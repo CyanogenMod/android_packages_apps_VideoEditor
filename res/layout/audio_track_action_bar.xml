@@ -51,6 +51,7 @@
         android:layout_toLeftOf="@id/action_unmute"
         android:layout_marginLeft="10dip"
         android:paddingRight="20dip"
+        android:paddingLeft="20dip"
         android:max="100"/>
     <TextView android:id="@+id/action_bar_title"
         android:layout_width="wrap_content"

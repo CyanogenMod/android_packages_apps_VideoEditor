@@ -141,8 +141,10 @@ public class ZoomControl extends View {
                 mThumbY + halfHeight);
         mThumb.draw(canvas);
 
+        /*
         canvas.drawCircle(getWidth() / 2, getHeight() / 2,
                 (mProgress * INTERNAL_RADIUS) / mMaxProgress, mCirclePaint);
+        */
     }
 
     /*

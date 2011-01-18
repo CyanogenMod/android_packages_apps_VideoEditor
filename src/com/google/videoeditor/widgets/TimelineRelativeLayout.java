@@ -20,8 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
@@ -36,12 +35,9 @@ import com.google.videoeditor.R;
  */
 public class TimelineRelativeLayout extends RelativeLayout {
     // Instance variables
-    private final Paint mPlayheadEdgePaint;
-    private final Paint mPlayheadFillPaint;
     private final int mHalfParentWidth;
-    private final int mPlayheadHalfWidth;
-    private final RectF mRect;
-    private final int mPlayheadMarginBottom;
+    private final int mPlayheadMarginTop, mPlayheadMarginBottom;
+    private final Drawable mPlayheadDrawable;
     private LayoutCallback mLayoutCallback;
 
     /**
@@ -61,21 +57,6 @@ public class TimelineRelativeLayout extends RelativeLayout {
     public TimelineRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        final Resources resources = context.getResources();
-        mPlayheadHalfWidth = (int)resources.getDimension(R.dimen.playhead_width) / 2;
-
-        // Prepare the Paint used for drawing the playhead edge
-        mPlayheadEdgePaint = new Paint();
-        mPlayheadEdgePaint.setColor(resources.getColor(R.color.playhead_edge));
-        mPlayheadEdgePaint.setStrokeWidth(1);
-        mPlayheadEdgePaint.setStyle(Paint.Style.STROKE);
-        mPlayheadEdgePaint.setAntiAlias(true);
-
-        // Prepare the Paint used for drawing the playhead fill
-        mPlayheadFillPaint = new Paint();
-        mPlayheadFillPaint.setColor(resources.getColor(R.color.playhead_fill));
-        mPlayheadFillPaint.setStyle(Paint.Style.FILL);
-
         // Compute half the width of the screen (and therefore the parent view)
         final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
         mHalfParentWidth = display.getWidth() / 2;
@@ -85,12 +66,14 @@ public class TimelineRelativeLayout extends RelativeLayout {
         setTag(R.id.left_view_width, mHalfParentWidth);
         setTag(R.id.playhead_offset, -1);
 
-        // Prepare the rectangle used for drawing the playhead
-        mRect = new RectF();
-        mRect.top = resources.getDimension(R.dimen.playhead_margin_top);
+        final Resources resources = context.getResources();
 
-        // Get the playhead bottom margin
+        // Get the playhead margins
+        mPlayheadMarginTop = (int)resources.getDimension(R.dimen.playhead_margin_top);
         mPlayheadMarginBottom = (int)resources.getDimension(R.dimen.playhead_margin_bottom);
+
+        // Prepare the playhead drawable
+        mPlayheadDrawable = resources.getDrawable(R.drawable.playhead);
     }
 
     /*
@@ -148,12 +131,11 @@ public class TimelineRelativeLayout extends RelativeLayout {
             startX = playheadOffset;
         }
 
-        mRect.left = startX - mPlayheadHalfWidth;
-        mRect.right = startX + mPlayheadHalfWidth;
-        mRect.bottom = getHeight() - mPlayheadMarginBottom;
-
-        canvas.drawRect(mRect, mPlayheadFillPaint);
-        canvas.drawRoundRect(mRect, 1, 1, mPlayheadEdgePaint);
+        // Draw the playhead
+        mPlayheadDrawable.setBounds(startX - (mPlayheadDrawable.getIntrinsicWidth() / 2),
+                mPlayheadMarginTop, startX + (mPlayheadDrawable.getIntrinsicWidth() / 2),
+                getHeight() - mPlayheadMarginBottom);
+        mPlayheadDrawable.draw(canvas);
     }
 
     /*
