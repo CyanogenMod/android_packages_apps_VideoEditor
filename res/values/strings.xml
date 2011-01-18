@@ -92,10 +92,10 @@
     <string name="export_dialog_movie_quality_medium">Medium</string>
     <string name="export_dialog_movie_quality_high">High</string>
  
-    <!-- Ken Burns activity-->
-    <string name="ken_burns_title">Ken Burns Effect</string>
-    <string name="ken_burns_start">Start</string>
-    <string name="ken_burns_end">End</string>
+    <!-- Pan and zoom activity-->
+    <string name="pan_zoom_title">Pan &amp; Zoom Effect</string>
+    <string name="pan_zoom_start">Start</string>
+    <string name="pan_zoom_end">End</string>
  
     <!-- Themes names and titles-->
     <string name="theme_name_travel">Travel</string>
@@ -127,7 +127,7 @@
 
     <!-- Effect names-->
     <string name="effects_select_effect">Effects</string>
-    <string name="effect_ken_burns">Ken Burns effect</string>
+    <string name="effect_pan_zoom">Pan &amp; zoom effect</string>
     <string name="effect_gradient">Gradient effect</string>
     <string name="effect_sepia">Sepia effect</string>
     <string name="effect_negative">Negative effect</string>
