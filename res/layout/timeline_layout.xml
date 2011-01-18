@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (C) 2009 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<com.google.videoeditor.widgets.TimelineHorizontalScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/timeline_scroller"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:fillViewport="true"
+    android:scrollbars="none">
+    <com.google.videoeditor.widgets.TimelineRelativeLayout 
+        android:id="@+id/timeline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <View android:id="@+id/timeline_sep_1"
+            android:layout_width="match_parent" 
+            android:layout_height="@dimen/timeline_separator_height"
+            android:background="@drawable/separator_1_background"/>
+        <com.google.videoeditor.widgets.MediaLinearLayout android:id="@+id/timeline_media"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/media_layout_height"
+            android:layout_below="@id/timeline_sep_1"
+            android:paddingTop="@dimen/media_layout_padding"
+            android:background="@drawable/media_item_timeline_background"/>
+        <com.google.videoeditor.widgets.OverlayLinearLayout android:id="@+id/timeline_overlays"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/overlay_layout_height"
+            android:layout_below="@id/timeline_media"
+            android:background="@drawable/overlay_timeline_background"/>
+        <View android:id="@+id/timeline_sep_2"
+            android:layout_width="match_parent" 
+            android:layout_height="@dimen/timeline_separator_height"
+            android:layout_below="@id/timeline_overlays"
+            android:background="@drawable/separator_2_background"/>
+        <com.google.videoeditor.widgets.AudioTrackLinearLayout android:id="@+id/timeline_audio_tracks"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/audio_layout_height"
+            android:layout_below="@id/timeline_sep_2"
+            android:background="@drawable/audio_timeline_background"/>
+        <View android:id="@+id/timeline_sep_3"
+            android:layout_width="match_parent" 
+            android:layout_height="@dimen/timeline_separator_height"
+            android:layout_below="@id/timeline_audio_tracks"
+            android:background="@drawable/separator_2_background"/>
+        <com.google.videoeditor.widgets.PlayheadView android:id="@+id/timeline_playhead"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/playhead_layout_height"
+            android:layout_below="@id/timeline_sep_3"
+            android:background="@drawable/playhead_timeline_background"/>
+    </com.google.videoeditor.widgets.TimelineRelativeLayout>
+</com.google.videoeditor.widgets.TimelineHorizontalScrollView>

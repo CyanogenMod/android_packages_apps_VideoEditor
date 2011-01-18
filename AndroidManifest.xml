@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.google.videoeditor"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <application android:icon="@drawable/icon" 
+        android:label="@string/app_name" 
+>
+        <service android:name=".service.ApiService"/>
+
+        <activity android:name=".ProjectsActivity"
+                  android:theme="@style/Theme.VideoEditorHolo"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".VideoEditorActivity"
+                  android:theme="@style/Theme.VideoEditorHolo"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".TransitionsActivity"
+                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                  android:label="@string/transitions_select_transition">
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".OverlaysActivity"
+                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                  android:label="@string/overlays_select_type">
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".OverlayTitleActivity"
+                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                  android:label="@string/overlay_title">
+            <intent-filter>
+                <action android:name="android.intent.action.EDIT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".EffectsActivity"
+                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                  android:label="@string/effects_select_effect">
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".KenBurnsActivity"
+                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                  android:label="@string/ken_burns_title">
+        </activity>
+
+    </application>
+    <uses-sdk android:minSdkVersion="Honeycomb" />
+
+</manifest> 
