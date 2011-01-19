@@ -325,8 +325,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         // When scrolling at high speed do not display the
                         // preview frame
                         final long timeMs = (scrollX * mDurationMs) / mActiveWidth;
-                        setPlayhead(timeMs < 0 ? 0 : timeMs);
-                        showPreviewFrame();
+                        if (setPlayhead(timeMs < 0 ? 0 : timeMs)) {
+                            showPreviewFrame();
+                        }
                     }
                 }
             }
@@ -339,8 +340,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 // close while scrolling
                 if (!appScroll && mActiveWidth > 0 && mProject != null && scrollX != mLastScrollX) {
                     final long timeMs = (scrollX * mDurationMs) / mActiveWidth;
-                    setPlayhead(timeMs < 0 ? 0 : timeMs);
-                    showPreviewFrame();
+                    if (setPlayhead(timeMs < 0 ? 0 : timeMs)) {
+                        showPreviewFrame();
+                    }
                 }
             }
         });
@@ -1305,30 +1307,39 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             return;
         }
 
-        if (mCurrentPlayheadPosMs == timeMs) {
-            return;
+        if (setPlayhead(timeMs)) {
+            // Scroll the timeline such that the specified position
+            // is in the center of the screen
+            mTimelineScroller.appScrollTo(timeToDimension(timeMs), true);
         }
-
-        setPlayhead(timeMs);
-        // Scroll the timeline such that the specified position
-        // is in the center of the screen
-        mTimelineScroller.appScrollTo(timeToDimension(timeMs), true);
     }
 
     /**
-     * Set the playhead position
+     * Set the playhead at the specified time position
      *
      * @param timeMs The time position
+     *
+     * @return true if the playhead was set at the specified time position
      */
-    private void setPlayhead(long timeMs) {
+    private boolean setPlayhead(long timeMs) {
+        // Check if the position would change
+        if (mCurrentPlayheadPosMs == timeMs) {
+            return false;
+        }
+
+        // Check if the time is valid. Note that invalid values are common due
+        // to overscrolling the timeline
         if (timeMs < 0) {
-            Log.e(TAG, "Negative time: " + timeMs, new Throwable());
+            return false;
+        } else if (timeMs > mProject.computeDuration()) {
+            return false;
         }
 
         mCurrentPlayheadPosMs = timeMs;
 
         mTimeView.setText(StringUtils.getTimestampAsString(this, timeMs));
         mProject.setPlayheadPos(timeMs);
+        return true;
     }
 
     /*
@@ -1759,32 +1770,36 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                  * {@inheritDoc}
                  */
                 public void run() {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "Start preview: " + project.getPath() + " at: " + fromMs);
-                    }
-                    project.startPreview(mSurfaceHolder, fromMs, -1, false, 3,
-                            new VideoEditor.PreviewProgressListener() {
-                        /*
-                         * {@inheritDoc}
-                         */
-                        public void onProgress(VideoEditor videoEditor, final long timeMs,
-                                final boolean end) {
-                            mHandler.post(new Runnable() {
-                                /*
-                                 * {@inheritDoc}
-                                 */
-                                public void run() {
-                                    if (mPlayingProject != null) {
-                                        if (end) {
-                                            previewStopped();
-                                        } else {
-                                            movePlayhead(timeMs);
+                    try {
+                        project.startPreview(mSurfaceHolder, fromMs, -1, false, 3,
+                                new VideoEditor.PreviewProgressListener() {
+                            /*
+                             * {@inheritDoc}
+                             */
+                            public void onProgress(VideoEditor videoEditor, final long timeMs,
+                                    final boolean end) {
+                                mHandler.post(new Runnable() {
+                                    /*
+                                     * {@inheritDoc}
+                                     */
+                                    public void run() {
+                                        if (mPlayingProject != null) {
+                                            if (end) {
+                                                previewStopped();
+                                            } else {
+                                                movePlayhead(timeMs);
+                                            }
                                         }
                                     }
-                                }
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
+                    } catch (Exception ex) {
+                        // This exception may occur when trying to play frames
+                        // at the end of the timeline
+                        // (e.g. when fromMs == clip duration)
+                        Log.i(TAG, "Cannot start preview at: " + fromMs);
+                    }
                 }
             });
 
