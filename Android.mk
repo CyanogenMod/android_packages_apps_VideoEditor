@@ -7,7 +7,6 @@ LOCAL_SRC_FILES := \
     ../../../frameworks/ex/carousel/java/com/android/ex/carousel/carousel.rs
 
 LOCAL_PACKAGE_NAME := VideoEditor
-LOCAL_CERTIFICATE := vendor/google/certs/app
 
 LOCAL_JAVA_LIBRARIES :=
 
