@@ -98,6 +98,7 @@ public class MediaLinearLayout extends LinearLayout {
     private MediaItemView mDragViewInProgress;
     private float mPrevDragPosition;
     private long mPrevDragScrollTime;
+    private View mDropLeftOfView, mDropRightOfView;
 
     /**
      * Activity listener
@@ -434,18 +435,16 @@ public class MediaLinearLayout extends LinearLayout {
                 }
 
                 final MovieMediaItem mediaItem = (MovieMediaItem)view.getTag();
+                /*
                 if (mProject.getMediaItemCount() > 1) {
                     if (view.isSelected()) {
-                        /*
                         // TODO: Remove this when drag and drop bug is fixed
                         mDragViewInProgress = (MediaItemView)view;
-                        view.startDrag(ClipData.newPlainText("File", null,
-                                mediaItem.getFilename()),
+                        view.startDrag(ClipData.newPlainText("File", mediaItem.getFilename()),
                                 ((MediaItemView)view).getShadowBuilder(), view, 0);
-                        */
                     }
                 }
-
+                */
                 if (!view.isSelected()) {
                     selectView(view, true);
                 }
@@ -1753,9 +1752,13 @@ public class MediaLinearLayout extends LinearLayout {
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED: {
                 // Claim to accept any dragged content
-                Log.v(TAG, "ACTION_DRAG_STARTED: " + event);
+                if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                    Log.v(TAG, "ACTION_DRAG_STARTED: " + event);
+                }
                 // TODO: Put this back once the bug is fixed
                 //mDragViewInProgress = (MediaItemView)event.getLocalState();
+                mDropLeftOfView = null;
+                mDropRightOfView = null;
 
                 // Hide the handles while dragging
                 mLeftHandle.setVisibility(View.GONE);
@@ -1767,19 +1770,25 @@ public class MediaLinearLayout extends LinearLayout {
             }
 
             case DragEvent.ACTION_DRAG_ENTERED: {
-                Log.v(TAG, "ACTION_DRAG_ENTERED: " + event);
+                if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                    Log.v(TAG, "ACTION_DRAG_ENTERED: " + event);
+                }
                 mPrevDragPosition = event.getX();
                 mPrevDragScrollTime = 0;
                 break;
             }
 
             case DragEvent.ACTION_DRAG_EXITED: {
-                Log.v(TAG, "ACTION_DRAG_EXITED: " + event);
+                if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                    Log.v(TAG, "ACTION_DRAG_EXITED: " + event);
+                }
                 break;
             }
 
             case DragEvent.ACTION_DRAG_ENDED: {
-                Log.v(TAG, "ACTION_DRAG_ENDED: " + event);
+                if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                    Log.v(TAG, "ACTION_DRAG_ENDED: " + event);
+                }
                 mDragViewInProgress = null;
                 // Hide the handles while dragging
                 mLeftHandle.setVisibility(View.VISIBLE);
@@ -1791,28 +1800,35 @@ public class MediaLinearLayout extends LinearLayout {
 
             case DragEvent.ACTION_DRAG_LOCATION: {
                 final int x = (int)event.getX();
-                if (System.currentTimeMillis() - mPrevDragScrollTime > 300) {
+                final long now = System.currentTimeMillis();
+                if (now - mPrevDragScrollTime > 300) {
                     // Get the view under the playhead
                     final View scrollerView = ((View)getParent().getParent());
                     final int playheadOffset = scrollerView.getScrollX() + mHalfParentWidth;
                     if (x < mPrevDragPosition - 50) { // Backwards
-                        View overView = getLeftViewFromPosition(playheadOffset,
+                        final View overView = getLeftViewFromPosition(playheadOffset,
                                 mDragViewInProgress);
                         if (overView != null) {
-                            final int scrollTo = overView.getLeft() - mHalfParentWidth;
-                            mListener.onRequestScrollTo(scrollTo, true);
+                            mDropLeftOfView = overView;
+                            mDropRightOfView = null;
+                            mListener.onRequestScrollTo(overView.getLeft() - mHalfParentWidth,
+                                    true);
                         }
+
                         mPrevDragPosition = x;
-                        mPrevDragScrollTime = System.currentTimeMillis();
+                        mPrevDragScrollTime = now;
                     } else if (x > mPrevDragPosition + 50) { // Forward
-                        View overView = getRightViewFromPosition(0, playheadOffset,
+                        final View overView = getRightViewFromPosition(0, playheadOffset,
                                 mDragViewInProgress);
                         if (overView != null) {
-                            final int scrollTo = overView.getRight() - mHalfParentWidth;
-                            mListener.onRequestScrollTo(scrollTo, true);
+                            mDropLeftOfView = null;
+                            mDropRightOfView = overView;
+                            mListener.onRequestScrollTo(overView.getRight() - mHalfParentWidth,
+                                    true);
                         }
+
                         mPrevDragPosition = x;
-                        mPrevDragScrollTime = System.currentTimeMillis();
+                        mPrevDragScrollTime = now;
                     }
                 } else {
                     mPrevDragPosition = x;
@@ -1824,14 +1840,49 @@ public class MediaLinearLayout extends LinearLayout {
             }
 
             case DragEvent.ACTION_DROP: {
-                Log.v(TAG, "ACTION_DROP: " + event);
+                if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                    Log.v(TAG, "ACTION_DROP: " + event);
+                }
+
+                if (mDropLeftOfView != null) {
+                    // We cannot end up left of a transition so it is safe to
+                    // cast the tag to a movie media item
+                    final MovieMediaItem mediaItem = (MovieMediaItem)mDropLeftOfView.getTag();
+                    final MovieMediaItem afterMediaItem = mProject.getPreviousMediaItem(
+                            mediaItem.getId());
+                    final String afterMediaId = afterMediaItem != null ?
+                            afterMediaItem.getId() : null;
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "ACTION_DROP (left): " + afterMediaId);
+                    }
+                } else if (mDropRightOfView != null) {
+                    final Object tag = mDropRightOfView.getTag();
+                    if (tag instanceof MovieMediaItem) { // Right of a media item
+                        final MovieMediaItem afterMediaItem = (MovieMediaItem)tag;
+                        if (Log.isLoggable(TAG, Log.DEBUG)) {
+                            Log.d(TAG, "ACTION_DROP (right of item): " + afterMediaItem.getId());
+                        }
+                    } else { // Right of a transition
+                        final MovieTransition transition = (MovieTransition)tag;
+                        final MovieMediaItem afterMediaItem = mProject.getPreviousMediaItem(
+                                transition);
+                        final String afterMediaId = afterMediaItem != null ?
+                                afterMediaItem.getId() : null;
+                        if (Log.isLoggable(TAG, Log.DEBUG)) {
+                            Log.d(TAG, "ACTION_DROP (right transition): " + afterMediaId);
+                        }
+                    }
+                }
+
                 result = true;
                 break;
             }
 
 
             default: {
-                Log.v(TAG, "Other drag event: " + event);
+                if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                    Log.v(TAG, "Other drag event: " + event);
+                }
                 result = true;
                 break;
             }
@@ -1863,7 +1914,7 @@ public class MediaLinearLayout extends LinearLayout {
                 } else {
                     if (i > 1) {
                         if (prevView == skipView) {
-                            overView = getLeftViewFromPosition(skipView.getLeft(), skipView);
+                            return getLeftViewFromPosition(skipView.getLeft(), skipView);
                         } else {
                             overView = v;
                         }
@@ -1877,13 +1928,20 @@ public class MediaLinearLayout extends LinearLayout {
             }
         }
 
+        if (overView != null) {
+            final Object tag = overView.getTag();
+            if (tag != null && tag instanceof MovieTransition) {
+                return getLeftViewFromPosition(overView.getLeft(), skipView);
+            }
+        }
+
         return overView;
     }
 
     /**
      * Get the view from the specified position
      *
-     * @param startIndex YThe start index
+     * @param startIndex The start index
      * @param x The position
      * @param skipView Skip this view
      *
@@ -1903,7 +1961,7 @@ public class MediaLinearLayout extends LinearLayout {
                 } else {
                     if (i < childrenCount - 4) {
                         if (getChildAt(i + 1) == skipView) {
-                            overView = getRightViewFromPosition(i + 2, skipView.getRight(),
+                            return getRightViewFromPosition(i + 2, skipView.getRight(),
                                     skipView);
                         } else {
                             overView = v;
@@ -1916,6 +1974,18 @@ public class MediaLinearLayout extends LinearLayout {
             } else if (next) {
                 overView = v;
                 break;
+            }
+        }
+
+        if (overView != null) {
+            if (i < childrenCount - 4) {
+                // If the next view represents a transition skip to the end
+                // of that view (or the next appropriate media item)
+                final View nextView = getChildAt(i + 1);
+                final Object nextTag = nextView.getTag();
+                if (nextTag != null && nextTag instanceof MovieTransition) {
+                    return getRightViewFromPosition(i + 1, overView.getRight(), skipView);
+                }
             }
         }
 
