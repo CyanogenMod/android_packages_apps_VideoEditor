@@ -948,7 +948,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
 
             mProjectPath = null;
-            mProject = null;
         }
     }
 

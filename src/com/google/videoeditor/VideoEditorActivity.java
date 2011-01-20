@@ -17,15 +17,17 @@
 package com.google.videoeditor;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.Bitmap.Config;
 import android.media.videoeditor.MediaItem;
 import android.media.videoeditor.MediaProperties;
 import android.media.videoeditor.VideoEditor;
@@ -46,6 +48,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.videoeditor.service.ApiService;
 import com.google.videoeditor.service.MovieMediaItem;
@@ -135,6 +138,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     // Instance variables
     private PreviewSurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
+    private ImageView mOverlayView;
     private PreviewThread mPreviewThread;
     private View mEditorProjectView;
     private View mEditorEmptyView;
@@ -188,6 +192,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        mOverlayView = (ImageView)findViewById(R.id.overlay_layer);
 
         mEditorProjectView = findViewById(R.id.editor_project_view);
         mEditorEmptyView = findViewById(R.id.empty_project_view);
@@ -1190,6 +1196,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "surfaceChanged: " + width + "x" + height);
         }
+
+        if (mPreviewThread != null) {
+            mPreviewThread.onSurfaceChanged(width, height);
+        }
     }
 
     /*
@@ -1423,6 +1433,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             Log.d(TAG, "setAspectRatio: " + aspectRatio + ", size: " + lp.width + "x" + lp.height);
         }
         mSurfaceView.setLayoutParams(lp);
+        mOverlayView.setLayoutParams(lp);
     }
 
     /*
@@ -1678,11 +1689,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         private final int PREVIEW_STATE_STARTED = 2;
         private final int PREVIEW_STATE_STOPPING = 3;
 
-        private final Handler mHandler;
+        private final int OVERLAY_DATA_COUNT = 16;
+
+        private final Handler mMainHandler;
         private final Queue<Runnable> mQueue;
         private final SurfaceHolder mSurfaceHolder;
+        private final Queue<VideoEditor.OverlayData> mOverlayDataQueue;
         private Handler mThreadHandler;
         private int mPreviewState;
+        private Bitmap mOverlayBitmap;
 
         private final Runnable mProcessQueueRunnable = new Runnable() {
             /*
@@ -1703,10 +1718,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * @param surfaceHolder The surface holder
          */
         public PreviewThread(SurfaceHolder surfaceHolder) {
-            mHandler = new Handler(Looper.getMainLooper());
+            mMainHandler = new Handler(Looper.getMainLooper());
             mQueue = new LinkedBlockingQueue<Runnable>();
             mSurfaceHolder = surfaceHolder;
             mPreviewState = PREVIEW_STATE_STOPPED;
+
+            mOverlayDataQueue = new LinkedBlockingQueue<VideoEditor.OverlayData>();
+            for (int i = 0; i < OVERLAY_DATA_COUNT; i++) {
+                mOverlayDataQueue.add(new VideoEditor.OverlayData());
+            }
 
             start();
         }
@@ -1739,15 +1759,47 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     if (clear) {
                         project.clearSurface(mSurfaceHolder);
                     } else {
+                        final VideoEditor.OverlayData overlayData;
                         try {
-                            if (project.renderPreviewFrame(mSurfaceHolder, timeMs) < 0) {
+                            overlayData = mOverlayDataQueue.remove();
+                        } catch (NoSuchElementException ex) {
+                            Log.e(TAG, "Out of OverlayData elements");
+                            return;
+                        }
+
+                        try {
+                            if (project.renderPreviewFrame(mSurfaceHolder, timeMs, overlayData)
+                                    < 0) {
                                 if (Log.isLoggable(TAG, Log.DEBUG)) {
                                     Log.d(TAG, "Cannot render preview frame at: " + timeMs +
                                             " of " + mProject.computeDuration());
                                 }
+
+                                mOverlayDataQueue.add(overlayData);
+                            } else {
+                                if (overlayData.needsRendering()) {
+                                    mMainHandler.post(new Runnable() {
+                                        /*
+                                         * {@inheritDoc}
+                                         */
+                                        public void run() {
+                                            if (mOverlayBitmap != null) {
+                                                overlayData.renderOverlay(mOverlayBitmap);
+                                                mOverlayView.invalidate();
+                                            } else {
+                                                overlayData.release();
+                                            }
+
+                                            mOverlayDataQueue.add(overlayData);
+                                        }
+                                    });
+                                } else {
+                                    mOverlayDataQueue.add(overlayData);
+                                }
                             }
                         } catch (Exception ex) {
                             Log.e(TAG, "Requested timeMs: " + timeMs);
+                            mOverlayDataQueue.add(overlayData);
                             ex.printStackTrace();
                         }
                     }
@@ -1829,37 +1881,65 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                  */
                 public void run() {
                     try {
-                        mHandler.post(new Runnable() {
-                            /*
-                             * {@inheritDoc}
-                             */
-                            public void run() {
-                                mPreviewState = PREVIEW_STATE_STARTED;
-                            }
-                        });
-
                         project.startPreview(mSurfaceHolder, fromMs, -1, false, 3,
                                 new VideoEditor.PreviewProgressListener() {
                             /*
                              * {@inheritDoc}
                              */
+                            public void onStart(VideoEditor videoEditor) {
+                            }
+
+                            /*
+                             * {@inheritDoc}
+                             */
                             public void onProgress(VideoEditor videoEditor, final long timeMs,
-                                    final boolean end) {
-                                mHandler.post(new Runnable() {
+                                    final VideoEditor.OverlayData overlayData) {
+                                mMainHandler.post(new Runnable() {
+                                    /*
+                                     * {@inheritDoc}
+                                     */
+                                    public void run() {
+                                        if (overlayData != null && overlayData.needsRendering()) {
+                                            if (mOverlayBitmap != null) {
+                                                overlayData.renderOverlay(mOverlayBitmap);
+                                                mOverlayView.invalidate();
+                                            } else {
+                                                overlayData.release();
+                                            }
+                                        }
+
+                                        if (mPreviewState == PREVIEW_STATE_STARTED ||
+                                                mPreviewState == PREVIEW_STATE_STOPPING) {
+                                            movePlayhead(timeMs);
+                                        }
+                                    }
+                                });
+                            }
+
+                            /*
+                             * {@inheritDoc}
+                             */
+                            public void onStop(VideoEditor videoEditor) {
+                                mMainHandler.post(new Runnable() {
                                     /*
                                      * {@inheritDoc}
                                      */
                                     public void run() {
                                         if (mPreviewState == PREVIEW_STATE_STARTED ||
                                                 mPreviewState == PREVIEW_STATE_STOPPING) {
-                                            if (end) {
-                                                previewStopped(false);
-                                            } else {
-                                                movePlayhead(timeMs);
-                                            }
+                                            previewStopped(false);
                                         }
                                     }
                                 });
+                            }
+                        });
+
+                        mMainHandler.post(new Runnable() {
+                            /*
+                             * {@inheritDoc}
+                             */
+                            public void run() {
+                                mPreviewState = PREVIEW_STATE_STARTED;
                             }
                         });
                     } catch (Exception ex) {
@@ -1872,12 +1952,13 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                             Log.d(TAG, "Cannot start preview at: " + fromMs);
                         }
 
-                        mHandler.post(new Runnable() {
+                        mMainHandler.post(new Runnable() {
                             /*
                              * {@inheritDoc}
                              */
                             public void run() {
-                                 previewStopped(true);
+                                mPreviewState = PREVIEW_STATE_STARTED;
+                                previewStopped(true);
                             }
                         });
                     }
@@ -1933,21 +2014,37 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     }
 
                     mPreviewState = PREVIEW_STATE_STOPPING;
+
                     // We need to wait until the preview starts
-                    mHandler.postDelayed(new Runnable() {
+                    mMainHandler.postDelayed(new Runnable() {
                         /*
                          * {@inheritDoc}
                          */
                         public void run() {
-                            if (mPreviewState == PREVIEW_STATE_STARTED) {
+                            if (isFinishing() || isChangingConfigurations()) {
+                                // The activity is shutting down. Force stopping now.
+                                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                    Log.d(TAG, "stopPreviewPlayback: Activity is shutting down");
+                                }
+
+                                mPreviewState = PREVIEW_STATE_STARTED;
+                                previewStopped(true);
+                            } else if (mPreviewState == PREVIEW_STATE_STARTED) {
                                 if (Log.isLoggable(TAG, Log.DEBUG)) {
                                     Log.d(TAG, "stopPreviewPlayback: Now PREVIEW_STATE_STARTED");
                                 }
+
                                 previewStopped(false);
-                            } else {
-                                mHandler.postDelayed(this, 100);
+                            } else if (mPreviewState == PREVIEW_STATE_STOPPING) {
+                                // Keep waiting
+                                mMainHandler.postDelayed(this, 100);
+
                                 if (Log.isLoggable(TAG, Log.DEBUG)) {
                                     Log.d(TAG, "stopPreviewPlayback: Waiting for PREVIEW_STATE_STARTED");
+                                }
+                            } else {
+                                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                    Log.d(TAG, "stopPreviewPlayback: PREVIEW_STATE_STOPPED while waiting");
                                 }
                             }
                         }
@@ -1971,6 +2068,33 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                             mPreviewState);
                 }
             }
+        }
+
+        /**
+         * The surface size has changed
+         *
+         * @param width The new surface width
+         * @param heightThe new surface height
+         */
+        private void onSurfaceChanged(int width, int height) {
+            if (mOverlayBitmap != null) {
+                if (mOverlayBitmap.getWidth() == width && mOverlayBitmap.getHeight() == height) {
+                    // The size has not changed
+                    return;
+                }
+
+                mOverlayView.setImageBitmap(null);
+                mOverlayBitmap.recycle();
+                mOverlayBitmap = null;
+            }
+
+            // Create the overlay bitmap
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "Overlay size: " + width + " x " + height);
+            }
+
+            mOverlayBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+            mOverlayView.setImageBitmap(mOverlayBitmap);
         }
 
         /**
@@ -2028,11 +2152,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mThreadHandler = new Handler();
 
             // Ensure that the queued items are processed
-            mHandler.post(new Runnable() {
+            mMainHandler.post(new Runnable() {
                 /*
                  * {@inheritDoc}
                  */
                 public void run() {
+                    // Start processing the queue of runnables
                     mThreadHandler.post(mProcessQueueRunnable);
                 }
             });
@@ -2045,6 +2170,13 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * Quit the thread
          */
         public void quit() {
+            // Release the overlay bitmap
+            if (mOverlayBitmap != null) {
+                mOverlayView.setImageBitmap(null);
+                mOverlayBitmap.recycle();
+                mOverlayBitmap = null;
+            }
+
             if (mThreadHandler != null) {
                 mThreadHandler.getLooper().quit();
                 try {

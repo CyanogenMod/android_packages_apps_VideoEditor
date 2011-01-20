@@ -101,5 +101,8 @@
         <com.google.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
             android:layout_height="400dip"/>
+        <ImageView android:id="@+id/overlay_layer"
+            android:layout_width="0dip"
+            android:layout_height="400dip"/>
     </FrameLayout>
 </com.google.videoeditor.widgets.EditorRelativeLayout>

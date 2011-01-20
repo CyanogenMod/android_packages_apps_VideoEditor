@@ -904,6 +904,7 @@ public class VideoEditorProject {
      *
      * @param surfaceHolder SurfaceHolder used by the application
      * @param timeMs time corresponding to the frame to display
+     * @param overlayData The overlay data
      *
      * @return The accurate time stamp of the frame that is rendered.
      * @throws IllegalStateException if a preview or an export is already in
@@ -911,9 +912,10 @@ public class VideoEditorProject {
      * @throws IllegalArgumentException if time is negative or beyond the
      *             preview duration
      */
-    public long renderPreviewFrame(SurfaceHolder surfaceHolder, long timeMs) {
+    public long renderPreviewFrame(SurfaceHolder surfaceHolder, long timeMs,
+            VideoEditor.OverlayData overlayData) {
         if (mVideoEditor != null) {
-            return mVideoEditor.renderPreviewFrame(surfaceHolder, timeMs);
+            return mVideoEditor.renderPreviewFrame(surfaceHolder, timeMs, overlayData);
         } else {
             return 0;
         }
@@ -966,6 +968,7 @@ public class VideoEditorProject {
      *            after the number of frames specified by this parameter.
      * @param listener The listener which will be notified of the preview
      *            progress
+     *
      * @throws IllegalArgumentException if fromMs is beyond the preview duration
      * @throws IllegalStateException if a preview or an export is already in
      *             progress
