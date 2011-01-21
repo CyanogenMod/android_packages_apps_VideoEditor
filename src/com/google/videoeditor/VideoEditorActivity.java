@@ -213,8 +213,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             /*
              * {@inheritDoc}
              */
-            public void onRequestScrollTo(int scrollTo, boolean smooth) {
-                mTimelineScroller.appScrollTo(scrollTo, smooth);
+            public void onRequestScrollToTime(long scrollToTime, boolean smooth) {
+                movePlayhead(scrollToTime);
             }
 
             /*
