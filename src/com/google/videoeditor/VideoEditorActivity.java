@@ -146,6 +146,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private PlayheadView mPlayheadView;
     private TextView mTimeView;
     private ImageButton mPreviewPlayButton;
+    private ImageButton mPreviewRewindButton, mPreviewNextButton, mPreviewPrevButton;
     private int mActivityWidth;
     private String mInsertMediaItemAfterMediaItemId;
     private long mCurrentPlayheadPosMs;
@@ -198,6 +199,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mAudioTrackLayout = (AudioTrackLinearLayout)findViewById(R.id.timeline_audio_tracks);
         mPlayheadView = (PlayheadView)findViewById(R.id.timeline_playhead);
         mPreviewPlayButton = (ImageButton)findViewById(R.id.editor_play);
+        mPreviewRewindButton = (ImageButton)findViewById(R.id.editor_rewind);
+        mPreviewNextButton = (ImageButton)findViewById(R.id.editor_next);
+        mPreviewPrevButton = (ImageButton)findViewById(R.id.editor_prev);
 
         mTimeView = (TextView)findViewById(R.id.editor_time);
 
@@ -252,6 +256,13 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             /*
              * {@inheritDoc}
              */
+            public void onTrimMediaItemBegin(MovieMediaItem mediaItem) {
+                onProjectEditStateChange(true);
+            }
+
+            /*
+             * {@inheritDoc}
+             */
             public void onTrimMediaItem(MovieMediaItem mediaItem, long timeMs) {
                 updateTimelineDuration();
                 if (mProject != null && mPreviewThread != null && !mPreviewThread.isPlaying()) {
@@ -270,7 +281,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             /*
              * {@inheritDoc}
              */
-            public void onTrimMediaItemComplete(MovieMediaItem mediaItem, long timeMs) {
+            public void onTrimMediaItemEnd(MovieMediaItem mediaItem, long timeMs) {
+                onProjectEditStateChange(false);
                 // We need to repaint the timeline layout to clear the old
                 // playhead position (the one drawn during trimming)
                 mTimelineLayout.invalidate();
@@ -1440,8 +1452,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "onProjectEditStateChange: " + projectEdited);
         }
+
         mPreviewPlayButton.setAlpha(projectEdited ? 100 : 255);
         mPreviewPlayButton.setEnabled(!projectEdited);
+        mPreviewRewindButton.setEnabled(!projectEdited);
+        mPreviewNextButton.setEnabled(!projectEdited);
+        mPreviewPrevButton.setEnabled(!projectEdited);
+
+        mZoomBar.setEnabled(!projectEdited);
     }
 
     /*

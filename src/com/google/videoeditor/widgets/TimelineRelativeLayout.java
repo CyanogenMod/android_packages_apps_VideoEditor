@@ -74,6 +74,8 @@ public class TimelineRelativeLayout extends RelativeLayout {
 
         // Prepare the playhead drawable
         mPlayheadDrawable = resources.getDrawable(R.drawable.playhead);
+
+        setMotionEventSplittingEnabled(false);
     }
 
     /*

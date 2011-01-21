@@ -130,7 +130,14 @@ public class MediaLinearLayout extends LinearLayout {
         public void onAddMediaItem(String afterMediaItemId);
 
         /**
-         * A media is trimmed
+         * A media item enters trimming mode
+         *
+         * @param mediaItem The media item
+         */
+        public void onTrimMediaItemBegin(MovieMediaItem mediaItem);
+
+        /**
+         * A media item is being trimmed
          *
          * @param mediaItem The media item
          * @param timeMs The time where the trim occurs
@@ -143,7 +150,7 @@ public class MediaLinearLayout extends LinearLayout {
          * @param mediaItem The media item
          * @param timeMs The time where the trim occurs
          */
-        public void onTrimMediaItemComplete(MovieMediaItem mediaItem, long timeMs);
+        public void onTrimMediaItemEnd(MovieMediaItem mediaItem, long timeMs);
     };
 
     /**
@@ -539,6 +546,8 @@ public class MediaLinearLayout extends LinearLayout {
         mHalfParentWidth = display.getWidth() / 2;
 
         mHandler = new Handler();
+
+        setMotionEventSplittingEnabled(false);
     }
 
     /*
@@ -2357,6 +2366,8 @@ public class MediaLinearLayout extends LinearLayout {
                         mOriginalWidth = mediaItemView.getWidth();
                         mMinimumDurationMs = MediaItemUtils.getMinimumVideoItemDuration();
                         setTrimState(mediaItemView, true);
+
+                        mListener.onTrimMediaItemBegin(mMediaItem);
                     }
 
                     /*
@@ -2445,7 +2456,7 @@ public class MediaLinearLayout extends LinearLayout {
                         // Layout all the children to ensure that
                         parentView.setTag(R.id.left_view_width, mHalfParentWidth);
                         parentView.setTag(R.id.playhead_offset, -1);
-                        mListener.onTrimMediaItemComplete(mMediaItem,
+                        mListener.onTrimMediaItemEnd(mMediaItem,
                                 mMediaItem.getAppBoundaryBeginTime());
 
                         setTrimState(mediaItemView, false);
@@ -2504,6 +2515,8 @@ public class MediaLinearLayout extends LinearLayout {
                     mOriginalEndMs = mMediaItem.getAppBoundaryEndTime();
                     mMinimumItemDurationMs = MediaItemUtils.getMinimumMediaItemDuration(mMediaItem);
                     setTrimState(mediaItemView, true);
+
+                    mListener.onTrimMediaItemBegin(mMediaItem);
                 }
 
                 /*
@@ -2624,7 +2637,7 @@ public class MediaLinearLayout extends LinearLayout {
                  */
                 private void scaleDone() {
                     parentView.setTag(R.id.playhead_offset, -1);
-                    mListener.onTrimMediaItemComplete(mMediaItem,
+                    mListener.onTrimMediaItemEnd(mMediaItem,
                             mMediaItem.getAppBoundaryEndTime());
                     setTrimState(mediaItemView, false);
                     if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >

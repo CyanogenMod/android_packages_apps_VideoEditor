@@ -282,6 +282,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
 
         // Get the layout height
         mAudioTrackHeight = (int)context.getResources().getDimension(R.dimen.audio_layout_height);
+
+        setMotionEventSplittingEnabled(false);
     }
 
     /*
