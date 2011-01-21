@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -106,7 +107,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
             titleView.setText(FileUtils.getSimpleName(mAudioTrack.getFilename()));
 
             titleBarView.findViewById(R.id.action_mute).setOnClickListener(this);
-            titleBarView.findViewById(R.id.action_unmute).setOnClickListener(this);
             titleBarView.findViewById(R.id.action_remove).setOnClickListener(this);
             final SeekBar seekBar =
                 ((SeekBar)titleBarView.findViewById(R.id.action_volume));
@@ -121,11 +121,12 @@ public class AudioTrackLinearLayout extends LinearLayout {
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             final View view = mode.getCustomView();
-            view.findViewById(R.id.action_mute).setVisibility(
-                    mAudioTrack.isAppMuted() ? View.GONE : View.VISIBLE);
-            view.findViewById(R.id.action_unmute).setVisibility(
-                    mAudioTrack.isAppMuted() ? View.VISIBLE : View.GONE);
-
+            final Button muteBtn = (Button)view.findViewById(R.id.action_mute);
+            if (mAudioTrack.isAppMuted()) {
+                muteBtn.setText(R.string.editor_unmute);
+            } else {
+                muteBtn.setText(R.string.editor_mute);
+            }
             return true;
         }
 
@@ -142,18 +143,17 @@ public class AudioTrackLinearLayout extends LinearLayout {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.action_mute: {
-                    mAudioTrack.setAppMute(true);
-                    mAudioTrackActionMode.invalidate();
-                    ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
-                            mAudioTrack.getId(), true);
-                    break;
-                }
-
-                case R.id.action_unmute: {
-                    mAudioTrack.setAppMute(false);
-                    mAudioTrackActionMode.invalidate();
-                    ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
-                            mAudioTrack.getId(), false);
+                    if (mAudioTrack.isAppMuted()) {
+                        mAudioTrack.setAppMute(false);
+                        mAudioTrackActionMode.invalidate();
+                        ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
+                                mAudioTrack.getId(), false);
+                    } else {
+                        mAudioTrack.setAppMute(true);
+                        mAudioTrackActionMode.invalidate();
+                        ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
+                                mAudioTrack.getId(), true);
+                    }
                     break;
                 }
 
@@ -238,7 +238,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
                 }
 
                 if (!view.isSelected()) {
-                    selectView(view, false);
+                    selectView(view, true);
                 }
 
                 if (mAudioTrackActionMode == null) {

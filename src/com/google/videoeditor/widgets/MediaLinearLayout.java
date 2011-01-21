@@ -331,7 +331,6 @@ public class MediaLinearLayout extends LinearLayout {
             final Activity activity = (Activity)getContext();
             activity.getMenuInflater().inflate(R.menu.transition_mode_menu, menu);
 
-            selectView(getTransitionView(mTransition.getId()), true);
             return true;
         }
 
