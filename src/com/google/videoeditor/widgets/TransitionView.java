@@ -21,12 +21,12 @@ import com.google.videoeditor.service.ApiService;
 import com.google.videoeditor.service.MovieTransition;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.Paint.Style;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -44,17 +44,10 @@ public class TransitionView extends ImageView {
     // Logging
     private static final String TAG = "TransitionView";
 
-    // This value determines the incline of the thumbnail separator
-    private static final int GAP_OFFSET = 4;
-    // This value determines the thickness of the thumbnail separator
-    private static final int GAP_THICKNESS = 8;
-
     // Instance variables
     private final GestureDetector mSimpleGestureDetector;
     private final ScrollViewListener mScrollListener;
     private final Rect mProgressDestRect;
-    private final Path mLeftPath, mRightPath;
-    private final Paint mLinePaint;
 
     private boolean mIsScrolling;
     private int mScrollX, mScrollingX;
@@ -64,6 +57,7 @@ public class TransitionView extends ImageView {
     private ItemSimpleGestureListener mGestureListener;
     private int mProgress;
     private boolean mIsPlaying;
+    private Drawable mTransitionSeparator;
 
     /*
      * {@inheritDoc}
@@ -127,10 +121,11 @@ public class TransitionView extends ImageView {
             }
         };
 
+        final Resources resources = getResources();
         // Prepare the bitmap rectangles
         final ProgressBar progressBar = ProgressBar.getProgressBar(context);
-        final int layoutHeight = (int)(getResources().getDimension(R.dimen.media_layout_height) -
-                getResources().getDimension(R.dimen.media_layout_padding));
+        final int layoutHeight = (int)(resources.getDimension(R.dimen.media_layout_height) -
+                resources.getDimension(R.dimen.media_layout_padding));
         mProgressDestRect = new Rect(getPaddingLeft(),
                 layoutHeight - progressBar.getHeight() - getPaddingBottom(), 0,
                 layoutHeight - getPaddingBottom());
@@ -145,16 +140,8 @@ public class TransitionView extends ImageView {
         display.getMetrics(metrics);
         mScreenWidth = metrics.widthPixels;
 
-        // Prepare the paths used for the clip regions
-        mLeftPath = new Path();
-        mRightPath = new Path();
-
-        // Prepare the line paint
-        mLinePaint = new Paint();
-        mLinePaint.setAntiAlias(true);
-        mLinePaint.setStyle(Style.STROKE);
-        mLinePaint.setColor(getResources().getColor(R.color.timeline_view_padding_color));
-        mLinePaint.setStrokeWidth(getResources().getDimension(R.dimen.timelime_item_padding));
+        // Prepare the transition separator
+        mTransitionSeparator = resources.getDrawable(R.drawable.transition_separator);
     }
 
     /*
@@ -292,50 +279,38 @@ public class TransitionView extends ImageView {
                     mProgressDestRect, getPaddingLeft(), getWidth() - getPaddingRight());
         } else if (mBitmaps != null) {
             final int halfWidth = getWidth() / 2;
-            // Exclude the padding
-            canvas.clipRect(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
-                    getHeight() - getPaddingBottom());
-
             // Draw the bitmaps
             // Draw the left side of the transition
             canvas.save();
-            mLeftPath.reset();
-            mLeftPath.moveTo(0, 0);
-            mLeftPath.lineTo(halfWidth + GAP_OFFSET, 0);
-            mLeftPath.lineTo(halfWidth - GAP_OFFSET - GAP_THICKNESS, getHeight());
-            mLeftPath.lineTo(0, getHeight());
-            mLeftPath.close();
-            canvas.clipPath(mLeftPath);
+            canvas.clipRect(getPaddingLeft(), getPaddingTop(), halfWidth,
+                    getHeight() - getPaddingBottom());
 
             if (mBitmaps[0] != null) {
                 canvas.drawBitmap(mBitmaps[0], getPaddingLeft(), getPaddingTop(), null);
             } else {
-                canvas.drawColor(0xff000000);
+                canvas.drawColor(Color.BLACK);
             }
             canvas.restore();
-            canvas.drawLine(halfWidth + GAP_OFFSET, getPaddingTop(),
-                    halfWidth - GAP_OFFSET - GAP_THICKNESS, getHeight() - getPaddingBottom(),
-                    mLinePaint);
 
             // Draw the right side of the transition
             canvas.save();
-            mRightPath.reset();
-            mRightPath.moveTo(halfWidth + GAP_OFFSET + GAP_THICKNESS, 0);
-            mRightPath.lineTo(getWidth(), 0);
-            mRightPath.lineTo(getWidth(), getHeight());
-            mRightPath.lineTo(halfWidth - GAP_OFFSET, getHeight());
-            mRightPath.close();
-            canvas.clipPath(mRightPath);
+            canvas.clipRect(halfWidth, getPaddingTop(),
+                    getWidth() - getPaddingRight(), getHeight() - getPaddingBottom());
             if (mBitmaps[1] != null) {
                 canvas.drawBitmap(mBitmaps[1],
                         getWidth() - getPaddingRight() - mBitmaps[1].getWidth(), getPaddingTop(),
                         null);
             } else {
-                canvas.drawColor(0xff000000);
+                canvas.drawColor(Color.BLACK);
             }
             canvas.restore();
-            canvas.drawLine(halfWidth + GAP_OFFSET + GAP_THICKNESS, getPaddingTop(),
-                    halfWidth - GAP_OFFSET, getHeight() - getPaddingBottom(), mLinePaint);
+
+            // Draw the transition separator
+            mTransitionSeparator.setBounds(
+                    halfWidth - (mTransitionSeparator.getIntrinsicWidth() / 2), getPaddingTop(),
+                    halfWidth + (mTransitionSeparator.getIntrinsicWidth() / 2),
+                    getHeight() - getPaddingBottom());
+            mTransitionSeparator.draw(canvas);
         } else if (mIsPlaying) { // Playing
             requestThumbnails();
         } else if (mIsScrolling) { // Scrolling

@@ -26,7 +26,7 @@
     <dimen name="handle_width">38dip</dimen>
 
     <dimen name="timeline_separator_height">3dip</dimen>
-    <dimen name="playhead_width">4dip</dimen>
+
     <dimen name="playhead_margin_top">22dip</dimen>
     <dimen name="playhead_margin_bottom">22dip</dimen>
     <dimen name="playhead_tick_height">5dip</dimen>
