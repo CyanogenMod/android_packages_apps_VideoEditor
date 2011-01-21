@@ -988,6 +988,7 @@ public class MediaLinearLayout extends LinearLayout {
             ApiService.removeTransition(getContext(), mProject.getPath(), transitionId);
             addTransition(afterMediaItemId, transitionType, transitionDurationMs);
         } else if (transition.getAppDuration() != transitionDurationMs) {
+            transition.setAppDuration(transitionDurationMs);
             ApiService.setTransitionDuration(getContext(), mProject.getPath(), transitionId,
                     transitionDurationMs);
         }
