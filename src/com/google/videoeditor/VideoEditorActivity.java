@@ -1798,7 +1798,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         // This exception may occur when trying to play frames
                         // at the end of the timeline
                         // (e.g. when fromMs == clip duration)
-                        Log.i(TAG, "Cannot start preview at: " + fromMs);
+                        if (Log.isLoggable(TAG, Log.DEBUG)) {
+                            Log.d(TAG, "Cannot start preview at: " + fromMs, ex);
+                        } else {
+                            Log.d(TAG, "Cannot start preview at: " + fromMs);
+                        }
                     }
                 }
             });
