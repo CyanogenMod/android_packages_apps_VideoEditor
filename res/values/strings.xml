@@ -15,13 +15,13 @@
     <string name="editor_change_aspect_ratio">Change aspect ratio</string>
     <string name="editor_edit_project_name">Change project name</string>
     <string name="editor_delete_project">Delete project</string>
-    <string name="editor_delete_project_question">Do you like to delete this project?</string>
+    <string name="editor_delete_project_question">Do you want to delete this project?</string>
     <string name="editor_zero_time_stamp">00:00:00.0</string>
     <string name="editor_remove_audio_track_question">Do you want to remove this audio track?</string>
     <string name="editor_edit_overlay">Edit</string>
     <string name="editor_remove_overlay_question">Do you want to remove this overlay?</string>
     <string name="editor_change_rendering_mode">Change rendering mode</string>
-    <string name="editor_remove_transition_question">Do you like to remove this transition?</string>
+    <string name="editor_remove_transition_question">Do you want to remove this transition?</string>
     <string name="editor_remove_effect_question">Do you want to remove this effect?</string>
     <string name="editor_remove_video_question">Do you want to remove this video clip?</string>
     <string name="editor_remove_image_question">Do you want to remove this image?</string>
@@ -29,8 +29,8 @@
     <string name="editor_change_effect">Change effect</string>
     <string name="editor_remove_effect">Remove effect</string>
     <string name="editor_add_overlay">Add title</string>
-    <string name="editor_add_begin_transition">Add begin transition</string>
-    <string name="editor_add_end_transition">Add end transition</string>
+    <string name="editor_add_begin_transition">Add beginning transition</string>
+    <string name="editor_add_end_transition">Add ending transition</string>
     <string name="editor_change_transition">Change transition</string>
     <string name="editor_transition_too_short">Cannot add a transition. The transition would be too short.</string>
 
@@ -54,35 +54,35 @@
     <string name="aspect_ratio_5_3">5 x 3</string>
 
     <!-- Error messages -->
-    <string name="editor_create_error">An error had occurred. The project cannot be created.</string>
-    <string name="editor_load_error">An error had occurred. The project cannot be loaded. Would you like to delete this project?</string>
-    <string name="editor_aspect_ratio_error">The aspect ratio cannot be changed</string>
-    <string name="editor_apply_theme_error">The theme cannot be applied</string>
-    <string name="editor_export_error">An error had occurred. The movie cannot be exported.</string>
-    <string name="editor_saved_error">The project cannot be saved</string>
-    <string name="editor_release_error">An error had occurred while releasing the project.</string>
-    <string name="editor_delete_error">An error had occurred while deleting the project.</string>
+    <string name="editor_create_error">An error occurred. The project cannot be created.</string>
+    <string name="editor_load_error">An error occurred. The project cannot be loaded. Do you want to delete this project?</string>
+    <string name="editor_aspect_ratio_error">The aspect ratio cannot be changed.</string>
+    <string name="editor_apply_theme_error">The theme cannot be applied.</string>
+    <string name="editor_export_error">An error occurred. The movie cannot be exported.</string>
+    <string name="editor_saved_error">The project cannot be saved.</string>
+    <string name="editor_release_error">An error occurred while releasing the project.</string>
+    <string name="editor_delete_error">An error occurred while deleting the project.</string>
     <string name="editor_add_video_clip_error">The video clip cannot be added to your project.</string>
     <string name="editor_add_image_error">The image cannot be added to your project.</string>
     <string name="editor_add_media_items_error">The items cannot be added to your project.</string>
     <string name="editor_move_media_item_error">The item cannot be moved.</string>
     <string name="editor_remove_media_item_error">The item cannot be removed.</string>
-    <string name="editor_set_rendering_mode_error">Rendering mode cannot be set</string>
-    <string name="editor_set_media_item_duration_error">Cannot set the image duration</string>
-    <string name="editor_set_media_item_boundaries_error">Cannot set the video clip boundaries</string>
+    <string name="editor_set_rendering_mode_error">Rendering mode cannot be set.</string>
+    <string name="editor_set_media_item_duration_error">Cannot set the image duration.</string>
+    <string name="editor_set_media_item_boundaries_error">Cannot set the video clip boundaries.</string>
     <string name="editor_add_transition_error">The transition cannot be added.</string>
     <string name="editor_remove_transition_error">The transition cannot be removed.</string>
-    <string name="editor_set_transition_duration_error">Cannot set the transition duration</string>
-    <string name="editor_add_overlay_error">The overlay cannot be added</string>
-    <string name="editor_remove_overlay_error">The overlay cannot be removed</string>
-    <string name="editor_set_duration_overlay_error">The overlay duration was not set</string>
-    <string name="editor_set_start_time_overlay_error">The overlay start time was not set</string>
-    <string name="editor_set_user_attributes_overlay_error">Cannot set overlay attributes</string>
-    <string name="editor_add_effect_error">The effect cannot be added</string>
-    <string name="editor_remove_effect_error">The effect cannot be removed</string>
+    <string name="editor_set_transition_duration_error">Cannot set the transition duration.</string>
+    <string name="editor_add_overlay_error">The overlay cannot be added.</string>
+    <string name="editor_remove_overlay_error">The overlay cannot be removed.</string>
+    <string name="editor_set_duration_overlay_error">The overlay duration was not set.</string>
+    <string name="editor_set_start_time_overlay_error">The overlay start time was not set.</string>
+    <string name="editor_set_user_attributes_overlay_error">Cannot set overlay attributes.</string>
+    <string name="editor_add_effect_error">The effect cannot be added.</string>
+    <string name="editor_remove_effect_error">The effect cannot be removed.</string>
     <string name="editor_add_audio_track_error">Audio track cannot be added</string>
-    <string name="editor_remove_audio_track_error">Audio track cannot be removed</string>
-    <string name="editor_set_audio_track_boundaries_error">Audio track cannot be trimmed</string>
+    <string name="editor_remove_audio_track_error">Audio track cannot be removed.</string>
+    <string name="editor_set_audio_track_boundaries_error">Audio track cannot be trimmed.</string>
  
      <!-- Export options dialog-->
     <string name="export_dialog_export">Export</string>
@@ -93,13 +93,13 @@
     <string name="export_dialog_movie_quality_high">High</string>
  
     <!-- Pan and zoom activity-->
-    <string name="pan_zoom_title">Pan &amp; Zoom Effect</string>
+    <string name="pan_zoom_title">Pan &amp; zoom effect</string>
     <string name="pan_zoom_start">Start</string>
     <string name="pan_zoom_end">End</string>
  
     <!-- Themes names and titles-->
     <string name="theme_name_travel">Travel</string>
-    <string name="theme_travel_title">My Trip to California</string>
+    <string name="theme_travel_title">My trip to California</string>
     <string name="theme_travel_subtitle">San Francisco</string>
     <string name="theme_name_surfing">Surfing</string>
     <string name="theme_surfing_title">My surfing adventure</string>
@@ -107,9 +107,9 @@
     <string name="theme_name_film">Film</string>
     <string name="theme_film_title">My short movie</string>
     <string name="theme_film_subtitle">Fun on the Bay</string>
-    <string name="theme_name_rock_and_roll">Rock and Roll</string>
-    <string name="theme_rock_and_roll_title">The Concert</string>
-    <string name="theme_rock_and_roll_subtitle">Two and a half Barrels</string>
+    <string name="theme_name_rock_and_roll">Rock and roll</string>
+    <string name="theme_rock_and_roll_title">The concert</string>
+    <string name="theme_rock_and_roll_subtitle">Two and a half barrels</string>
 
     <!-- Overlay names-->
     <string name="overlay_preview_center">Centered title</string>
@@ -117,7 +117,7 @@
 
     <!-- Overlay sample titles-->
     <string name="overlay_title">Title</string>
-    <string name="overlay_title_sample">My Trip</string>
+    <string name="overlay_title_sample">My trip</string>
     <string name="overlay_subtitle_sample">San Francisco</string>
 
     <!-- Overlay title activity EditText labels -->
