@@ -57,7 +57,7 @@ public class EffectType {
             case CATEGORY_IMAGE: {
                 effects = new EffectType[4];
                 effects[0] = new EffectType(
-                        context.getString(R.string.effect_ken_burns), EFFECT_KEN_BURNS);
+                        context.getString(R.string.effect_pan_zoom), EFFECT_KEN_BURNS);
                 effects[1] = new EffectType(
                         context.getString(R.string.effect_gradient), EFFECT_COLOR_GRADIENT);
                 effects[2] = new EffectType(
