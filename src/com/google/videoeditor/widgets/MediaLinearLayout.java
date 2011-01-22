@@ -95,7 +95,7 @@ public class MediaLinearLayout extends LinearLayout {
     private boolean mPlaybackInProgress;
     private HandleView mLeftHandle, mRightHandle;
     private boolean mMoveLayoutPending;
-    private View mTrimmingView;
+    private View mSelectedView;
     private String mDragMediaItemId;
     private float mPrevDragPosition;
     private long mPrevDragScrollTime;
@@ -308,6 +308,11 @@ public class MediaLinearLayout extends LinearLayout {
          */
         public void onDestroyActionMode(ActionMode mode) {
             final View mediaItemView = getMediaItemView(mMediaItem.getId());
+            if (mSelectedView != null) {
+                mLeftHandle.endMove();
+                mRightHandle.endMove();
+            }
+
             if (mediaItemView != null) {
                 selectView(mediaItemView, false);
             }
@@ -1409,7 +1414,7 @@ public class MediaLinearLayout extends LinearLayout {
                     view.layout(left, paddingTop, getWidth(), b - t);
                 }
             }
-        } else if (mTrimmingView != null) { // Trimming mode
+        } else if (mSelectedView != null) { // Trimming mode
             final int leftViewWidth = (Integer)((View)getParent()).getTag(R.id.left_view_width);
 
             for (int i = 0; i < childrenCount; i++) {
@@ -1435,14 +1440,14 @@ public class MediaLinearLayout extends LinearLayout {
                     startMs += durationMs;
                     left = right;
                 } else if (view == mLeftHandle) {
-                    view.layout(mTrimmingView.getLeft() - mHandleWidth,
-                            paddingTop + mTrimmingView.getPaddingTop(),
-                            mTrimmingView.getLeft(), b - t - mTrimmingView.getPaddingBottom());
+                    view.layout(mSelectedView.getLeft() - mHandleWidth,
+                            paddingTop + mSelectedView.getPaddingTop(),
+                            mSelectedView.getLeft(), b - t - mSelectedView.getPaddingBottom());
                 } else if (view == mRightHandle) {
-                    view.layout(mTrimmingView.getRight(),
-                            paddingTop + mTrimmingView.getPaddingTop(),
-                            mTrimmingView.getRight() + mHandleWidth,
-                            b - t - mTrimmingView.getPaddingBottom());
+                    view.layout(mSelectedView.getRight(),
+                            paddingTop + mSelectedView.getPaddingTop(),
+                            mSelectedView.getRight() + mHandleWidth,
+                            b - t - mSelectedView.getPaddingBottom());
                 } else if (i == 0) { // Begin view
                     view.layout(0, paddingTop, leftViewWidth, b - t);
                     left += leftViewWidth;
@@ -1451,8 +1456,6 @@ public class MediaLinearLayout extends LinearLayout {
                             paddingTop, getWidth(), b - t);
                 }
             }
-
-            mMoveLayoutPending = false;
         } else {
             for (int i = 0; i < childrenCount; i++) {
                 final View view = getChildAt(i);
@@ -1486,6 +1489,8 @@ public class MediaLinearLayout extends LinearLayout {
                 }
             }
         }
+
+        mMoveLayoutPending = false;
     }
 
     /**
@@ -2278,7 +2283,7 @@ public class MediaLinearLayout extends LinearLayout {
             mLeftHandle.setListener(null);
             mRightHandle.setVisibility(View.GONE);
             mRightHandle.setListener(null);
-            mTrimmingView = null;
+            mSelectedView = null;
         }
 
         // Unselect all the children
@@ -2311,7 +2316,7 @@ public class MediaLinearLayout extends LinearLayout {
 
         final Object tag = selectedView.getTag();
         if (selected == false) {
-            mTrimmingView = null;
+            mSelectedView = null;
             mLeftHandle.setVisibility(View.GONE);
             mLeftHandle.setListener(null);
             mRightHandle.setVisibility(View.GONE);
@@ -2320,7 +2325,7 @@ public class MediaLinearLayout extends LinearLayout {
         }
 
         if (tag instanceof MovieMediaItem) {
-            mTrimmingView = selectedView;
+            mSelectedView = selectedView;
 
             final View parentView = (View)getParent();
             final MediaItemView mediaItemView = (MediaItemView)selectedView;
@@ -2345,6 +2350,7 @@ public class MediaLinearLayout extends LinearLayout {
                         mi.getAppTimelineDuration() <=
                             MediaItemUtils.getMinimumVideoItemDuration());
                 mLeftHandle.setListener(new HandleView.MoveListener() {
+                    private View mTrimmedView;
                     private MovieMediaItem mMediaItem;
                     private long mTransitionsDurationMs;
                     private long mOriginalBeginMs, mOriginalEndMs;
@@ -2366,6 +2372,7 @@ public class MediaLinearLayout extends LinearLayout {
                         mOriginalWidth = mediaItemView.getWidth();
                         mMinimumDurationMs = MediaItemUtils.getMinimumVideoItemDuration();
                         setTrimState(mediaItemView, true);
+                        mTrimmedView = mediaItemView;
 
                         mListener.onTrimMediaItemBegin(mMediaItem);
                     }
@@ -2379,7 +2386,7 @@ public class MediaLinearLayout extends LinearLayout {
                         }
 
                         // Compute what will become the width of the view
-                        final int newWidth = mTrimmingView.getRight() - position;
+                        final int newWidth = mTrimmedView.getRight() - position;
                         if (newWidth == mediaItemView.getWidth()) {
                             return false;
                         }
@@ -2496,6 +2503,7 @@ public class MediaLinearLayout extends LinearLayout {
                     videoClip ? (mi.getAppBoundaryEndTime() >= mi.getDuration()) :
                         durationMs >= MAXIMUM_IMAGE_DURATION);
             mRightHandle.setListener(new HandleView.MoveListener() {
+                private View mTrimmedView;
                 private MovieMediaItem mMediaItem;
                 private long mTransitionsDurationMs;
                 private long mOriginalBeginMs, mOriginalEndMs;
@@ -2515,6 +2523,7 @@ public class MediaLinearLayout extends LinearLayout {
                     mOriginalEndMs = mMediaItem.getAppBoundaryEndTime();
                     mMinimumItemDurationMs = MediaItemUtils.getMinimumMediaItemDuration(mMediaItem);
                     setTrimState(mediaItemView, true);
+                    mTrimmedView = mediaItemView;
 
                     mListener.onTrimMediaItemBegin(mMediaItem);
                 }
@@ -2530,7 +2539,7 @@ public class MediaLinearLayout extends LinearLayout {
                     long newDurationMs;
                     if (videoClip) { // Video clip
                         // Compute what will become the width of the view
-                        final int newWidth = position - mTrimmingView.getLeft();
+                        final int newWidth = position - mTrimmedView.getLeft();
                         if (newWidth == mediaItemView.getWidth()) {
                             return false;
                         }
@@ -2641,9 +2650,9 @@ public class MediaLinearLayout extends LinearLayout {
                             mMediaItem.getAppBoundaryEndTime());
                     setTrimState(mediaItemView, false);
                     if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
-                    TIME_TOLERANCE ||
+                            TIME_TOLERANCE ||
                             Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >
-                    TIME_TOLERANCE) {
+                            TIME_TOLERANCE) {
                         if (videoClip) { // Video clip
                             ApiService.setMediaItemBoundaries(getContext(), mProject.getPath(),
                                     mMediaItem.getId(), mMediaItem.getAppBoundaryBeginTime(),
