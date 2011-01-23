@@ -2380,14 +2380,16 @@ public class MediaLinearLayout extends LinearLayout {
                     /*
                      * {@inheritDoc}
                      */
-                    public boolean onMove(HandleView view, int position) {
+                    public boolean onMove(HandleView view, int left, int delta) {
                         if (mMoveLayoutPending) {
                             return false;
                         }
 
+                        int position = left + delta;
+                        mMovePosition = position;
                         // Compute what will become the width of the view
-                        final int newWidth = mTrimmedView.getRight() - position;
-                        if (newWidth == mediaItemView.getWidth()) {
+                        int newWidth = mTrimmedView.getRight() - position;
+                        if (newWidth == mTrimmedView.getWidth()) {
                             return false;
                         }
 
@@ -2402,10 +2404,19 @@ public class MediaLinearLayout extends LinearLayout {
                                 mMinimumDurationMs)) {
                             newDurationMs = Math.max(2 * mTransitionsDurationMs,
                                     mMinimumDurationMs);
+                            newWidth = (int)(((newDurationMs - mTransitionsDurationMs) *
+                                    (getWidth() - (2 * mHalfParentWidth)) /
+                                    mProject.computeDuration()));
+                            position = mTrimmedView.getRight() - newWidth;
                         } else if (mMediaItem.getAppBoundaryEndTime() - newDurationMs < 0) {
                             newDurationMs = mMediaItem.getAppBoundaryEndTime();
+                            newWidth = (int)(((newDurationMs - mTransitionsDurationMs) *
+                                    (getWidth() - (2 * mHalfParentWidth)) /
+                                    mProject.computeDuration()));
+                            position = mTrimmedView.getRight() - newWidth;
                         }
 
+                        // Check if the duration would change
                         if (newDurationMs == mMediaItem.getAppTimelineDuration()) {
                             return false;
                         }
@@ -2416,7 +2427,6 @@ public class MediaLinearLayout extends LinearLayout {
 
                         mLeftHandle.setLimitReached(mMediaItem.getAppBoundaryBeginTime() <= 0,
                                 mMediaItem.getAppTimelineDuration() <= mMinimumDurationMs);
-                        mMovePosition = position;
                         mMoveLayoutPending = true;
                         parentView.setTag(R.id.left_view_width,
                                 mHalfParentWidth - (newWidth - mOriginalWidth));
@@ -2431,7 +2441,8 @@ public class MediaLinearLayout extends LinearLayout {
                     /*
                      * {@inheritDoc}
                      */
-                    public void onMoveEnd(final HandleView view, final int position) {
+                    public void onMoveEnd(final HandleView view, final int left, final int delta) {
+                        final int position = left + delta;
                         if (mMoveLayoutPending || (position != mMovePosition)) {
                             mHandler.post(new Runnable() {
                                 /*
@@ -2441,7 +2452,7 @@ public class MediaLinearLayout extends LinearLayout {
                                     if (mMoveLayoutPending) {
                                         mHandler.post(this);
                                     } else if (position != mMovePosition) {
-                                        if (onMove(view, position)) {
+                                        if (onMove(view, left, delta)) {
                                             mHandler.post(this);
                                         } else {
                                             scaleDone();
@@ -2466,11 +2477,11 @@ public class MediaLinearLayout extends LinearLayout {
                         mListener.onTrimMediaItemEnd(mMediaItem,
                                 mMediaItem.getAppBoundaryBeginTime());
 
-                        setTrimState(mediaItemView, false);
+                        setTrimState(mTrimmedView, false);
                         if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                                     TIME_TOLERANCE
                                 || Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >
-                                TIME_TOLERANCE) {
+                                    TIME_TOLERANCE) {
 
                             if (videoClip) { // Video clip
                                 ApiService.setMediaItemBoundaries(getContext(), mProject.getPath(),
@@ -2531,34 +2542,47 @@ public class MediaLinearLayout extends LinearLayout {
                 /*
                  * {@inheritDoc}
                  */
-                public boolean onMove(HandleView view, int position) {
+                public boolean onMove(HandleView view, int left, int delta) {
                     if (mMoveLayoutPending) {
                         return false;
                     }
 
-                    long newDurationMs;
-                    if (videoClip) { // Video clip
-                        // Compute what will become the width of the view
-                        final int newWidth = position - mTrimmedView.getLeft();
-                        if (newWidth == mediaItemView.getWidth()) {
-                            return false;
-                        }
-                        // Compute the new duration
-                        newDurationMs = mTransitionsDurationMs +
-                                (newWidth * mProject.computeDuration()) /
-                                (getWidth() - (2 * mHalfParentWidth));
+                    int position = left + delta;
+                    mMovePosition = position;
 
-                        if (Math.abs(mMediaItem.getAppTimelineDuration() - newDurationMs) <
-                                TIME_TOLERANCE) {
-                            return false;
-                        } else if (newDurationMs < Math.max(2 * mTransitionsDurationMs,
+                    long newDurationMs;
+                    // Compute what will become the width of the view
+                    int newWidth = position - mTrimmedView.getLeft();
+                    if (newWidth == mTrimmedView.getWidth()) {
+                        return false;
+                    }
+
+                    // Compute the new duration
+                    newDurationMs = mTransitionsDurationMs +
+                            (newWidth * mProject.computeDuration()) /
+                            (getWidth() - (2 * mHalfParentWidth));
+                    if (Math.abs(mMediaItem.getAppTimelineDuration() - newDurationMs) <
+                            TIME_TOLERANCE) {
+                        return false;
+                    }
+
+                    if (videoClip) { // Video clip
+                        if (newDurationMs < Math.max(2 * mTransitionsDurationMs,
                                 mMinimumItemDurationMs)) {
                             newDurationMs = Math.max(2 * mTransitionsDurationMs,
                                     mMinimumItemDurationMs);
+                            newWidth = (int)(((newDurationMs - mTransitionsDurationMs) *
+                                    (getWidth() - (2 * mHalfParentWidth)) /
+                                    mProject.computeDuration()));
+                            position = newWidth + mTrimmedView.getLeft();
                         } else if (mMediaItem.getAppBoundaryBeginTime() + newDurationMs >
                                 mMediaItem.getDuration()) {
                             newDurationMs = mMediaItem.getDuration() -
                                 mMediaItem.getAppBoundaryBeginTime();
+                            newWidth = (int)(((newDurationMs - mTransitionsDurationMs) *
+                                    (getWidth() - (2 * mHalfParentWidth)) /
+                                    mProject.computeDuration()));
+                            position = newWidth + mTrimmedView.getLeft();
                         }
 
                         if (newDurationMs == mMediaItem.getAppTimelineDuration()) {
@@ -2569,28 +2593,23 @@ public class MediaLinearLayout extends LinearLayout {
                                 mMediaItem.getAppBoundaryBeginTime() + newDurationMs);
                         mListener.onTrimMediaItem(mMediaItem, mMediaItem.getAppBoundaryEndTime());
                     } else { // Image
-                        // Compute what will become the width of the view
-                        final int newWidth = position - mediaItemView.getLeft();
-                        if (newWidth == mediaItemView.getWidth()) {
-                            return false;
-                        }
-
-                        // Compute the new duration
-                        newDurationMs = mTransitionsDurationMs +
-                                (newWidth * mProject.computeDuration()) /
-                                (getWidth() - (2 * mHalfParentWidth));
-
-                        if (Math.abs(mMediaItem.getAppTimelineDuration() - newDurationMs) <
-                            TIME_TOLERANCE) {
-                            return false;
-                        } else if (newDurationMs < Math.max(mMinimumItemDurationMs,
+                        if (newDurationMs < Math.max(mMinimumItemDurationMs,
                                 2 * mTransitionsDurationMs)) {
                             newDurationMs = Math.max(mMinimumItemDurationMs,
                                     2 * mTransitionsDurationMs);
+                            newWidth = (int)(((newDurationMs - mTransitionsDurationMs) *
+                                    (getWidth() - (2 * mHalfParentWidth)) /
+                                    mProject.computeDuration()));
+                            position = newWidth + mTrimmedView.getLeft();
                         } else if (newDurationMs > MAXIMUM_IMAGE_DURATION) {
                             newDurationMs = MAXIMUM_IMAGE_DURATION;
+                            newWidth = (int)(((newDurationMs - mTransitionsDurationMs) *
+                                    (getWidth() - (2 * mHalfParentWidth)) /
+                                    mProject.computeDuration()));
+                            position = newWidth + mTrimmedView.getLeft();
                         }
 
+                        // Check if the duration would change
                         if (newDurationMs == mMediaItem.getAppTimelineDuration()) {
                             return false;
                         }
@@ -2606,7 +2625,6 @@ public class MediaLinearLayout extends LinearLayout {
                                 mMediaItem.getDuration()) : newDurationMs >=
                                     MAXIMUM_IMAGE_DURATION);
 
-                    mMovePosition = position;
                     mMoveLayoutPending = true;
                     requestLayout();
 
@@ -2616,7 +2634,8 @@ public class MediaLinearLayout extends LinearLayout {
                 /*
                  * {@inheritDoc}
                  */
-                public void onMoveEnd(final HandleView view, final int position) {
+                public void onMoveEnd(final HandleView view, final int left, final int delta) {
+                    final int position = left + delta;
                     if (mMoveLayoutPending || (position != mMovePosition)) {
                         mHandler.post(new Runnable() {
                             /*
@@ -2626,7 +2645,7 @@ public class MediaLinearLayout extends LinearLayout {
                                 if (mMoveLayoutPending) {
                                     mHandler.post(this);
                                 } else if (position != mMovePosition) {
-                                    if (onMove(view, position)) {
+                                    if (onMove(view, left, delta)) {
                                         mHandler.post(this);
                                     } else {
                                         scaleDone();
@@ -2648,7 +2667,7 @@ public class MediaLinearLayout extends LinearLayout {
                     parentView.setTag(R.id.playhead_offset, -1);
                     mListener.onTrimMediaItemEnd(mMediaItem,
                             mMediaItem.getAppBoundaryEndTime());
-                    setTrimState(mediaItemView, false);
+                    setTrimState(mTrimmedView, false);
                     if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                             TIME_TOLERANCE ||
                             Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >

@@ -151,7 +151,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private String mInsertMediaItemAfterMediaItemId;
     private long mCurrentPlayheadPosMs;
     private ProgressDialog mExportProgressDialog;
-    private ZoomControl mZoomBar;
+    private ZoomControl mZoomControl;
 
     // Variables used in onActivityResult
     private Uri mAddMediaItemVideoUri;
@@ -272,8 +272,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         }
                     } else {
                         mPreviewThread.previewFrame(mProject,
-                                mProject.getMediaItemBeginTime(mediaItem.getId())
-                                + timeMs, mProject.getMediaItemCount() == 0);
+                                mProject.getMediaItemBeginTime(mediaItem.getId()) + timeMs,
+                                mProject.getMediaItemCount() == 0);
                     }
                 }
             }
@@ -304,9 +304,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mTimelineScroller.addScrollListener(new ScrollViewListener() {
             // Instance variables
             private int mActiveWidth;
-
             private long mDurationMs;
-
             private int mLastScrollX;
 
             /*
@@ -364,7 +362,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             private static final int SCALE_TOLERANCE = 3;
 
             private int mLastScaleFactorSign;
-
             private float mLastScaleFactor;
 
             /*
@@ -459,9 +456,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     }
                 }));
 
-        mZoomBar = ((ZoomControl)findViewById(R.id.editor_zoom));
-        mZoomBar.setMax(MAX_ZOOM_LEVEL);
-        mZoomBar.setOnZoomChangeListener(new ZoomControl.OnZoomChangeListener() {
+        mZoomControl = ((ZoomControl)findViewById(R.id.editor_zoom));
+        mZoomControl.setMax(MAX_ZOOM_LEVEL);
+        mZoomControl.setOnZoomChangeListener(new ZoomControl.OnZoomChangeListener() {
             /*
              * {@inheritDoc}
              */
@@ -1260,8 +1257,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         mTimelineLayout.requestLayout(mLayoutCallback);
 
-        // Since the duration has gone down make sure that the playhead
-        // position is correct.
+        // Since the duration has changed make sure that the playhead
+        // position is valid.
         if (mProject.getPlayheadPos() > durationMs) {
             movePlayhead(durationMs);
         }
@@ -1290,9 +1287,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
      * Zoom the timeline
      *
      * @param level The zoom level
-     * @param setBar true to set the SeekBar position to match the zoom level
+     * @param updateControl true to set the control position to match the
+     *      zoom level
      */
-    private int zoomTimeline(int level, boolean setBar) {
+    private int zoomTimeline(int level, boolean updateControl) {
         if (level < 1 || level > MAX_ZOOM_LEVEL) {
             return mProject.getZoomLevel();
         }
@@ -1304,8 +1302,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         updateTimelineDuration();
 
-        if (setBar) {
-            mZoomBar.setProgress(level);
+        if (updateControl) {
+            mZoomControl.setProgress(level);
         }
         return level;
     }
@@ -1458,8 +1456,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mPreviewRewindButton.setEnabled(!projectEdited);
         mPreviewNextButton.setEnabled(!projectEdited);
         mPreviewPrevButton.setEnabled(!projectEdited);
-
-        mZoomBar.setEnabled(!projectEdited);
     }
 
     /*
