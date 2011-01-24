@@ -34,7 +34,7 @@ public class HandleView extends ImageView {
     private final Drawable mArrowLeft;
     private final Drawable mArrowRight;
     private MoveListener mListener;
-    private float mStartMoveX;
+    private float mStartMoveX, mLastMoveX;
     private boolean mMoveStarted;
     private boolean mBeginLimitReached, mEndLimitReached;
 
@@ -117,6 +117,15 @@ public class HandleView extends ImageView {
         invalidate();
     }
 
+    /**
+     * End the move
+     */
+    public void endMove() {
+        if (mMoveStarted) {
+            endActionMove(mLastMoveX);
+        }
+    }
+
     /*
      * {@inheritDoc}
      */
@@ -154,27 +163,15 @@ public class HandleView extends ImageView {
                     if (mListener != null) {
                         mListener.onMove(this, offsetX);
                     }
+
+                    mLastMoveX = ev.getX();
                 }
                 break;
             }
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
-                if (mMoveStarted) {
-                    final int leftMargin = getLeft() + Math.round((ev.getX() - mStartMoveX));
-                    final int offsetX;
-                    if (getId() == R.id.handle_left) {
-                        offsetX = leftMargin + getWidth();
-                    } else {
-                        offsetX = leftMargin;
-                    }
-
-                    if (mListener != null) {
-                        mListener.onMoveEnd(this, offsetX);
-                    }
-
-                    mMoveStarted = false;
-                }
+                endActionMove(ev.getX());
                 break;
             }
 
@@ -184,6 +181,28 @@ public class HandleView extends ImageView {
         }
 
         return true;
+    }
+
+    /**
+     * End the move (if it was in progress)
+     *
+     * @param eventX The event horizontal position
+     */
+    private void endActionMove(float eventX) {
+        if (mMoveStarted) {
+            mMoveStarted = false;
+            final int leftMargin = getLeft() + Math.round((eventX - mStartMoveX));
+            final int offsetX;
+            if (getId() == R.id.handle_left) {
+                offsetX = leftMargin + getWidth();
+            } else {
+                offsetX = leftMargin;
+            }
+
+            if (mListener != null) {
+                mListener.onMoveEnd(this, offsetX);
+            }
+        }
     }
 
     /*
