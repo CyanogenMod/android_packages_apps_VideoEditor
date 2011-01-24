@@ -1616,6 +1616,19 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mExportProgressDialog.setCancelable(true);
         mExportProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mExportProgressDialog.setMax(100);
+        mExportProgressDialog.setCanceledOnTouchOutside(false);
+        mExportProgressDialog.setButton(getString(android.R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                /*
+                 * {@inheritDoc}
+                 */
+                public void onClick(DialogInterface dialog, int which) {
+                    ApiService.cancelExportVideoEditor(VideoEditorActivity.this,
+                            mProjectPath, mPendingExportFilename);
+                    mPendingExportFilename = null;
+                    mExportProgressDialog = null;
+                }
+            });
         mExportProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             /*
              * {@inheritDoc}
