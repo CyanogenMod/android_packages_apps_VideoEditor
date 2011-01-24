@@ -643,8 +643,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             case MENU_SHARE_VIDEO: {
-                final Intent intent = new Intent(Intent.ACTION_SEND,
-                        mProject.getExportedMovieUri());
+                final Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_STREAM, mProject.getExportedMovieUri());
                 intent.setType("video/*");
                 startActivity(intent);
                 return true;
