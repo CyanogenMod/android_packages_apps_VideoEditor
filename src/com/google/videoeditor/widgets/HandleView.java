@@ -37,6 +37,7 @@ public class HandleView extends ImageView {
     private float mStartMoveX, mLastMoveX;
     private boolean mMoveStarted;
     private boolean mBeginLimitReached, mEndLimitReached;
+    private int mLastDeltaX;
 
     /**
      * Move listener
@@ -53,17 +54,19 @@ public class HandleView extends ImageView {
          * Move is in progress
          *
          * @param view The view
-         * @param position The current position
+         * @param left The left edge left position
+         * @param delta The offset relative to the left of the view
          */
-        public boolean onMove(HandleView view, int position);
+        public boolean onMove(HandleView view, int left, int delta);
 
         /**
          * The move ended
          *
          * @param view The view
-         * @param position The current position
+         * @param left The left edge left position
+         * @param delta The offset relative to the left of the view
          */
-        public void onMoveEnd(HandleView view, int position);
+        public void onMoveEnd(HandleView view, int left, int delta);
     }
 
     /*
@@ -147,24 +150,27 @@ public class HandleView extends ImageView {
                 } else {
                     mMoveStarted = false;
                 }
+
+                mLastDeltaX = -10000;
                 break;
             }
 
             case MotionEvent.ACTION_MOVE: {
                 if (mMoveStarted && isEnabled()) {
-                    final int leftMargin = getLeft() + Math.round((ev.getX() - mStartMoveX));
-                    final int offsetX;
-                    if (getId() == R.id.handle_left) {
-                        offsetX = leftMargin + getWidth();
-                    } else {
-                        offsetX = leftMargin;
-                    }
+                    final int deltaX = Math.round((ev.getX() - mStartMoveX));
+                    if (deltaX != mLastDeltaX) {
+                        mLastDeltaX = deltaX;
 
-                    if (mListener != null) {
-                        mListener.onMove(this, offsetX);
-                    }
+                        if (mListener != null) {
+                            if (getId() == R.id.handle_left) {
+                                mListener.onMove(this, getLeft(), deltaX + getWidth());
+                            } else {
+                                mListener.onMove(this, getLeft(), deltaX);
+                            }
+                        }
 
-                    mLastMoveX = ev.getX();
+                        mLastMoveX = ev.getX();
+                    }
                 }
                 break;
             }
@@ -191,16 +197,12 @@ public class HandleView extends ImageView {
     private void endActionMove(float eventX) {
         if (mMoveStarted) {
             mMoveStarted = false;
-            final int leftMargin = getLeft() + Math.round((eventX - mStartMoveX));
-            final int offsetX;
-            if (getId() == R.id.handle_left) {
-                offsetX = leftMargin + getWidth();
-            } else {
-                offsetX = leftMargin;
-            }
 
-            if (mListener != null) {
-                mListener.onMoveEnd(this, offsetX);
+            final int deltaX = Math.round((eventX - mStartMoveX));
+            if (getId() == R.id.handle_left) {
+                mListener.onMoveEnd(this, getLeft(), deltaX + getWidth());
+            } else {
+                mListener.onMoveEnd(this, getLeft(), deltaX);
             }
         }
     }

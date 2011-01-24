@@ -974,11 +974,12 @@ public class OverlayLinearLayout extends LinearLayout {
             /*
              * {@inheritDoc}
              */
-            public boolean onMove(HandleView view, int position) {
+            public boolean onMove(HandleView view, int left, int delta) {
                 if (mMoveLayoutPending) {
                     return false;
                 }
 
+                final int position = left + delta;
                 // Compute what will become the width of the view
                 final int newWidth = position - overlayView.getLeft();
 
@@ -1009,7 +1010,8 @@ public class OverlayLinearLayout extends LinearLayout {
             /*
              * {@inheritDoc}
              */
-            public void onMoveEnd(final HandleView view, final int position) {
+            public void onMoveEnd(final HandleView view, final int left, final int delta) {
+                final int position = left + delta;
                 if (mMoveLayoutPending || (position != mMovePosition)) {
                     mHandler.post(new Runnable() {
                         /*
@@ -1019,7 +1021,7 @@ public class OverlayLinearLayout extends LinearLayout {
                             if (mMoveLayoutPending) {
                                 mHandler.post(this);
                             } else if (position != mMovePosition) {
-                                if (onMove(view, position)) {
+                                if (onMove(view, left, delta)) {
                                     mHandler.post(this);
                                 } else {
                                     scaleDone();
