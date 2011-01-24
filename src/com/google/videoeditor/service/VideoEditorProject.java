@@ -994,6 +994,17 @@ public class VideoEditorProject {
     }
 
     /**
+     * Clear the surface
+     *
+     * @param surfaceHolder SurfaceHolder where the preview is rendered.
+     */
+    public void clearSurface(SurfaceHolder surfaceHolder) {
+        if (mVideoEditor != null) {
+            mVideoEditor.clearSurface(surfaceHolder);
+        }
+    }
+
+    /**
      * Release the project
      */
     public void release() {
