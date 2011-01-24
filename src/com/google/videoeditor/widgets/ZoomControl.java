@@ -139,12 +139,11 @@ public class ZoomControl extends View {
         final int halfHeight = mThumb.getIntrinsicHeight() / 2;
         mThumb.setBounds(mThumbX - halfWidth, mThumbY - halfHeight, mThumbX + halfWidth,
                 mThumbY + halfHeight);
+        mThumb.setAlpha(isEnabled() ? 255 : 100);
         mThumb.draw(canvas);
 
-        /*
         canvas.drawCircle(getWidth() / 2, getHeight() / 2,
                 (mProgress * INTERNAL_RADIUS) / mMaxProgress, mCirclePaint);
-        */
     }
 
     /*
@@ -155,44 +154,48 @@ public class ZoomControl extends View {
         super.onTouchEvent(ev);
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                getParent().requestDisallowInterceptTouchEvent(true);
+                if (isEnabled()) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                }
                 break;
             }
 
             case MotionEvent.ACTION_MOVE: {
-                final float x = ev.getX() - (getWidth() / 2);
-                final float y = -(ev.getY() - (getHeight() / 2));
-                final double alpha = Math.atan((double)y / (double)x);
+                if (isEnabled()) {
+                    final float x = ev.getX() - (getWidth() / 2);
+                    final float y = -(ev.getY() - (getHeight() / 2));
+                    final double alpha = Math.atan((double)y / (double)x);
 
-                if (!checkHit(x, y, alpha)) {
-                    return true;
-                }
+                    if (!checkHit(x, y, alpha)) {
+                        return true;
+                    }
 
-                final int progress;
-                if (x >= 0 && y >= 0) {
-                    mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
-                    mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
-                    progress = (int)((mMaxProgress / 2) - (alpha / mInterval));
-                } else if (x >= 0 && y <= 0) {
-                    mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
-                    mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
-                    progress = (int)((mMaxProgress / 2) - (alpha / mInterval));
-                } else if (x <= 0 && y >= 0) {
-                    mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
-                    mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
-                    progress = -(int)(((alpha + MAX_ANGLE) / mInterval));
-                } else {
-                    mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
-                    mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
-                    progress = (int)(mMaxProgress - ((alpha - MAX_ANGLE) / mInterval));
-                }
+                    final int progress;
+                    if (x >= 0 && y >= 0) {
+                        mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
+                        mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
+                        progress = (int)((mMaxProgress / 2) - (alpha / mInterval));
+                    } else if (x >= 0 && y <= 0) {
+                        mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
+                        mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
+                        progress = (int)((mMaxProgress / 2) - (alpha / mInterval));
+                    } else if (x <= 0 && y >= 0) {
+                        mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
+                        mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
+                        progress = -(int)(((alpha + MAX_ANGLE) / mInterval));
+                    } else {
+                        mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
+                        mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
+                        progress = (int)(mMaxProgress - ((alpha - MAX_ANGLE) / mInterval));
+                    }
 
-                invalidate();
+                    invalidate();
 
-                if (mListener != null) {
-                    if (progress != mProgress) {
-                        mProgress = progress;
-                        mListener.onProgressChanged(mProgress, true);
+                    if (mListener != null) {
+                        if (progress != mProgress) {
+                            mProgress = progress;
+                            mListener.onProgressChanged(mProgress, true);
+                        }
                     }
                 }
                 break;

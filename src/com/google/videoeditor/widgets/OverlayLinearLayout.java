@@ -416,6 +416,8 @@ public class OverlayLinearLayout extends LinearLayout {
             overlayView.getPaddingTop() - overlayView.getPaddingBottom();
 
         mHandler = new Handler();
+
+        setMotionEventSplittingEnabled(false);
    }
 
     /*
