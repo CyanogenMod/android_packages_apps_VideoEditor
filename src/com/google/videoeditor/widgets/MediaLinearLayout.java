@@ -1415,7 +1415,8 @@ public class MediaLinearLayout extends LinearLayout {
                 }
             }
         } else if (mSelectedView != null) { // Trimming mode
-            final int leftViewWidth = (Integer)((View)getParent()).getTag(R.id.left_view_width);
+            final int leftViewWidth = (Integer)((View)getParent().getParent()).getTag(
+                    R.id.left_view_width);
 
             for (int i = 0; i < childrenCount; i++) {
                 final View view = getChildAt(i);
@@ -2327,7 +2328,7 @@ public class MediaLinearLayout extends LinearLayout {
         if (tag instanceof MovieMediaItem) {
             mSelectedView = selectedView;
 
-            final View parentView = (View)getParent();
+            final View parentView = (View)getParent().getParent();
             final MediaItemView mediaItemView = (MediaItemView)selectedView;
             if (mediaItemView.isInProgress()) {
                 mLeftHandle.setEnabled(false);

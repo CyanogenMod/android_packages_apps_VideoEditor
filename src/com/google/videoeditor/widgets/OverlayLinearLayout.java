@@ -690,7 +690,8 @@ public class OverlayLinearLayout extends LinearLayout {
         final long totalDurationMs = mProject.computeDuration();
         final int viewWidth = getWidth() - (2 * mHalfParentWidth);
 
-        final int leftViewWidth = (Integer)((View)getParent()).getTag(R.id.left_view_width);
+        final int leftViewWidth = (Integer)((View)getParent().getParent()).getTag(
+                R.id.left_view_width);
         long mediaItemStartTimeMs = 0;
         int left = 0;
         final int childrenCount = getChildCount();
