@@ -916,42 +916,71 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             case R.id.editor_rewind: {
                 if (mProject != null && mPreviewThread != null) {
-                    mPreviewThread.stopPreviewPlayback();
-
-                    movePlayhead(0);
-                    showPreviewFrame();
+                    if (mPreviewThread.isPlaying()) {
+                        mPreviewThread.stopPreviewPlayback();
+                        movePlayhead(0);
+                        mPreviewThread.startPreviewPlayback(mProject, 0);
+                    } else {
+                        movePlayhead(0);
+                        showPreviewFrame();
+                    }
                 }
                 break;
             }
 
             case R.id.editor_next: {
                 if (mProject != null && mPreviewThread != null) {
-                    mPreviewThread.stopPreviewPlayback();
-
-                    final MovieMediaItem mediaItem = mProject.getNextMediaItem(playheadPosMs);
-                    if (mediaItem != null) {
-                        movePlayhead(mProject.getMediaItemBeginTime(mediaItem.getId()));
-                    } else { // Move to the end of the timeline
-                        movePlayhead(mProject.computeDuration());
+                    final long restartPosMs;
+                    final boolean restartPreview;
+                    if (mPreviewThread.isPlaying()) {
+                        restartPosMs = mPreviewThread.stopPreviewPlayback();
+                        restartPreview = true;
+                    } else {
+                        restartPosMs = playheadPosMs;
+                        restartPreview = false;
                     }
 
-                    showPreviewFrame();
+                    final MovieMediaItem mediaItem = mProject.getNextMediaItem(restartPosMs);
+                    if (mediaItem != null) {
+                        movePlayhead(mProject.getMediaItemBeginTime(mediaItem.getId()));
+                        if (restartPreview) {
+                            mPreviewThread.startPreviewPlayback(mProject,
+                                    mProject.getPlayheadPos());
+                        } else {
+                            showPreviewFrame();
+                        }
+                    } else { // Move to the end of the timeline
+                        movePlayhead(mProject.computeDuration());
+                        showPreviewFrame();
+                    }
                 }
                 break;
             }
 
             case R.id.editor_prev: {
                 if (mProject != null && mPreviewThread != null) {
-                    mPreviewThread.stopPreviewPlayback();
+                    final long restartPosMs;
+                    final boolean restartPreview;
+                    if (mPreviewThread.isPlaying()) {
+                        restartPosMs = mPreviewThread.stopPreviewPlayback();
+                        restartPreview = true;
+                    } else {
+                        restartPosMs = playheadPosMs;
+                        restartPreview = false;
+                    }
 
-                    final MovieMediaItem mediaItem = mProject.getPreviousMediaItem(playheadPosMs);
+                    final MovieMediaItem mediaItem = mProject.getPreviousMediaItem(restartPosMs);
                     if (mediaItem != null) {
                         movePlayhead(mProject.getMediaItemBeginTime(mediaItem.getId()));
                     } else { // Move to the beginning of the timeline
                         movePlayhead(0);
                     }
 
-                    showPreviewFrame();
+                    if (restartPreview) {
+                        mPreviewThread.startPreviewPlayback(mProject, mProject.getPlayheadPos());
+                    } else {
+                        showPreviewFrame();
+                    }
                 }
                 break;
             }
@@ -1810,7 +1839,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                     public void run() {
                                         if (mPlayingProject != null) {
                                             if (end) {
-                                                previewStopped();
+                                                previewStopped(false, 0);
                                             } else {
                                                 movePlayhead(timeMs);
                                             }
@@ -1828,6 +1857,17 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         } else {
                             Log.d(TAG, "Cannot start preview at: " + fromMs);
                         }
+
+                        mHandler.post(new Runnable() {
+                            /*
+                             * {@inheritDoc}
+                             */
+                            public void run() {
+                                if (mPlayingProject != null) {
+                                    previewStopped(true, fromMs);
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -1840,12 +1880,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         /**
          * Stop previewing
          */
-        private void stopPreviewPlayback() {
+        private long stopPreviewPlayback() {
             if (mPlayingProject == null) {
-                return;
+                return -1;
             }
 
-            previewStopped();
+            return previewStopped(false, 0);
         }
 
         /**
@@ -1867,19 +1907,28 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         /**
-         * Preview stopped.
-         * This method is always invoked from the UI thread.
+         * Preview stopped. This method is always invoked from the UI thread.
+         *
+         * @param error true if the preview stopped due to an error
+         * @param The last play position (only matters if
+         *
+         * @return The stop position
          */
-        private void previewStopped() {
+        private long previewStopped(boolean error, long playPositionMs) {
             // Change the button image back to a play icon
             mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_play);
 
-            // Set the playhead position at the position where the playback stopped
-            final long stopTimeMs = mPlayingProject.stopPreview();
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Stopped at: " + stopTimeMs);
+            final long stopTimeMs;
+            if (error == false) {
+                // Set the playhead position at the position where the playback stopped
+                stopTimeMs = mPlayingProject.stopPreview();
+                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                    Log.d(TAG, "Stopped at: " + stopTimeMs);
+                }
+                movePlayhead(stopTimeMs);
+            } else {
+                stopTimeMs = playPositionMs;
             }
-            movePlayhead(stopTimeMs);
 
             mPlayingProject = null;
 
@@ -1888,6 +1937,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mMediaLayout.setPlaybackInProgress(false);
             mAudioTrackLayout.setPlaybackInProgress(false);
             mOverlayLayout.setPlaybackInProgress(false);
+
+            return stopTimeMs;
         }
 
         /**
