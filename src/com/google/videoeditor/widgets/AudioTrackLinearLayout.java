@@ -552,7 +552,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
                 emptyViewShift = 0;
             }
 
-            final int leftViewWidth = (Integer)((View)getParent()).getTag(R.id.left_view_width);
+            final int leftViewWidth = (Integer)((View)getParent().getParent()).getTag(
+                    R.id.left_view_width);
             for (int i = 0; i < childrenCount; i++) {
                 final View childView = getChildAt(i);
                 final MovieAudioTrack audioTrack = (MovieAudioTrack)childView.getTag();

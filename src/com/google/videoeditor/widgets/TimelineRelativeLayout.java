@@ -16,28 +16,17 @@
 
 package com.google.videoeditor.widgets;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
-
-import com.google.videoeditor.R;
 
 /**
  * The RelativeLayout which is the container for the timeline layout
  */
 public class TimelineRelativeLayout extends RelativeLayout {
     // Instance variables
-    private final int mHalfParentWidth;
-    private final int mPlayheadMarginTop, mPlayheadMarginBottom;
-    private final Drawable mPlayheadDrawable;
     private LayoutCallback mLayoutCallback;
 
     /**
@@ -56,24 +45,6 @@ public class TimelineRelativeLayout extends RelativeLayout {
      */
     public TimelineRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        // Compute half the width of the screen (and therefore the parent view)
-        final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
-        mHalfParentWidth = display.getWidth() / 2;
-
-        // This value is shared by all children. It represents the width of
-        // the left empty view.
-        setTag(R.id.left_view_width, mHalfParentWidth);
-        setTag(R.id.playhead_offset, -1);
-
-        final Resources resources = context.getResources();
-
-        // Get the playhead margins
-        mPlayheadMarginTop = (int)resources.getDimension(R.dimen.playhead_margin_top);
-        mPlayheadMarginBottom = (int)resources.getDimension(R.dimen.playhead_margin_bottom);
-
-        // Prepare the playhead drawable
-        mPlayheadDrawable = resources.getDrawable(R.drawable.playhead);
 
         setMotionEventSplittingEnabled(false);
     }
@@ -114,30 +85,6 @@ public class TimelineRelativeLayout extends RelativeLayout {
             mLayoutCallback.onLayoutComplete();
             mLayoutCallback = null;
         }
-    }
-
-    /*
-     * {@inheritDoc}
-     */
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-
-        final int playheadOffset = (Integer)getTag(R.id.playhead_offset);
-        final int startX;
-        if (playheadOffset < 0) {
-            // Draw the playhead in the middle of the screen
-            startX = (((HorizontalScrollView)getParent()).getScrollX() + mHalfParentWidth);
-        } else {
-            // Draw the playhead at the specified position (during trimming)
-            startX = playheadOffset;
-        }
-
-        // Draw the playhead
-        mPlayheadDrawable.setBounds(startX - (mPlayheadDrawable.getIntrinsicWidth() / 2),
-                mPlayheadMarginTop, startX + (mPlayheadDrawable.getIntrinsicWidth() / 2),
-                getHeight() - mPlayheadMarginBottom);
-        mPlayheadDrawable.draw(canvas);
     }
 
     /*

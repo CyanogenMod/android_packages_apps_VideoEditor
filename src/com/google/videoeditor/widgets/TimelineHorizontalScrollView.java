@@ -19,9 +19,16 @@ package com.google.videoeditor.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.videoeditor.R;
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.HorizontalScrollView;
@@ -33,6 +40,9 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
     // Instance variables
     private final List<ScrollViewListener> mScrollListenerList;
     private final Handler mHandler;
+    private final int mPlayheadMarginTop, mPlayheadMarginBottom;
+    private final Drawable mPlayheadDrawable;
+    private final int mHalfParentWidth;
     private ScaleGestureDetector mScaleDetector;
     private int mLastScrollX;
     private boolean mIsScrolling;
@@ -65,6 +75,24 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         mEnableUserScrolling = true;
         mScrollListenerList = new ArrayList<ScrollViewListener>();
         mHandler = new Handler();
+
+        // Compute half the width of the screen (and therefore the parent view)
+        final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
+        mHalfParentWidth = display.getWidth() / 2;
+
+        // This value is shared by all children. It represents the width of
+        // the left empty view.
+        setTag(R.id.left_view_width, mHalfParentWidth);
+        setTag(R.id.playhead_offset, -1);
+
+        final Resources resources = context.getResources();
+
+        // Get the playhead margins
+        mPlayheadMarginTop = (int)resources.getDimension(R.dimen.playhead_margin_top);
+        mPlayheadMarginBottom = (int)resources.getDimension(R.dimen.playhead_margin_bottom);
+
+        // Prepare the playhead drawable
+        mPlayheadDrawable = resources.getDrawable(R.drawable.playhead);
     }
 
     /*
@@ -209,5 +237,29 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
                 }
             }
         }
+    }
+
+    /*
+     * {@inheritDoc}
+     */
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+
+        final int playheadOffset = (Integer)getTag(R.id.playhead_offset);
+        final int startX;
+        if (playheadOffset < 0) {
+            // Draw the playhead in the middle of the screen
+            startX = mHalfParentWidth + getScrollX();
+        } else {
+            // Draw the playhead at the specified position (during trimming)
+            startX = playheadOffset;
+        }
+
+        // Draw the playhead
+        final int halfPlayheadWidth = mPlayheadDrawable.getIntrinsicWidth() / 2;
+        mPlayheadDrawable.setBounds(startX - halfPlayheadWidth, mPlayheadMarginTop,
+                startX + halfPlayheadWidth, getHeight() - mPlayheadMarginBottom);
+        mPlayheadDrawable.draw(canvas);
     }
 }
