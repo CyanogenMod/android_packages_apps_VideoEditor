@@ -930,17 +930,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             case R.id.editor_next: {
                 if (mProject != null && mPreviewThread != null) {
-                    final long restartPosMs;
                     final boolean restartPreview;
                     if (mPreviewThread.isPlaying()) {
-                        restartPosMs = mPreviewThread.stopPreviewPlayback();
+                        mPreviewThread.stopPreviewPlayback();
                         restartPreview = true;
                     } else {
-                        restartPosMs = playheadPosMs;
                         restartPreview = false;
                     }
 
-                    final MovieMediaItem mediaItem = mProject.getNextMediaItem(restartPosMs);
+                    final MovieMediaItem mediaItem = mProject.getNextMediaItem(playheadPosMs);
                     if (mediaItem != null) {
                         movePlayhead(mProject.getMediaItemBeginTime(mediaItem.getId()));
                         if (restartPreview) {
@@ -959,17 +957,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             case R.id.editor_prev: {
                 if (mProject != null && mPreviewThread != null) {
-                    final long restartPosMs;
                     final boolean restartPreview;
                     if (mPreviewThread.isPlaying()) {
-                        restartPosMs = mPreviewThread.stopPreviewPlayback();
+                        mPreviewThread.stopPreviewPlayback();
                         restartPreview = true;
                     } else {
-                        restartPosMs = playheadPosMs;
                         restartPreview = false;
                     }
 
-                    final MovieMediaItem mediaItem = mProject.getPreviousMediaItem(restartPosMs);
+                    final MovieMediaItem mediaItem = mProject.getPreviousMediaItem(playheadPosMs);
                     if (mediaItem != null) {
                         movePlayhead(mProject.getMediaItemBeginTime(mediaItem.getId()));
                     } else { // Move to the beginning of the timeline
@@ -1673,11 +1669,17 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
      * The preview thread
      */
     private class PreviewThread extends Thread {
+        // Preview states
+        private final int PREVIEW_STATE_STOPPED = 0;
+        private final int PREVIEW_STATE_STARTING = 1;
+        private final int PREVIEW_STATE_STARTED = 2;
+        private final int PREVIEW_STATE_STOPPING = 3;
+
         private final Handler mHandler;
         private final Queue<Runnable> mQueue;
         private final SurfaceHolder mSurfaceHolder;
         private Handler mThreadHandler;
-        private VideoEditorProject mPlayingProject;
+        private int mPreviewState;
 
         private final Runnable mProcessQueueRunnable = new Runnable() {
             /*
@@ -1701,7 +1703,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mHandler = new Handler(Looper.getMainLooper());
             mQueue = new LinkedBlockingQueue<Runnable>();
             mSurfaceHolder = surfaceHolder;
-            mPlayingProject = null;
+            mPreviewState = PREVIEW_STATE_STOPPED;
+
             start();
         }
 
@@ -1714,7 +1717,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          */
         public void previewFrame(final VideoEditorProject project, final long timeMs,
                 final boolean clear) {
-            if (mPlayingProject != null) {
+            if (mPreviewState == PREVIEW_STATE_STARTING || mPreviewState == PREVIEW_STATE_STARTED) {
                 stopPreviewPlayback();
             }
 
@@ -1760,7 +1763,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * @param timeMs The frame time
          */
         public void renderMediaItemFrame(final MovieMediaItem mediaItem, final long timeMs) {
-            if (mPlayingProject != null) {
+            if (mPreviewState == PREVIEW_STATE_STARTING || mPreviewState == PREVIEW_STATE_STARTED) {
                 stopPreviewPlayback();
             }
 
@@ -1803,20 +1806,18 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * @param fromMs Start playing from the specified position
          */
         private void startPreviewPlayback(final VideoEditorProject project, final long fromMs) {
-            if (mPlayingProject != null) {
-                if (mPlayingProject.getPath().equals(project.getPath())) {
-                    // This project is already playing
-                    return;
-                } else {
-                    // Another project is playing. Stop that playback.
-                    stopPreviewPlayback();
+            if (mPreviewState != PREVIEW_STATE_STOPPED) {
+                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                    Log.d(TAG, "Preview did not start: " + mPreviewState);
                 }
+                return;
             }
 
             previewStarted(project);
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "Start preview at: " + fromMs);
             }
+
             // Clear any pending preview frames
             mQueue.clear();
             mQueue.add(new Runnable() {
@@ -1825,6 +1826,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                  */
                 public void run() {
                     try {
+                        mHandler.post(new Runnable() {
+                            /*
+                             * {@inheritDoc}
+                             */
+                            public void run() {
+                                mPreviewState = PREVIEW_STATE_STARTED;
+                            }
+                        });
+
                         project.startPreview(mSurfaceHolder, fromMs, -1, false, 3,
                                 new VideoEditor.PreviewProgressListener() {
                             /*
@@ -1837,9 +1847,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                      * {@inheritDoc}
                                      */
                                     public void run() {
-                                        if (mPlayingProject != null) {
+                                        if (mPreviewState == PREVIEW_STATE_STARTED ||
+                                                mPreviewState == PREVIEW_STATE_STOPPING) {
                                             if (end) {
-                                                previewStopped(false, 0);
+                                                previewStopped(false);
                                             } else {
                                                 movePlayhead(timeMs);
                                             }
@@ -1863,9 +1874,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                              * {@inheritDoc}
                              */
                             public void run() {
-                                if (mPlayingProject != null) {
-                                    previewStopped(true, fromMs);
-                                }
+                                 previewStopped(true);
                             }
                         });
                     }
@@ -1875,17 +1884,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             if (mThreadHandler != null) {
                 mThreadHandler.post(mProcessQueueRunnable);
             }
-        }
-
-        /**
-         * Stop previewing
-         */
-        private long stopPreviewPlayback() {
-            if (mPlayingProject == null) {
-                return -1;
-            }
-
-            return previewStopped(false, 0);
         }
 
         /**
@@ -1903,49 +1901,118 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mOverlayLayout.setPlaybackInProgress(true);
             mAudioTrackLayout.setPlaybackInProgress(true);
 
-            mPlayingProject = project;
+            mPreviewState = PREVIEW_STATE_STARTING;
+        }
+
+        /**
+         * Stop previewing
+         */
+        private void stopPreviewPlayback() {
+            switch (mPreviewState) {
+                case PREVIEW_STATE_STOPPED: {
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STOPPED");
+                    }
+                    return;
+                }
+
+                case PREVIEW_STATE_STOPPING: {
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STOPPING");
+                    }
+                    return;
+                }
+
+                case PREVIEW_STATE_STARTING: {
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STARTING " +
+                                "now PREVIEW_STATE_STOPPING");
+                    }
+
+                    mPreviewState = PREVIEW_STATE_STOPPING;
+                    // We need to wait until the preview starts
+                    mHandler.postDelayed(new Runnable() {
+                        /*
+                         * {@inheritDoc}
+                         */
+                        public void run() {
+                            if (mPreviewState == PREVIEW_STATE_STARTED) {
+                                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                    Log.d(TAG, "stopPreviewPlayback: Now PREVIEW_STATE_STARTED");
+                                }
+                                previewStopped(false);
+                            } else {
+                                mHandler.postDelayed(this, 100);
+                                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                    Log.d(TAG, "stopPreviewPlayback: Waiting for PREVIEW_STATE_STARTED");
+                                }
+                            }
+                        }
+                    }, 50);
+
+                    break;
+                }
+
+                case PREVIEW_STATE_STARTED: {
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STARTED");
+                    }
+
+                    // We need to stop
+                    previewStopped(false);
+                    return;
+                }
+
+                default: {
+                    throw new IllegalArgumentException("stopPreviewPlayback state: " +
+                            mPreviewState);
+                }
+            }
         }
 
         /**
          * Preview stopped. This method is always invoked from the UI thread.
          *
          * @param error true if the preview stopped due to an error
-         * @param The last play position (only matters if
          *
          * @return The stop position
          */
-        private long previewStopped(boolean error, long playPositionMs) {
+        private void previewStopped(boolean error) {
+            if (mPreviewState != PREVIEW_STATE_STARTED) {
+                throw new IllegalStateException("previewStopped in state: " + mPreviewState);
+            }
+
             // Change the button image back to a play icon
             mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_play);
 
-            final long stopTimeMs;
             if (error == false) {
                 // Set the playhead position at the position where the playback stopped
-                stopTimeMs = mPlayingProject.stopPreview();
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "Stopped at: " + stopTimeMs);
-                }
+                final long stopTimeMs = mProject.stopPreview();
                 movePlayhead(stopTimeMs);
+                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                    Log.d(TAG, "PREVIEW_STATE_STOPPED: " + stopTimeMs);
+                }
             } else {
-                stopTimeMs = playPositionMs;
+                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                    Log.d(TAG, "PREVIEW_STATE_STOPPED due to error");
+                }
             }
 
-            mPlayingProject = null;
+            mPreviewState = PREVIEW_STATE_STOPPED;
 
             // The playback has stopped
             mTimelineScroller.enableUserScrolling(true);
             mMediaLayout.setPlaybackInProgress(false);
             mAudioTrackLayout.setPlaybackInProgress(false);
             mOverlayLayout.setPlaybackInProgress(false);
-
-            return stopTimeMs;
         }
 
         /**
          * @return true if preview playback is in progress
          */
         private boolean isPlaying() {
-            return (mPlayingProject != null);
+            return mPreviewState == PREVIEW_STATE_STARTING ||
+                mPreviewState == PREVIEW_STATE_STARTED;
         }
 
         /*
