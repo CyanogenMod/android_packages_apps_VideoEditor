@@ -182,6 +182,11 @@ public class ApiService extends Service {
     private static final int OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM = 508;
     private static final int OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS = 509;
 
+    private static final int DUCK_THRESHOLD = 20;
+    private static final int DUCK_TRACK_VOLUME = 65;
+    // The default audio track volume
+    private static final int DEFAULT_AUDIO_TRACK_VOLUME = 50;
+
     // Static member variables
     private static final Map<String, Intent> mPendingIntents = new HashMap<String, Intent>();
     private static final List<ApiServiceListener> mListeners = new ArrayList<ApiServiceListener>();
@@ -3172,7 +3177,8 @@ public class ApiService extends Service {
 
                     final AudioTrack audioTrack = new AudioTrack(videoEditor,
                             intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID), filename);
-                    audioTrack.enableDucking(65, 10);
+                    audioTrack.enableDucking(DUCK_THRESHOLD, DUCK_TRACK_VOLUME);
+                    audioTrack.setVolume(DEFAULT_AUDIO_TRACK_VOLUME);
                     if (intent.getBooleanExtra(PARAM_LOOP, false)) {
                         audioTrack.enableLoop();
                     } else {
@@ -3263,7 +3269,7 @@ public class ApiService extends Service {
                     }
 
                     if (intent.getBooleanExtra(PARAM_DUCK, false)) {
-                        audioTrack.enableDucking(65, 10);
+                        audioTrack.enableDucking(DUCK_THRESHOLD, DUCK_TRACK_VOLUME);
                     } else {
                         audioTrack.disableDucking();
                     }
@@ -4976,7 +4982,8 @@ public class ApiService extends Service {
             }
 
             // Enable ducking
-            audioTrack.enableDucking(65, 15);
+            audioTrack.enableDucking(DUCK_THRESHOLD, DUCK_TRACK_VOLUME);
+            audioTrack.setVolume(DEFAULT_AUDIO_TRACK_VOLUME);
             videoEditor.addAudioTrack(audioTrack);
         }
     }

@@ -401,7 +401,7 @@ public class MovieAudioTrack {
      *
      * @param enabled true to enable ducking
      */
-    void enableAppDucking(boolean enabled) {
+    public void enableAppDucking(boolean enabled) {
         mAppIsDuckingEnabled = enabled;
     }
 
