@@ -25,6 +25,4 @@
     <color name="playhead_tick_color">#80cccccc</color>
 
     <color name="zoom_interior_color">#40808080</color>
-
-    <color name="timeline_view_padding_color">#ff453B45</color>
 </resources>
