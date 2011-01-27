@@ -198,11 +198,13 @@ public class HandleView extends ImageView {
         if (mMoveStarted) {
             mMoveStarted = false;
 
-            final int deltaX = Math.round((eventX - mStartMoveX));
-            if (getId() == R.id.handle_left) {
-                mListener.onMoveEnd(this, getLeft(), deltaX + getWidth());
-            } else {
-                mListener.onMoveEnd(this, getLeft(), deltaX);
+            if (mListener != null) {
+                final int deltaX = Math.round((eventX - mStartMoveX));
+                if (getId() == R.id.handle_left) {
+                    mListener.onMoveEnd(this, getLeft(), deltaX + getWidth());
+                } else {
+                    mListener.onMoveEnd(this, getLeft(), deltaX);
+                }
             }
         }
     }
