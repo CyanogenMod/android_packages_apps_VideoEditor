@@ -31,7 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -107,6 +107,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             titleView.setText(FileUtils.getSimpleName(mAudioTrack.getFilename()));
 
             titleBarView.findViewById(R.id.action_mute).setOnClickListener(this);
+            titleBarView.findViewById(R.id.action_duck).setOnClickListener(this);
             titleBarView.findViewById(R.id.action_remove).setOnClickListener(this);
             final SeekBar seekBar =
                 ((SeekBar)titleBarView.findViewById(R.id.action_volume));
@@ -121,12 +122,20 @@ public class AudioTrackLinearLayout extends LinearLayout {
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             final View view = mode.getCustomView();
-            final Button muteBtn = (Button)view.findViewById(R.id.action_mute);
+            final ImageButton muteBtn = (ImageButton)view.findViewById(R.id.action_mute);
             if (mAudioTrack.isAppMuted()) {
-                muteBtn.setText(R.string.editor_unmute);
+                muteBtn.setImageResource(R.drawable.unmute);
             } else {
-                muteBtn.setText(R.string.editor_mute);
+                muteBtn.setImageResource(R.drawable.mute);
             }
+
+            final ImageButton duckBtn = (ImageButton)view.findViewById(R.id.action_duck);
+            if (mAudioTrack.isAppDuckingEnabled()) {
+                duckBtn.setImageResource(R.drawable.noduck);
+            } else {
+                duckBtn.setImageResource(R.drawable.duck);
+            }
+
             return true;
         }
 
@@ -143,17 +152,20 @@ public class AudioTrackLinearLayout extends LinearLayout {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.action_mute: {
-                    if (mAudioTrack.isAppMuted()) {
-                        mAudioTrack.setAppMute(false);
-                        mAudioTrackActionMode.invalidate();
-                        ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
-                                mAudioTrack.getId(), false);
-                    } else {
-                        mAudioTrack.setAppMute(true);
-                        mAudioTrackActionMode.invalidate();
-                        ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
-                                mAudioTrack.getId(), true);
-                    }
+                    final boolean mute = !mAudioTrack.isAppMuted();
+                    mAudioTrack.setAppMute(mute);
+                    mAudioTrackActionMode.invalidate();
+                    ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
+                            mAudioTrack.getId(), mute);
+                    break;
+                }
+
+                case R.id.action_duck: {
+                    final boolean duck = !mAudioTrack.isAppDuckingEnabled();
+                    mAudioTrack.enableAppDucking(duck);
+                    mAudioTrackActionMode.invalidate();
+                    ApiService.setAudioTrackDuck(getContext(), mProject.getPath(),
+                            mAudioTrack.getId(), duck);
                     break;
                 }
 
