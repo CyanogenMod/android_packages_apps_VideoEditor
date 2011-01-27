@@ -256,7 +256,7 @@ public class AudioTrackView extends View {
         // Compute the normalized heights
         final int halfHeight =
             (int)((getResources().getDimension(R.dimen.audio_layout_height) - getPaddingTop() -
-                    getPaddingBottom()) / 2);
+                    getPaddingBottom() - 4) / 2);
         final MovieAudioTrack audioTrack = (MovieAudioTrack)getTag();
 
         final int numFramesComp = (int)audioTrack.getDuration() / mWaveformData.getFrameDuration();
