@@ -241,6 +241,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         dialog.dismiss();
 
                         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                         if (item == 0) {
                             intent.setType("image/*");
                             startActivityForResult(intent, REQUEST_CODE_IMPORT_IMAGE);
@@ -565,6 +566,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 intent.setType("video/*");
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
                 return true;
@@ -580,6 +582,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_IMAGE);
                 return true;
