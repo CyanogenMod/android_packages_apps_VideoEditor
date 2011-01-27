@@ -2376,7 +2376,12 @@ public class MediaLinearLayout extends LinearLayout {
                         mTrimmedView = mediaItemView;
 
                         mListener.onTrimMediaItemBegin(mMediaItem);
-
+                        if (videoClip) { // Video clip
+                            mListener.onTrimMediaItem(mMediaItem,
+                                    mMediaItem.getAppBoundaryBeginTime());
+                        } else {
+                            mListener.onTrimMediaItem(mMediaItem, 0);
+                        }
                         // Move the playhead
                         parentView.setTag(R.id.playhead_offset, view.getRight());
                         parentView.invalidate();
@@ -2544,6 +2549,11 @@ public class MediaLinearLayout extends LinearLayout {
                     mTrimmedView = mediaItemView;
 
                     mListener.onTrimMediaItemBegin(mMediaItem);
+                    if (videoClip) { // Video clip
+                        mListener.onTrimMediaItem(mMediaItem, mMediaItem.getAppBoundaryEndTime());
+                    } else {
+                        mListener.onTrimMediaItem(mMediaItem, 0);
+                    }
 
                     // Move the playhead
                     parentView.setTag(R.id.playhead_offset, view.getLeft());
