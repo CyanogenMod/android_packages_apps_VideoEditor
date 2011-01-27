@@ -1790,6 +1790,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             previewStarted(project);
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "Start preview at: " + fromMs);
+            }
             // Clear any pending preview frames
             mQueue.clear();
             mQueue.add(new Runnable() {
@@ -1845,10 +1848,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         private void stopPreviewPlayback() {
             if (mPlayingProject == null) {
                 return;
-            }
-
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Stop preview: " + mPlayingProject.getPath());
             }
 
             previewStopped();
