@@ -192,6 +192,7 @@ public class ApiService extends Service {
 
     private ServiceThread mVideoThread;
     private ServiceThread mAudioThread;
+    private ServiceThread mThumbnailThread;
     private Handler mHandler;
 
     private final Runnable mStopRunnable = new Runnable() {
@@ -1847,6 +1848,9 @@ public class ApiService extends Service {
 
         mAudioThread = new ServiceThread(mHandler, "AudioServiceThread");
         mAudioThread.start();
+
+        mThumbnailThread = new ServiceThread(mHandler, "ThumbnailServiceThread");
+        mThumbnailThread.start();
     }
 
     /*
@@ -1910,14 +1914,14 @@ public class ApiService extends Service {
                 final String projectPath = intent.getStringExtra(PARAM_PROJECT_PATH);
                 final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                 // Cancel any pending thumbnail request for the same media item
-                for (Intent qIntent : mVideoThread.mQueue) {
+                for (Intent qIntent : mThumbnailThread.mQueue) {
                     int opi = qIntent.getIntExtra(PARAM_OP, -1);
                     if (opi == op) {
                         String pp = qIntent.getStringExtra(PARAM_PROJECT_PATH);
                         if (pp.equals(projectPath)) {
                             String mid = qIntent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                             if (mid.equals(mediaItemId)) {
-                                if (mVideoThread.cancel(qIntent)) {
+                                if (mThumbnailThread.cancel(qIntent)) {
                                     if (Log.isLoggable(TAG, Log.DEBUG)) {
                                         Log.d(TAG, "Canceled op: " + op +
                                                 " for media item: " + mediaItemId);
@@ -1933,7 +1937,7 @@ public class ApiService extends Service {
                     }
                 }
 
-                mVideoThread.put(intent);
+                mThumbnailThread.put(intent);
                 break;
             }
 
@@ -1963,6 +1967,11 @@ public class ApiService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if (mThumbnailThread != null) {
+            mThumbnailThread.quit();
+            mThumbnailThread = null;
+        }
 
         if (mAudioThread != null) {
             mAudioThread.quit();
@@ -2564,6 +2573,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_MEDIA_ITEM_GET_THUMBNAIL: {
+                    // Note that this command is executed in the thumbnail thread
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     if (Log.isLoggable(TAG, Log.DEBUG)) {
                         Log.d(TAG, "OP_MEDIA_ITEM_GET_THUMBNAIL: " + mediaItemId);
@@ -2584,6 +2594,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_MEDIA_ITEM_GET_THUMBNAILS: {
+                    // Note that this command is executed in the thumbnail thread
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     if (Log.isLoggable(TAG, Log.DEBUG)) {
                         Log.d(TAG, "OP_MEDIA_ITEM_GET_THUMBNAILS: " + mediaItemId);
