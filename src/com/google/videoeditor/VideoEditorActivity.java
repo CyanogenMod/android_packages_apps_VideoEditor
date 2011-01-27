@@ -1702,15 +1702,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                  */
                 public void run() {
                     if (clear) {
-                        clearSurface();
+                        project.clearSurface(mSurfaceHolder);
                     } else {
                         try {
                             if (project.renderPreviewFrame(mSurfaceHolder, timeMs) < 0) {
                                 if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "Clear frame at: " + timeMs +
+                                    Log.d(TAG, "Cannot render preview frame at: " + timeMs +
                                             " of " + mProject.computeDuration());
                                 }
-                                clearSurface();
                             }
                         } catch (Exception ex) {
                             Log.e(TAG, "Requested timeMs: " + timeMs);
@@ -1751,7 +1750,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     try {
                         if (mProject.renderMediaItemFrame(mSurfaceHolder, mediaItem.getId(),
                                 timeMs) < 0) {
-                            clearSurface();
+                            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                Log.d(TAG, "Cannot render media item frame at: " + timeMs +
+                                        " of " + mediaItem.getDuration());
+                            }
                         }
                     } catch (Exception ex) {
                         // For now handle the NullPointerException in the NXP code
@@ -1763,13 +1765,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             if (mThreadHandler != null) {
                 mThreadHandler.post(mProcessQueueRunnable);
             }
-        }
-
-        /**
-         * Clear the surface (render a black frame)
-         */
-        private void clearSurface() {
-            // TODO: Call the new API method to clear the frame
         }
 
         /**
