@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke android:color="#ff00ffff" android:width="@dimen/timelime_item_padding"/>
-    <gradient android:startColor="#ff96B5CA" android:endColor="#ff639CB0" android:angle="270"/>
-</shape>

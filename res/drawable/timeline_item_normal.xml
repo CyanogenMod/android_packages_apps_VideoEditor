@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke android:color="@color/timeline_view_padding_color" android:width="@dimen/timelime_item_padding"/>
-    <solid android:color="#00000000"/>
-</shape>
