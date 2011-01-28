@@ -1394,8 +1394,10 @@ public class MediaLinearLayout extends LinearLayout {
 
                     if (tag instanceof MovieMediaItem) {
                         if (left != view.getLeft() || right != view.getRight()) {
+                            final int oldLeft = view.getLeft();
+                            final int oldRight = view.getRight();
                             view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).refreshThumbnails();
+                            ((MediaItemView)view).onPositionChanged(oldLeft, oldRight);
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
@@ -1429,8 +1431,10 @@ public class MediaLinearLayout extends LinearLayout {
 
                     if (tag instanceof MovieMediaItem) {
                         if (left != view.getLeft() || right != view.getRight()) {
+                            final int oldLeft = view.getLeft();
+                            final int oldRight = view.getRight();
                             view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).refreshThumbnails();
+                            ((MediaItemView)view).onPositionChanged(oldLeft, oldRight);
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
@@ -1469,8 +1473,10 @@ public class MediaLinearLayout extends LinearLayout {
 
                     if (tag instanceof MovieMediaItem) {
                         if (left != view.getLeft() || right != view.getRight()) {
+                            final int oldLeft = view.getLeft();
+                            final int oldRight = view.getRight();
                             view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).refreshThumbnails();
+                            ((MediaItemView)view).onPositionChanged(oldLeft, oldRight);
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
@@ -2465,26 +2471,28 @@ public class MediaLinearLayout extends LinearLayout {
                                         if (onMove(view, left, delta)) {
                                             mHandler.post(this);
                                         } else {
-                                            scaleDone();
+                                            moveDone();
                                         }
                                     } else {
-                                        scaleDone();
+                                        moveDone();
                                     }
                                 }
                             });
                         } else {
-                            scaleDone();
+                            moveDone();
                         }
                     }
 
                     /**
-                     * The scale is complete
+                     * The move is complete
                      */
-                    private void scaleDone() {
+                    private void moveDone() {
                         // Layout all the children to ensure that
                         parentView.setTag(R.id.left_view_width, mHalfParentWidth);
                         parentView.setTag(R.id.playhead_offset, -1);
                         parentView.invalidate();
+                        // Note: invalidate the parent does not invalidate the children
+                        invalidateAllChildren();
 
                         mListener.onTrimMediaItemEnd(mMediaItem,
                                 mMediaItem.getAppBoundaryBeginTime());
@@ -2669,24 +2677,26 @@ public class MediaLinearLayout extends LinearLayout {
                                     if (onMove(view, left, delta)) {
                                         mHandler.post(this);
                                     } else {
-                                        scaleDone();
+                                        moveDone();
                                     }
                                 } else {
-                                    scaleDone();
+                                    moveDone();
                                 }
                             }
                         });
                     } else {
-                        scaleDone();
+                        moveDone();
                     }
                 }
 
                 /**
-                 * The scale is complete
+                 * The move is complete
                  */
-                private void scaleDone() {
+                private void moveDone() {
                     parentView.setTag(R.id.playhead_offset, -1);
                     parentView.invalidate();
+                    // Note: invalidate the parent does not invalidate the children
+                    invalidateAllChildren();
 
                     mListener.onTrimMediaItemEnd(mMediaItem,
                             mMediaItem.getAppBoundaryEndTime());
@@ -2764,5 +2774,16 @@ public class MediaLinearLayout extends LinearLayout {
      */
     private void unselectAllViews() {
         ((RelativeLayout)getParent()).setSelected(false);
+    }
+
+    /**
+     * Invalidate all children
+     */
+    private void invalidateAllChildren() {
+        final int childrenCount = getChildCount();
+        for (int i = 0; i < childrenCount; i++) {
+            final View childView = getChildAt(i);
+            childView.invalidate();
+        }
     }
 }

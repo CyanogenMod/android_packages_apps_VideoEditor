@@ -307,9 +307,12 @@ public class MediaItemView extends View {
     }
 
     /**
-     * Refresh the content
+     * The view has been layout out
+     *
+     * @param oldLeft The old left position
+     * @param oldRight The old right position
      */
-    public void refreshThumbnails() {
+    public void onPositionChanged(int oldLeft, int oldRight) {
         releaseBitmapsAndClear();
 
         if (!mIsScrolling && !mIsTrimming && mProgress < 0) {
