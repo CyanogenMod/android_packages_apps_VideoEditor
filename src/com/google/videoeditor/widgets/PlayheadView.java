@@ -86,6 +86,7 @@ public class PlayheadView extends View {
              */
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
                 mScrollX = scrollX;
+                invalidate();
             }
 
             /*
