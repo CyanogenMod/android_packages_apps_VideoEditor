@@ -333,7 +333,8 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
 
             if (exception != null) {
-                if (mediaItemClass.getCanonicalName().equals(MediaVideoItem.class)) {
+                if (mediaItemClass.getCanonicalName().equals(
+                        MediaVideoItem.class.getCanonicalName())) {
                     Toast.makeText(VideoEditorBaseActivity.this,
                             R.string.editor_add_video_clip_error, Toast.LENGTH_LONG).show();
                 } else {
