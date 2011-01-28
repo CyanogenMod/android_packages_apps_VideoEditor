@@ -1225,10 +1225,6 @@ public class MediaLinearLayout extends LinearLayout {
         }
 
         final MovieEffect effect = mediaItem.getEffect();
-        // Check if the type has changed
-        if (effect.getType() == effectType) {
-            return;
-        }
 
         final String id = ApiService.generateId();
         switch (effectType) {
@@ -1242,49 +1238,66 @@ public class MediaLinearLayout extends LinearLayout {
                 intent.putExtra(KenBurnsActivity.PARAM_FILENAME, mediaItem.getFilename());
                 intent.putExtra(KenBurnsActivity.PARAM_WIDTH, mediaItem.getWidth());
                 intent.putExtra(KenBurnsActivity.PARAM_HEIGHT, mediaItem.getHeight());
+                if (effect.getType() == EffectType.EFFECT_KEN_BURNS) {
+                    intent.putExtra(KenBurnsActivity.PARAM_START_RECT, effect.getStartRect());
+                    intent.putExtra(KenBurnsActivity.PARAM_END_RECT, effect.getEndRect());
+                }
+
                 activity.startActivityForResult(intent,
                         VideoEditorActivity.REQUEST_CODE_KEN_BURNS);
                 break;
             }
 
             case EffectType.EFFECT_COLOR_GRADIENT: {
-                // Remove the old effect
-                ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                        effect.getId());
+                // Check if the type has changed
+                if (effect.getType() != effectType) {
+                    // Remove the old effect
+                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
+                            effect.getId());
 
-                ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                        mediaItem.getDuration(), EffectColor.TYPE_GRADIENT,
-                        EffectColor.GRAY);
+                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
+                            mediaItem.getDuration(), EffectColor.TYPE_GRADIENT,
+                            EffectColor.GRAY);
+                }
                 break;
             }
 
             case EffectType.EFFECT_COLOR_SEPIA: {
-                // Remove the old effect
-                ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                        effect.getId());
+                // Check if the type has changed
+                if (effect.getType() != effectType) {
+                    // Remove the old effect
+                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
+                            effect.getId());
 
-                ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                        mediaItem.getDuration(), EffectColor.TYPE_SEPIA, 0);
+                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
+                            mediaItem.getDuration(), EffectColor.TYPE_SEPIA, 0);
+                }
                 break;
             }
 
             case EffectType.EFFECT_COLOR_NEGATIVE: {
-                // Remove the old effect
-                ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                        effect.getId());
+                // Check if the type has changed
+                if (effect.getType() != effectType) {
+                    // Remove the old effect
+                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
+                            effect.getId());
 
-                ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                        mediaItem.getDuration(), EffectColor.TYPE_NEGATIVE, 0);
+                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
+                            mediaItem.getDuration(), EffectColor.TYPE_NEGATIVE, 0);
+                }
                 break;
             }
 
             case EffectType.EFFECT_COLOR_FIFTIES: {
-                // Remove the old effect
-                ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                        effect.getId());
+                // Check if the type has changed
+                if (effect.getType() != effectType) {
+                    // Remove the old effect
+                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
+                            effect.getId());
 
-                ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                        mediaItem.getDuration(), EffectColor.TYPE_FIFTIES, 0);
+                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
+                            mediaItem.getDuration(), EffectColor.TYPE_FIFTIES, 0);
+                }
                 break;
             }
 

@@ -53,7 +53,7 @@ public class MovieEffect {
         mDurationMs = effect.getDuration();
         if (effect instanceof EffectKenBurns) {
             mStartRect = ((EffectKenBurns)effect).getStartRect();
-            mEndRect = ((EffectKenBurns)effect).getStartRect();;
+            mEndRect = ((EffectKenBurns)effect).getEndRect();
         } else {
             mStartRect = null;
             mEndRect = null;
