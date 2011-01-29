@@ -27,31 +27,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/generic_image"/>
-     <ImageView android:id="@+id/overlay_layer"
+    <ImageView android:id="@+id/overlay_layer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <EditText android:id="@+id/overlay_title"
         android:layout_width="256dip"
         android:layout_height="wrap_content"
-        android:layout_below="@id/overlay_generic"
+        android:layout_toRightOf="@id/overlay_generic"
         android:layout_marginTop="20dip"
+        android:layout_marginLeft="20dip"
         android:hint="@string/overlay_title_label"
         android:singleLine="true"/>
 
     <EditText android:id="@+id/overlay_subtitle"
         android:layout_width="256dip"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/overlay_generic"
         android:layout_below="@id/overlay_title"
         android:layout_marginTop="10dip"
+        android:layout_marginLeft="20dip"
         android:hint="@string/overlay_subtitle_label"
         android:singleLine="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/overlay_subtitle"
-        android:layout_alignLeft="@id/overlay_subtitle"
+        android:layout_below="@id/overlay_generic"
+        android:layout_alignLeft="@id/overlay_generic"
         android:layout_alignRight="@id/overlay_subtitle"
         android:layout_marginTop="20dip">
 

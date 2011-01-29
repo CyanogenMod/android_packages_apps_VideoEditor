@@ -123,7 +123,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
 
             // Check if an error occurred
-            if (exception != null) {
+            if (exception != null || project == null) {
                 mProjectPath = null;
 
                 enterDisabledState(R.string.editor_no_project);

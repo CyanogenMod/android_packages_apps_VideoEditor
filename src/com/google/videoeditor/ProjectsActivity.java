@@ -128,7 +128,8 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_NEW_PROJECT_ID, Menu.NONE,
-                R.string.projects_new_project).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                R.string.projects_new_project).setIcon(R.drawable.new_project).setShowAsAction(
+                        MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 
@@ -158,7 +159,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
             case DIALOG_NEW_PROJECT_ID: {
                 return AlertDialogs.createEditDialog(this,
                         getString(R.string.projects_project_name),
-                        null, getString(android.R.string.ok),
+                        getString(R.string.untitled), getString(android.R.string.ok),
                         new DialogInterface.OnClickListener() {
                             /*
                              * {@inheritDoc}
