@@ -2033,7 +2033,7 @@ public class ApiService extends Service {
                     }
 
                     final List<VideoEditorProject> projects = new ArrayList<VideoEditorProject>();
-                    final File dir = FileUtils.getProjectsRootDir();
+                    final File dir = FileUtils.getProjectsRootDir(getApplicationContext());
                     final File[] files = dir.listFiles();
                     if (files != null) {
                         // Collect valid projects (project with valid metadata)
