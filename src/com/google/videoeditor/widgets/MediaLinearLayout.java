@@ -450,10 +450,8 @@ public class MediaLinearLayout extends LinearLayout {
 
                 final MovieMediaItem mediaItem = (MovieMediaItem)view.getTag();
                 if (mProject.getMediaItemCount() > 1) {
-                    if (view.isSelected()) {
-                        view.startDrag(ClipData.newPlainText("File", mediaItem.getFilename()),
+                    view.startDrag(ClipData.newPlainText("File", mediaItem.getFilename()),
                                 ((MediaItemView)view).getShadowBuilder(), mediaItem.getId(), 0);
-                    }
                 }
 
                 if (!view.isSelected()) {
