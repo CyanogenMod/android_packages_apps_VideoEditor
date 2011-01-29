@@ -4703,6 +4703,9 @@ public class ApiService extends Service {
                             progressIntent.putExtra(PARAM_INTENT, intent);
                             progressIntent.putExtra(PARAM_PROGRESS_VALUE, progress);
                             mVideoThread.put(progressIntent);
+                            if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                                Log.v(TAG, "Export progress: " + progress + " for: " + filename);
+                            }
                         }
                     });
 
@@ -4713,8 +4716,17 @@ public class ApiService extends Service {
                     } else {
                         throw new IllegalStateException("Export file does not exist: " + filename);
                     }
+
+                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                        Log.v(TAG, "Export complete for: " + filename);
+                    }
                 } catch (Exception ex) {
                     statusIntent.putExtra(PARAM_EXCEPTION, ex);
+
+                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                        Log.v(TAG, "Export error for: " + filename);
+                        ex.printStackTrace();
+                    }
                 }
                 mVideoThread.put(statusIntent);
             }
