@@ -102,6 +102,7 @@ public class AlertDialogs {
         final EditText textInput = (EditText)myView.findViewById(R.id.text_1);
         if (text != null) {
             textInput.setText(text);
+            textInput.setSelection(0, text.length());
         }
 
         if (maxChars > 0) {
