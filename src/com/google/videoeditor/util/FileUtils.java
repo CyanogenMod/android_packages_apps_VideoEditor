@@ -54,7 +54,12 @@ public class FileUtils {
      */
     public static File getProjectsRootDir(Context context)
             throws FileNotFoundException, IOException {
-        final File dir = context.getExternalFilesDir(null);
+        final File rootDir = Environment.getExternalStorageDirectory();
+        if (rootDir == null) {
+            throw new FileNotFoundException("External storage not available");
+        }
+
+        final File dir = new File(rootDir.getAbsolutePath() + "/videoeditor");
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 throw new FileNotFoundException("Cannot create folder: " + dir.getAbsolutePath());
