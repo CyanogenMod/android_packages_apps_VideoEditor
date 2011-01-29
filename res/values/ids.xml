@@ -18,4 +18,5 @@
 <resources>
     <item type="id" name="left_view_width" />
     <item type="id" name="playhead_offset" />
+    <item type="id" name="playhead_type" />
 </resources>
