@@ -538,12 +538,23 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         menu.findItem(MENU_CHANGE_ASPECT_RATIO_ID).setVisible(haveProject &&
                 mProject.hasMultipleAspectRatios());
         menu.findItem(MENU_EDIT_PROJECT_NAME_ID).setVisible(haveProject);
-        menu.findItem(MENU_EXPORT_MOVIE_ID).setVisible(haveProject && haveMediaItems);
-        menu.findItem(MENU_PLAY_EXPORTED_MOVIE).setVisible(haveProject &&
+
+        // Check if there is an operation pending or preview is on
+        boolean enableMenu = haveProject;
+        if (enableMenu && mPreviewThread != null) {
+            // Preview is in progress
+            enableMenu = mPreviewThread.isStopped();
+            if (enableMenu && mProjectPath != null) {
+                enableMenu = !ApiService.isProjectEdited(mProjectPath);
+            }
+        }
+
+        menu.findItem(MENU_EXPORT_MOVIE_ID).setVisible(enableMenu && haveMediaItems);
+        menu.findItem(MENU_PLAY_EXPORTED_MOVIE).setVisible(enableMenu &&
                 mProject.getExportedMovieUri() != null);
-        menu.findItem(MENU_SHARE_VIDEO).setVisible(haveProject &&
+        menu.findItem(MENU_SHARE_VIDEO).setVisible(enableMenu &&
                 mProject.getExportedMovieUri() != null);
-        menu.findItem(MENU_DELETE_PROJECT_ID).setVisible(haveProject);
+        menu.findItem(MENU_DELETE_PROJECT_ID).setVisible(enableMenu);
         return true;
     }
 
@@ -2105,6 +2116,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * @return The stop position
          */
         private void previewStopped(boolean error) {
+            if (mProject == null) {
+                Log.w(TAG, "previewStopped: project was deleted.");
+                return;
+            }
+
             if (mPreviewState != PREVIEW_STATE_STARTED) {
                 throw new IllegalStateException("previewStopped in state: " + mPreviewState);
             }
@@ -2140,6 +2156,13 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         private boolean isPlaying() {
             return mPreviewState == PREVIEW_STATE_STARTING ||
                 mPreviewState == PREVIEW_STATE_STARTED;
+        }
+
+        /**
+         * @return true if the preview is stopped
+         */
+        private boolean isStopped() {
+            return mPreviewState == PREVIEW_STATE_STOPPED;
         }
 
         /*
