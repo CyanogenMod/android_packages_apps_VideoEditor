@@ -48,15 +48,13 @@ public class FileUtils {
     /**
      * Get the root path for all projects
      *
+     * @param contex The context
+     *
      * @return The file representing the projects root directory
      */
-    public static File getProjectsRootDir() throws FileNotFoundException, IOException {
-        final File rootDir = Environment.getExternalStorageDirectory();
-        if (rootDir == null) {
-            throw new FileNotFoundException("External storage not available");
-        }
-
-        final File dir = new File(rootDir.getAbsolutePath() + "/videoeditor");
+    public static File getProjectsRootDir(Context context)
+            throws FileNotFoundException, IOException {
+        final File dir = context.getExternalFilesDir(null);
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 throw new FileNotFoundException("Cannot create folder: " + dir.getAbsolutePath());
@@ -223,8 +221,9 @@ public class FileUtils {
      *
      * @return The absolute path to the project
      */
-    public static String createNewProjectPath() throws FileNotFoundException, IOException {
-        final File file = new File(getProjectsRootDir(), StringUtils.randomString(10));
+    public static String createNewProjectPath(Context context)
+            throws FileNotFoundException, IOException {
+        final File file = new File(getProjectsRootDir(context), StringUtils.randomString(10));
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "New project: " + file.getAbsolutePath());
         }

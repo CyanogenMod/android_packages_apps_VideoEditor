@@ -288,7 +288,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
             final Intent extra = new Intent(this, VideoEditorActivity.class);
             extra.setAction(Intent.ACTION_INSERT);
             extra.putExtra(PARAM_CREATE_PROJECT_NAME, projectName);
-            final String projectPath = FileUtils.createNewProjectPath();
+            final String projectPath = FileUtils.createNewProjectPath(this);
             extra.putExtra(PARAM_OPEN_PROJECT_PATH, projectPath);
             startActivityForResult(extra, REQUEST_CODE_CREATE_PROJECT);
         } catch (Exception ex) {
