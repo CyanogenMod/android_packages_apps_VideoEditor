@@ -573,12 +573,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
 
             final int leftViewWidth = (Integer)((View)getParent().getParent()).getTag(
                     R.id.left_view_width);
-            final int addAudioTrackButtonWidth;
-            if (mProject.getAudioTracks().size() > 0) {
-                addAudioTrackButtonWidth = 0;
-            } else {
-                addAudioTrackButtonWidth = mAddAudioTrackButtonWidth;
-            }
 
             for (int i = 0; i < childrenCount; i++) {
                 final View childView = getChildAt(i);
@@ -606,14 +600,16 @@ public class AudioTrackLinearLayout extends LinearLayout {
                     childView.layout(trackLeft, 0, trackLeft + width, mAudioTrackHeight);
                     left = trackLeft + width;
                 } else if (id == R.id.add_audio_track_button) {
-                    childView.layout(left, 0, left + mAddAudioTrackButtonWidth, mAudioTrackHeight);
-                    left += mAddAudioTrackButtonWidth;
+                    if (childView.getVisibility() == View.VISIBLE) {
+                        childView.layout(left, 0, left + mAddAudioTrackButtonWidth,
+                                mAudioTrackHeight);
+                        left += mAddAudioTrackButtonWidth;
+                    }
                 } else if (i == 0) { // Begin view
                     childView.layout(left, 0, left + leftViewWidth, mAudioTrackHeight);
                     left += leftViewWidth;
                 } else { // End view
-                    childView.layout(getWidth() - mHalfParentWidth + addAudioTrackButtonWidth -
-                            (mHalfParentWidth - leftViewWidth), 0, getWidth(), mAudioTrackHeight);
+                    childView.layout(left, 0, getWidth(), mAudioTrackHeight);
                 }
             }
         }
