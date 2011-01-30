@@ -102,6 +102,7 @@ public class MediaLinearLayout extends LinearLayout {
     private long mPrevDragScrollTime;
     private MovieMediaItem mDropAfterMediaItem;
     private int mDropIndex;
+    private boolean mFirstEntered;
 
     /**
      * Activity listener
@@ -451,10 +452,8 @@ public class MediaLinearLayout extends LinearLayout {
 
                 final MovieMediaItem mediaItem = (MovieMediaItem)view.getTag();
                 if (mProject.getMediaItemCount() > 1) {
-                    if (view.isSelected()) {
-                        view.startDrag(ClipData.newPlainText("File", mediaItem.getFilename()),
-                                ((MediaItemView)view).getShadowBuilder(), mediaItem.getId(), 0);
-                    }
+                    view.startDrag(ClipData.newPlainText("File", mediaItem.getFilename()),
+                            ((MediaItemView)view).getShadowBuilder(), mediaItem.getId(), 0);
                 }
 
                 if (!view.isSelected()) {
@@ -1823,6 +1822,7 @@ public class MediaLinearLayout extends LinearLayout {
                 mDropAfterMediaItem = null;
                 mDropIndex = -1;
 
+                mFirstEntered = true;
                 // This view accepts drag
                 result = true;
                 break;
@@ -1832,6 +1832,18 @@ public class MediaLinearLayout extends LinearLayout {
                 if (Log.isLoggable(TAG, Log.VERBOSE)) {
                     Log.v(TAG, "ACTION_DRAG_ENTERED: " + event);
                 }
+
+                final View scrollView = (View)getParent().getParent();
+                if (!mFirstEntered && mDropIndex >= 0) {
+                    scrollView.setTag(R.id.playhead_type,
+                            TimelineHorizontalScrollView.PLAYHEAD_MOVE_OK);
+                } else {
+                    scrollView.setTag(R.id.playhead_type,
+                            TimelineHorizontalScrollView.PLAYHEAD_MOVE_NOT_OK);
+                }
+                scrollView.invalidate();
+
+                mFirstEntered = false;
                 break;
             }
 
@@ -1920,7 +1932,7 @@ public class MediaLinearLayout extends LinearLayout {
         final int x = (int)eventX - scrollView.getScrollX();
         final long now = System.currentTimeMillis();
         if (now - mPrevDragScrollTime > 300) {
-            if (x < mPrevDragPosition - 35) { // Backwards
+            if (x < mPrevDragPosition - 42) { // Backwards
                 final long positionMs = getLeftDropPosition();
                 if (mDropIndex >= 0) {
                     // Redraw the "move ok playhead"
@@ -1937,7 +1949,7 @@ public class MediaLinearLayout extends LinearLayout {
 
                 mPrevDragPosition = x;
                 mPrevDragScrollTime = now;
-            } else if (x > mPrevDragPosition + 35) { // Forward
+            } else if (x > mPrevDragPosition + 42) { // Forward
                 final long positionMs = getRightDropPosition();
                 if (mDropIndex >= 0) {
                     // Redraw the "move ok playhead"
