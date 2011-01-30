@@ -223,7 +223,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             /*
              * {@inheritDoc}
              */
-            public void onRequestScrollToTime(long scrollToTime, boolean smooth) {
+            public void onRequestMovePlayhead(long scrollToTime, boolean smooth) {
                 movePlayhead(scrollToTime);
             }
 
