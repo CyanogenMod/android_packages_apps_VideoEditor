@@ -2996,8 +2996,8 @@ public class ApiService extends Service {
 
                     final OverlayFrame overlay = new OverlayFrame(mediaItem,
                             intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID),
-                            ImageUtils.buildOverlayBitmap(null, overlayType, title, subTitle,
-                                    scaledWidth, scaledHeight),
+                            ImageUtils.buildOverlayBitmap(getApplicationContext(), null,
+                                    overlayType, title, subTitle, scaledWidth, scaledHeight),
                             intent.getLongExtra(PARAM_START_TIME, -1),
                             intent.getLongExtra(PARAM_DURATION, 0));
 
@@ -3131,8 +3131,8 @@ public class ApiService extends Service {
                     final String subTitle = MovieOverlay.getSubtitle(userAttributes);
 
                     ((OverlayFrame)overlay).setBitmap(
-                            ImageUtils.buildOverlayBitmap(null, overlayType, title, subTitle,
-                                    scaledWidth, scaledHeight));
+                            ImageUtils.buildOverlayBitmap(getApplicationContext(), null,
+                                    overlayType, title, subTitle, scaledWidth, scaledHeight));
 
                     for (String name : userAttributes.keySet()) {
                         if (MovieOverlay.getAttributeType(name).equals(Integer.class)) {
@@ -4958,8 +4958,8 @@ public class ApiService extends Service {
             }
 
             final Overlay overlay = new OverlayFrame(mediaItem, generateId(),
-                    ImageUtils.buildOverlayBitmap(null, movieOverlay.getType(),
-                            movieOverlay.getTitle(),
+                    ImageUtils.buildOverlayBitmap(getApplicationContext(), null,
+                            movieOverlay.getType(), movieOverlay.getTitle(),
                             movieOverlay.getSubtitle(), scaledWidth, scaledHeight),
                             movieOverlay.getStartTime(), movieOverlay.getDuration());
 
@@ -5091,8 +5091,8 @@ public class ApiService extends Service {
                 }
 
                 final Overlay overlay = new OverlayFrame(mediaItem, generateId(),
-                        ImageUtils.buildOverlayBitmap(null, movieOverlay.getType(),
-                                movieOverlay.getTitle(),
+                        ImageUtils.buildOverlayBitmap(getApplicationContext(), null,
+                                movieOverlay.getType(), movieOverlay.getTitle(),
                                 movieOverlay.getSubtitle(), scaledWidth, scaledHeight),
                         movieOverlay.getStartTime(),
                         Math.min(movieOverlay.getDuration(),

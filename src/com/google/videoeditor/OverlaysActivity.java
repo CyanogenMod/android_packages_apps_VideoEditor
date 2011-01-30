@@ -30,6 +30,8 @@ import com.google.videoeditor.service.MovieOverlay;
 public class OverlaysActivity extends ListActivity {
     // Input overlay category
     public static final String PARAM_MEDIA_ITEM_ID = "media_item_id";
+    public static final String PARAM_OVERLAY_ATTRIBUTES = "attributes";
+    public static final String PARAM_OVERLAY_ID = "overlay_id";
 
     // Request code ids
     private static final int REQUEST_CODE_SET_TITLE = 1;
@@ -91,11 +93,25 @@ public class OverlaysActivity extends ListActivity {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         final Intent intent = new Intent(this, OverlayTitleActivity.class);
-        intent.putExtra(OverlayTitleActivity.PARAM_OVERLAY_ATTRIBUTES,
-                MovieOverlay.buildUserAttributes(
-                        ((OverlayType)mAdapter.getItem(position)).getType(), null, null));
         intent.putExtra(OverlayTitleActivity.PARAM_MEDIA_ITEM_ID,
                 getIntent().getStringExtra(PARAM_MEDIA_ITEM_ID));
+
+        final int type = ((OverlayType)mAdapter.getItem(position)).getType();
+        final Bundle bundle = getIntent().getBundleExtra(PARAM_OVERLAY_ATTRIBUTES);
+        if (bundle != null) {
+            intent.putExtra(OverlayTitleActivity.PARAM_OVERLAY_ATTRIBUTES,
+                    MovieOverlay.buildUserAttributes(type,
+                            MovieOverlay.getTitle(bundle),  MovieOverlay.getSubtitle(bundle)));
+        } else {
+            intent.putExtra(OverlayTitleActivity.PARAM_OVERLAY_ATTRIBUTES,
+                    MovieOverlay.buildUserAttributes(type, null, null));
+        }
+
+        final String overlayId = getIntent().getStringExtra(PARAM_OVERLAY_ID);
+        if (overlayId != null) {
+            intent.putExtra(OverlayTitleActivity.PARAM_OVERLAY_ID, overlayId);
+        }
+
         startActivityForResult(intent, REQUEST_CODE_SET_TITLE);
     }
 

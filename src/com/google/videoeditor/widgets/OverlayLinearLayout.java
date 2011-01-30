@@ -129,12 +129,12 @@ public class OverlayLinearLayout extends LinearLayout {
             switch (item.getItemId()) {
                 case R.id.action_edit_overlay: {
                     final Activity activity = (Activity)getContext();
-                    final Intent intent = new Intent(activity, OverlayTitleActivity.class);
+                    final Intent intent = new Intent(activity, OverlaysActivity.class);
                     intent.putExtra(OverlayTitleActivity.PARAM_MEDIA_ITEM_ID, mMediaItem.getId());
 
                     final MovieOverlay overlay = mMediaItem.getOverlay();
-                    intent.putExtra(OverlayTitleActivity.PARAM_OVERLAY_ID, overlay.getId());
-                    intent.putExtra(OverlayTitleActivity.PARAM_OVERLAY_ATTRIBUTES,
+                    intent.putExtra(OverlaysActivity.PARAM_OVERLAY_ID, overlay.getId());
+                    intent.putExtra(OverlaysActivity.PARAM_OVERLAY_ATTRIBUTES,
                             overlay.buildUserAttributes());
                     activity.startActivityForResult(intent,
                             VideoEditorActivity.REQUEST_CODE_EDIT_OVERLAY);
@@ -193,8 +193,8 @@ public class OverlayLinearLayout extends LinearLayout {
          */
         @Override
         protected Bitmap doInBackground(Void... zzz) {
-            return ImageUtils.buildOverlayBitmap(null, mOverlay.getType(), mOverlay.getTitle(),
-                    mOverlay.getSubtitle(),
+            return ImageUtils.buildOverlayBitmap(getContext(), null, mOverlay.getType(),
+                    mOverlay.getTitle(), mOverlay.getSubtitle(),
                     (mOverlayHeight * mMediaItem.getWidth()) / mMediaItem.getHeight(),
                     mOverlayHeight);
         }

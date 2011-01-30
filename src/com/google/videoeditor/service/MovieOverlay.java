@@ -27,8 +27,10 @@ import android.os.Bundle;
  */
 public class MovieOverlay {
     // Overlay types
-    public static final int OVERLAY_TYPE_CENTER = 0;
-    public static final int OVERLAY_TYPE_BOTTOM = 1;
+    public static final int OVERLAY_TYPE_CENTER_1 = 0;
+    public static final int OVERLAY_TYPE_BOTTOM_1 = 1;
+    public static final int OVERLAY_TYPE_CENTER_2 = 2;
+    public static final int OVERLAY_TYPE_BOTTOM_2 = 3;
 
     // User attribute keys
     private static final String KEY_TYPE = "type";

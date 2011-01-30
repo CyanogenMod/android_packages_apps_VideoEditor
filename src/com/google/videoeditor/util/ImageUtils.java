@@ -18,12 +18,17 @@ package com.google.videoeditor.util;
 
 import java.io.IOException;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+
+import com.google.videoeditor.R;
 import com.google.videoeditor.service.MovieOverlay;
 
 /**
@@ -117,6 +122,7 @@ public class ImageUtils {
     /**
      * Build an overlay image
      *
+     * @param context The context
      * @param inputBitmap If the bitmap is provided no not create a new one
      * @param overlayType The overlay type
      * @param title The title
@@ -126,8 +132,8 @@ public class ImageUtils {
      *
      * @return The bitmap
      */
-    public static Bitmap buildOverlayBitmap(Bitmap inputBitmap, int overlayType, String title,
-            String subTitle, int width, int height) {
+    public static Bitmap buildOverlayBitmap(Context context, Bitmap inputBitmap, int overlayType,
+            String title, String subTitle, int width, int height) {
         final Bitmap overlayBitmap;
         if (inputBitmap == null) {
             overlayBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -135,60 +141,31 @@ public class ImageUtils {
             overlayBitmap = inputBitmap;
         }
 
+        overlayBitmap.eraseColor(Color.TRANSPARENT);
         final Canvas canvas = new Canvas(overlayBitmap);
-        // Clear the image
-        canvas.drawColor(0x00000000);
 
-        final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-        p.setTypeface(Typeface.DEFAULT_BOLD);
         switch (overlayType) {
-            case MovieOverlay.OVERLAY_TYPE_CENTER: {
-                p.setARGB(0x80, 0x80, 0x80, 0x80);
-                final int startHeight = height / 3;
-                canvas.drawRect(0, startHeight, width, (2 * height) / 3, p);
-
-                p.setColor(0xff000000);
-                final int titleFontSize = height / 12;
-                final int maxSize = width - (2 * titleFontSize);
-                final int startYOffset = startHeight + (height / 6);
-                if (title != null) {
-                    p.setTextSize(titleFontSize);
-                    title = StringUtils.trimText(title, p, maxSize);
-                    canvas.drawText(title, (width - p.measureText(title)) / 2,
-                            startYOffset - p.descent(), p);
-                }
-
-                if (subTitle != null) {
-                    p.setTextSize(titleFontSize - 2);
-                    subTitle = StringUtils.trimText(subTitle, p, maxSize);
-                    canvas.drawText(subTitle, (width - p.measureText(subTitle)) / 2,
-                            startYOffset - p.ascent(), p);
-                }
+            case MovieOverlay.OVERLAY_TYPE_CENTER_1: {
+                drawCenterOverlay(context, canvas, R.drawable.overlay_background_1,
+                        title, subTitle, width, height);
                 break;
             }
 
-            case MovieOverlay.OVERLAY_TYPE_BOTTOM: {
-                p.setARGB(0x80, 0x80, 0x80, 0x80);
-                final int startHeight = (2 * height) / 3;
-                canvas.drawRect(0, startHeight, width, height, p);
+            case MovieOverlay.OVERLAY_TYPE_BOTTOM_1: {
+                drawBottomOverlay(context, canvas, R.drawable.overlay_background_1,
+                        title, subTitle, width, height);
+                break;
+            }
 
-                p.setColor(0xff000000);
-                final int titleFontSize = height / 12;
-                final int maxSize = width - (2 * titleFontSize);
-                final int startYOffset = startHeight + (height / 6);
-                if (title != null) {
-                    p.setTextSize(titleFontSize);
-                    title = StringUtils.trimText(title, p, maxSize);
-                    canvas.drawText(title, (width - p.measureText(title)) / 2,
-                            startYOffset - p.descent(), p);
-                }
+            case MovieOverlay.OVERLAY_TYPE_CENTER_2: {
+                drawCenterOverlay(context, canvas, R.drawable.overlay_background_2,
+                        title, subTitle, width, height);
+                break;
+            }
 
-                if (subTitle != null) {
-                    p.setTextSize(titleFontSize - 2);
-                    subTitle = StringUtils.trimText(subTitle, p, maxSize);
-                    canvas.drawText(subTitle, (width - p.measureText(subTitle)) / 2,
-                            startYOffset - p.ascent(), p);
-                }
+            case MovieOverlay.OVERLAY_TYPE_BOTTOM_2: {
+                drawBottomOverlay(context, canvas, R.drawable.overlay_background_2,
+                        title, subTitle, width, height);
                 break;
             }
 
@@ -198,5 +175,89 @@ public class ImageUtils {
         }
 
         return overlayBitmap;
+    }
+
+
+    /**
+     * Build an overlay image in the center third of the image
+     *
+     * @param context The context
+     * @param canvas The canvas
+     * @param drawableId The overlay background drawable if
+     * @param title The title
+     * @param subTitle The subtitle
+     * @param width The width
+     * @param height The height
+     */
+    private static void drawCenterOverlay(Context context, Canvas canvas, int drawableId,
+            String title, String subTitle, int width, int height) {
+        final int INSET = width / 72;
+        final int startHeight = (height / 3) + INSET;
+        final Drawable background = context.getResources().getDrawable(drawableId);
+        background.setBounds(INSET, startHeight, width - INSET,
+                ((2 * height) / 3) - INSET);
+        background.draw(canvas);
+
+        final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        p.setTypeface(Typeface.DEFAULT_BOLD);
+        p.setColor(Color.BLACK);
+
+        final int titleFontSize = height / 12;
+        final int maxWidth = width - (2 * INSET) - (2 * titleFontSize);
+        final int startYOffset = startHeight + (height / 6);
+        if (title != null) {
+            p.setTextSize(titleFontSize);
+            title = StringUtils.trimText(title, p, maxWidth);
+            canvas.drawText(title, (width - (2 * INSET) - p.measureText(title)) / 2,
+                    startYOffset - p.descent(), p);
+        }
+
+        if (subTitle != null) {
+            p.setTextSize(titleFontSize - 2);
+            subTitle = StringUtils.trimText(subTitle, p, maxWidth);
+            canvas.drawText(subTitle, (width - (2 * INSET) - p.measureText(subTitle)) / 2,
+                    startYOffset - p.ascent(), p);
+        }
+    }
+
+    /**
+     * Build an overlay image in the lower third of the image
+     *
+     * @param context The context
+     * @param canvas The canvas
+     * @param drawableId The overlay background drawable if
+     * @param title The title
+     * @param subTitle The subtitle
+     * @param width The width
+     * @param height The height
+     */
+    private static void drawBottomOverlay(Context context, Canvas canvas, int drawableId,
+            String title, String subTitle, int width, int height) {
+        final int INSET = width / 72;
+        final int startHeight = ((2 * height) / 3) + INSET;
+        final Drawable background = context.getResources().getDrawable(drawableId);
+        background.setBounds(INSET, startHeight, width - INSET, height - INSET);
+        background.draw(canvas);
+
+        final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        p.setTypeface(Typeface.DEFAULT_BOLD);
+        p.setColor(Color.BLACK);
+
+        final int titleFontSize = height / 12;
+        final int maxWidth = width - (2 * INSET) - (2 * titleFontSize);
+        final int startYOffset = startHeight + (height / 6);
+        if (title != null) {
+            p.setTextSize(titleFontSize);
+            title = StringUtils.trimText(title, p, maxWidth);
+            canvas.drawText(title, (width - (2 * INSET) - p.measureText(title)) / 2,
+                    startYOffset - p.descent(), p);
+        }
+
+        if (subTitle != null) {
+            p.setTextSize(titleFontSize - 2);
+            subTitle = StringUtils.trimText(subTitle, p, maxWidth);
+            canvas.drawText(subTitle, (width - (2 * INSET) - p.measureText(subTitle)) / 2,
+                    startYOffset - p.ascent(), p);
+        }
     }
 }
