@@ -23,5 +23,5 @@
         android:layout_gravity="left"
         android:layout_width="56dip"
         android:layout_height="wrap_content"
-        android:background="@drawable/add_clip_selector"/>
+        android:background="@drawable/add_clip_right_selector"/>
 </FrameLayout>
