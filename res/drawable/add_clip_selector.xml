@@ -15,7 +15,7 @@
 -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_window_focused="false" android:drawable="@drawable/add_clip_left_normal" />
-    <item android:state_pressed="true" android:state_selected="false" android:drawable="@drawable/add_clip_left_pressed" />
-    <item android:state_selected="true" android:drawable="@drawable/add_clip_left_selected" />
+    <item android:state_window_focused="false" android:drawable="@drawable/add_clip_normal" />
+    <item android:state_pressed="true" android:state_selected="false" android:drawable="@drawable/add_clip_pressed" />
+    <item android:state_selected="true" android:drawable="@drawable/add_clip_selected" />
 </selector>

@@ -42,6 +42,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -500,8 +501,20 @@ public class MediaLinearLayout extends LinearLayout {
         };
 
         // Add the beginning timeline item
-        final View beginView = inflate(getContext(), R.layout.empty_timeline_item, null);
+        final View beginView = inflate(getContext(), R.layout.empty_left_timeline_item, null);
         beginView.setOnClickListener(new View.OnClickListener() {
+            /*
+             * {@inheritDoc}
+             */
+            public void onClick(View view) {
+                unselectAllViews();
+            }
+        });
+
+        final ImageButton leftAddClipButton = (ImageButton)beginView.findViewById(
+                R.id.add_left_media_item_button);
+        leftAddClipButton.setVisibility(View.GONE);
+        leftAddClipButton.setOnClickListener(new View.OnClickListener() {
             /*
              * {@inheritDoc}
              */
@@ -513,12 +526,23 @@ public class MediaLinearLayout extends LinearLayout {
                 }
             }
         });
+
         addView(beginView);
 
         // Add the end timeline item
-        final View endView = inflate(getContext(), R.layout.empty_timeline_item, null);
-        endView.setBackgroundResource(R.drawable.add_clip_left_selector);
+        final View endView = inflate(getContext(), R.layout.empty_right_timeline_item, null);
         endView.setOnClickListener(new View.OnClickListener() {
+            /*
+             * {@inheritDoc}
+             */
+            public void onClick(View view) {
+                unselectAllViews();
+            }
+        });
+
+        final ImageButton rightAddClipButton = (ImageButton)endView.findViewById(
+                R.id.add_right_media_item_button);
+        rightAddClipButton.setOnClickListener(new View.OnClickListener() {
             /*
              * {@inheritDoc}
              */
@@ -692,7 +716,7 @@ public class MediaLinearLayout extends LinearLayout {
 
         // Now we can add clips by tapping the beginning view
         final View beginView = getChildAt(0);
-        beginView.setBackgroundResource(R.drawable.add_clip_right_selector);
+        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -769,7 +793,7 @@ public class MediaLinearLayout extends LinearLayout {
 
         // Now we can add clips by tapping the beginning view
         final View beginView = getChildAt(0);
-        beginView.setBackgroundResource(R.drawable.add_clip_right_selector);
+        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -881,7 +905,8 @@ public class MediaLinearLayout extends LinearLayout {
                     if (mProject.getMediaItemCount() == 0) {
                         // We cannot add clips by tapping the beginning view
                         final View beginView = getChildAt(0);
-                        beginView.setBackgroundDrawable(null);
+                        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(
+                                View.GONE);
                     }
                     return childView;
                 }
@@ -2229,7 +2254,7 @@ public class MediaLinearLayout extends LinearLayout {
 
         // We cannot add clips by tapping the beginning view
         final View beginView = getChildAt(0);
-        beginView.setBackgroundDrawable(null);
+        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(View.GONE);
     }
 
     /**

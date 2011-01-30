@@ -232,32 +232,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
              */
             public void onAddMediaItem(String afterMediaItemId) {
                 mInsertMediaItemAfterMediaItemId = afterMediaItemId;
-                final CharSequence[] items = {
-                        VideoEditorActivity.this.getString(R.string.editor_import_image),
-                        VideoEditorActivity.this.getString(R.string.editor_import_video)
-                };
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(
-                        VideoEditorActivity.this);
-                builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
-                    public void onClick(DialogInterface dialog, int item) {
-                        dialog.dismiss();
-
-                        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                        if (item == 0) {
-                            intent.setType("image/*");
-                            startActivityForResult(intent, REQUEST_CODE_IMPORT_IMAGE);
-                        } else {
-                            intent.setType("video/*");
-                            startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
-                        }
-                    }
-                });
-                builder.show();
+                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                intent.setType("video/*");
+                startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
             }
 
             /*

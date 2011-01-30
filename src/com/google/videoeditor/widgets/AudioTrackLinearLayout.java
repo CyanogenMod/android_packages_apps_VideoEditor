@@ -59,7 +59,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
     private final ItemSimpleGestureListener mAudioTrackGestureListener;
     private final int mAudioTrackHeight;
     private final int mHalfParentWidth;
-    private final int mEmptyViewShift;
+    private final View mAddAudioTrackButtonView;
+    private final int mAddAudioTrackButtonWidth;
     private AudioTracksLayoutListener mListener;
     private ActionMode mAudioTrackActionMode;
     private VideoEditorProject mProject;
@@ -268,9 +269,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
              */
             public void onClick(View view) {
                 unselectAllViews();
-                if (mProject != null && mProject.getAudioTracks().size() == 0) {
-                    mListener.onAddAudioTrack();
-                }
             }
         });
         addView(beginView);
@@ -287,7 +285,22 @@ public class AudioTrackLinearLayout extends LinearLayout {
         });
         addView(endView);
 
-        mEmptyViewShift = (int)context.getResources().getDimension(R.dimen.audio_empty_view_shift);
+        // Add the audio track button
+        mAddAudioTrackButtonView = inflate(getContext(), R.layout.add_audio_track_button, null);
+        addView(mAddAudioTrackButtonView, 1);
+        mAddAudioTrackButtonView.setOnClickListener(new View.OnClickListener() {
+            /*
+             * {@inheritDoc}
+             */
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onAddAudioTrack();
+                }
+            }
+        });
+        mAddAudioTrackButtonWidth = (int)context.getResources().getDimension(
+                R.dimen.add_audio_track_button_width);
+
         // Compute half the width of the screen (and therefore the parent view)
         final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
         mHalfParentWidth = display.getWidth() / 2;
@@ -331,9 +344,9 @@ public class AudioTrackLinearLayout extends LinearLayout {
 
         mProject = project;
 
-        setBeginViewBackground();
+        updateAddAudioTrackButton();
 
-        removeViews();
+        removeAudioTrackViews();
     }
 
     /**
@@ -361,9 +374,9 @@ public class AudioTrackLinearLayout extends LinearLayout {
             mAudioTrackActionMode = null;
         }
 
-        setBeginViewBackground();
+        updateAddAudioTrackButton();
 
-        removeViews();
+        removeAudioTrackViews();
 
         mTimelineDurationMs = mProject.computeDuration();
 
@@ -380,6 +393,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
      * @return The view that was added
      */
     public View addAudioTrack(MovieAudioTrack audioTrack) {
+        updateAddAudioTrackButton();
+
         final AudioTrackView audioTrackView = (AudioTrackView)inflate(getContext(),
                 R.layout.audio_track_item, null);
 
@@ -404,8 +419,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
             mAudioTrackActionMode.invalidate();
         }
 
-        setBeginViewBackground();
-
         requestLayout();
         return audioTrackView;
     }
@@ -424,7 +437,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             if (audioTrack != null && audioTrack.getId().equals(audioTrackId)) {
                 removeViewAt(i);
 
-                setBeginViewBackground();
+                updateAddAudioTrackButton();
 
                 requestLayout();
                 return childView;
@@ -519,7 +532,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
         mTimelineDurationMs = mProject.computeDuration();
 
         // Media items may had been added or removed
-        setBeginViewBackground();
+        updateAddAudioTrackButton();
 
         // Update the project duration for all views
         final int childrenCount = getChildCount();
@@ -557,17 +570,19 @@ public class AudioTrackLinearLayout extends LinearLayout {
         } else {
             final int viewWidth = getWidth() - (2 * mHalfParentWidth);
             int left = 0;
-            final int emptyViewShift;
-            if (mProject.getAudioTracks().isEmpty()) {
-                emptyViewShift = mEmptyViewShift;
-            } else {
-                emptyViewShift = 0;
-            }
 
             final int leftViewWidth = (Integer)((View)getParent().getParent()).getTag(
                     R.id.left_view_width);
+            final int addAudioTrackButtonWidth;
+            if (mProject.getAudioTracks().size() > 0) {
+                addAudioTrackButtonWidth = 0;
+            } else {
+                addAudioTrackButtonWidth = mAddAudioTrackButtonWidth;
+            }
+
             for (int i = 0; i < childrenCount; i++) {
                 final View childView = getChildAt(i);
+                final int id = childView.getId();
                 final MovieAudioTrack audioTrack = (MovieAudioTrack)childView.getTag();
                 if (audioTrack != null) { // Audio track views
                     final int width;
@@ -590,12 +605,14 @@ public class AudioTrackLinearLayout extends LinearLayout {
                             leftViewWidth;
                     childView.layout(trackLeft, 0, trackLeft + width, mAudioTrackHeight);
                     left = trackLeft + width;
+                } else if (id == R.id.add_audio_track_button) {
+                    childView.layout(left, 0, left + mAddAudioTrackButtonWidth, mAudioTrackHeight);
+                    left += mAddAudioTrackButtonWidth;
                 } else if (i == 0) { // Begin view
-                    childView.layout(left, 0, left + leftViewWidth + emptyViewShift,
-                            mAudioTrackHeight);
-                    left += leftViewWidth + emptyViewShift;
+                    childView.layout(left, 0, left + leftViewWidth, mAudioTrackHeight);
+                    left += leftViewWidth;
                 } else { // End view
-                    childView.layout(getWidth() - mHalfParentWidth - emptyViewShift -
+                    childView.layout(getWidth() - mHalfParentWidth + addAudioTrackButtonWidth -
                             (mHalfParentWidth - leftViewWidth), 0, getWidth(), mAudioTrackHeight);
                 }
             }
@@ -685,7 +702,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
     /**
      * Remove all audio track views (leave the beginning and end views)
      */
-    private void removeViews() {
+    private void removeAudioTrackViews() {
         int index = 0;
         while (index < getChildCount()) {
             final Object tag = getChildAt(index).getTag();
@@ -702,18 +719,17 @@ public class AudioTrackLinearLayout extends LinearLayout {
     /**
      * Set the background of the begin view
      */
-    private void setBeginViewBackground() {
-        final View beginView = getChildAt(0);
-        if (mProject == null) {
-            beginView.setBackgroundDrawable(null);
+    private void updateAddAudioTrackButton() {
+        if (mProject == null) { // No project
+            mAddAudioTrackButtonView.setVisibility(View.GONE);
         } else if (mProject.getMediaItemCount() > 0) {
             if (mProject.getAudioTracks().size() > 0) {
-                beginView.setBackgroundDrawable(null);
+                mAddAudioTrackButtonView.setVisibility(View.GONE);
             } else {
-                beginView.setBackgroundResource(R.drawable.add_audio_track_selector);
+                mAddAudioTrackButtonView.setVisibility(View.VISIBLE);
             }
-        } else {
-            beginView.setBackgroundDrawable(null);
+        } else { // No media items
+            mAddAudioTrackButtonView.setVisibility(View.GONE);
         }
     }
 

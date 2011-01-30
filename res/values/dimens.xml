@@ -22,7 +22,7 @@
     <dimen name="playhead_layout_height">32dip</dimen>
 
     <dimen name="media_layout_padding">32dip</dimen>
-    <dimen name="audio_empty_view_shift">56dip</dimen>
+    <dimen name="add_audio_track_button_width">56dip</dimen>
     <dimen name="handle_width">38dip</dimen>
 
     <dimen name="timeline_separator_height">3dip</dimen>
