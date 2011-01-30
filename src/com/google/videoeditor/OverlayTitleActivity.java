@@ -80,6 +80,7 @@ public class OverlayTitleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overlay_title);
+        setFinishOnTouchOutside(true);
 
         final Bundle attributes = getIntent().getBundleExtra(PARAM_OVERLAY_ATTRIBUTES);
         mOverlayType = MovieOverlay.getType(attributes);

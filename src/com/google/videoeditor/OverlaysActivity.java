@@ -44,6 +44,7 @@ public class OverlaysActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
+        setFinishOnTouchOutside(true);
 
         // Create the list adapter
         mAdapter = new OverlaysAdapter(this, getListView());

@@ -57,6 +57,7 @@ public class TransitionsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transition_list_view);
+        setFinishOnTouchOutside(true);
 
         mTransitionDurationView = (TextView)findViewById(R.id.transition_duration);
         mTransitionLeftBtn = findViewById(R.id.duration_left);

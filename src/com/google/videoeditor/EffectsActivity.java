@@ -42,6 +42,7 @@ public class EffectsActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
+        setFinishOnTouchOutside(true);
 
         // Create the list adapter
         mAdapter = new EffectsAdapter(this, getListView(), getIntent().getIntExtra(PARAM_CATEGORY,

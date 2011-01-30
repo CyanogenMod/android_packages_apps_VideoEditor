@@ -218,6 +218,7 @@ public class KenBurnsActivity extends Activity {
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.ken_burns_layout);
+        setFinishOnTouchOutside(true);
 
         mMediaItemWidth = getIntent().getIntExtra(PARAM_WIDTH, 0);
         mMediaItemHeight = getIntent().getIntExtra(PARAM_HEIGHT, 0);
