@@ -32,11 +32,15 @@ public class OverlayType {
      * @return The array of overlay
      */
     public static OverlayType[] getOverlays(Context context) {
-        final OverlayType[] overlays = new OverlayType[2];
+        final OverlayType[] overlays = new OverlayType[4];
         overlays[0] = new OverlayType(context.getString(R.string.overlay_preview_center),
-                MovieOverlay.OVERLAY_TYPE_CENTER);
+                MovieOverlay.OVERLAY_TYPE_CENTER_1);
         overlays[1] = new OverlayType(context.getString(R.string.overlay_preview_bottom),
-                MovieOverlay.OVERLAY_TYPE_BOTTOM);
+                MovieOverlay.OVERLAY_TYPE_BOTTOM_1);
+        overlays[2] = new OverlayType(context.getString(R.string.overlay_preview_center),
+                MovieOverlay.OVERLAY_TYPE_CENTER_2);
+        overlays[3] = new OverlayType(context.getString(R.string.overlay_preview_bottom),
+                MovieOverlay.OVERLAY_TYPE_BOTTOM_2);
 
         return overlays;
     }

@@ -54,7 +54,7 @@ public class MovieTheme {
                             Transition.BEHAVIOR_SPEED_DOWN),
                     new MovieOverlay(null, 0, 1000, context.getString(R.string.theme_travel_title),
                             context.getString(R.string.theme_travel_subtitle),
-                            MovieOverlay.OVERLAY_TYPE_CENTER),
+                            MovieOverlay.OVERLAY_TYPE_CENTER_1),
                     new MovieAudioTrack(R.raw.theme_travel_audio_track));
         } else if (THEME_SURFING.equals(theme)) {
             return new MovieTheme(THEME_SURFING, R.string.theme_name_surfing,
@@ -68,7 +68,7 @@ public class MovieTheme {
                     new MovieOverlay(null, 0, 1000,
                             context.getString(R.string.theme_surfing_title),
                             context.getString(R.string.theme_surfing_subtitle),
-                            MovieOverlay.OVERLAY_TYPE_BOTTOM),
+                            MovieOverlay.OVERLAY_TYPE_BOTTOM_1),
                     new MovieAudioTrack(R.raw.theme_surfing_audio_track));
         } else if (THEME_FILM.equals(theme)) {
             return new MovieTheme(THEME_FILM, R.string.theme_name_film,
@@ -81,7 +81,7 @@ public class MovieTheme {
                             Transition.BEHAVIOR_SPEED_DOWN),
                     new MovieOverlay(null, 0, 1000, context.getString(R.string.theme_film_title),
                             context.getString(R.string.theme_film_subtitle),
-                            MovieOverlay.OVERLAY_TYPE_BOTTOM),
+                            MovieOverlay.OVERLAY_TYPE_BOTTOM_1),
                      new MovieAudioTrack(R.raw.theme_film_audio_track));
         } else if (THEME_ROCKANDROLL.equals(theme)) {
             return new MovieTheme(THEME_ROCKANDROLL, R.string.theme_name_rock_and_roll,
@@ -96,7 +96,7 @@ public class MovieTheme {
                     new MovieOverlay(null, 0, 1000, context.getString(
                             R.string.theme_rock_and_roll_title),
                             context.getString(R.string.theme_rock_and_roll_subtitle),
-                            MovieOverlay.OVERLAY_TYPE_BOTTOM),
+                            MovieOverlay.OVERLAY_TYPE_BOTTOM_1),
                     new MovieAudioTrack(R.raw.theme_rockandroll_audio_track));
         } else {
             return null;

@@ -108,7 +108,8 @@ public class OverlaysAdapter extends BaseAdapterWithImages<Integer> {
 
         final Canvas canvas = new Canvas(overlayBitmap);
         canvas.drawBitmap(mGenericBitmap, 0, 0, sCopyPaint);
-        canvas.drawBitmap(ImageUtils.buildOverlayBitmap(null, (Integer)data, mTitle, mSubtitle,
+        canvas.drawBitmap(ImageUtils.buildOverlayBitmap(mContext, null, (Integer)data, mTitle,
+                mSubtitle,
                 mGenericBitmap.getWidth(), mGenericBitmap.getHeight()), 0, 0, sCopyPaint);
         return overlayBitmap;
     }

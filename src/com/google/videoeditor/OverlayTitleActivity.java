@@ -64,9 +64,9 @@ public class OverlayTitleActivity extends Activity {
          * {@inheritDoc}
          */
         public void afterTextChanged(Editable s) {
-            mOverlayBitmap = ImageUtils.buildOverlayBitmap(mOverlayBitmap, mOverlayType,
-                    mTitleView.getText().toString(), mSubtitleView.getText().toString(),
-                    mPreviewWidth, mPreviewHeight);
+            mOverlayBitmap = ImageUtils.buildOverlayBitmap(OverlayTitleActivity.this,
+                    mOverlayBitmap, mOverlayType, mTitleView.getText().toString(),
+                    mSubtitleView.getText().toString(), mPreviewWidth, mPreviewHeight);
             mOverlayImageView.setImageBitmap(mOverlayBitmap);
 
             invalidateOptionsMenu();
@@ -104,7 +104,7 @@ public class OverlayTitleActivity extends Activity {
             mSubtitleView.setText(MovieOverlay.getSubtitle(attributes));
         }
 
-        mOverlayBitmap = ImageUtils.buildOverlayBitmap(mOverlayBitmap, mOverlayType,
+        mOverlayBitmap = ImageUtils.buildOverlayBitmap(this, mOverlayBitmap, mOverlayType,
                 mTitleView.getText().toString(), mSubtitleView.getText().toString(),
                 mPreviewWidth, mPreviewHeight);
         mOverlayImageView.setImageBitmap(mOverlayBitmap);
