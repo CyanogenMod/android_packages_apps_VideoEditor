@@ -96,8 +96,9 @@ public class ExportOptionsDialog {
         builder.setCancelable(true);
         builder.setOnCancelListener(cancelListener);
 
-        // Create the dialog
-        return builder.create();
+        final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 
     /**

@@ -68,7 +68,10 @@ public class AlertDialogs {
         builder.setNegativeButton(negative, negativeListener);
         builder.setOnCancelListener(cancelListener);
         builder.setCancelable(cancelable);
-        return builder.create();
+
+        final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        return dialog;
     }
 
     /**
@@ -120,6 +123,7 @@ public class AlertDialogs {
         builder.setNegativeButton(negativeButtonText, negativeListener);
         builder.setOnCancelListener(cancelListener);
         final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
         textInput.addTextChangedListener(new TextWatcher() {
             Button mPositiveButton;
             /*
@@ -144,6 +148,7 @@ public class AlertDialogs {
                 mPositiveButton.setEnabled(s.toString().trim().length() > 0);
             }
         });
+
         return dialog;
     }
 }
