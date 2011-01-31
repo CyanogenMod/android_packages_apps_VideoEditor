@@ -1667,6 +1667,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
         });
         mExportProgressDialog.show();
+        mExportProgressDialog.setProgressNumberFormat("");
     }
 
     /**
