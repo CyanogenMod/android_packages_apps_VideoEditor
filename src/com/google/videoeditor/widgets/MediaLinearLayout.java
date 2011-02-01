@@ -89,6 +89,7 @@ public class MediaLinearLayout extends LinearLayout {
     private final Handler mHandler;
     private final int mHalfParentWidth;
     private final int mHandleWidth;
+    private final int mTransitionVerticalInset;
     private MediaLayoutListener mListener;
     private ActionMode mMediaItemActionMode;
     private ActionMode mTransitionActionMode;
@@ -188,19 +189,25 @@ public class MediaLinearLayout extends LinearLayout {
          * {@inheritDoc}
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            menu.findItem(R.id.action_add_effect).setVisible(mMediaItem.getEffect() == null &&
+            menu.findItem(R.id.action_add_effect).setIcon(
+                    R.drawable.ic_menu_add_effects).setVisible(mMediaItem.getEffect() == null &&
                     !mPlaybackInProgress);
-            menu.findItem(R.id.action_change_effect).setVisible(mMediaItem.getEffect() != null &&
+            menu.findItem(R.id.action_change_effect).setIcon(
+                    R.drawable.ic_menu_edit).setVisible(mMediaItem.getEffect() != null &&
                     !mPlaybackInProgress);
-            menu.findItem(R.id.action_remove_effect).setVisible(mMediaItem.getEffect() != null &&
+            menu.findItem(R.id.action_remove_effect).setIcon(
+                    R.drawable.ic_menu_delete).setVisible(mMediaItem.getEffect() != null &&
                     !mPlaybackInProgress);
             menu.findItem(R.id.action_add_overlay).setVisible(mMediaItem.getOverlay() == null &&
                     !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_begin_transition).setVisible(
+            menu.findItem(R.id.action_add_begin_transition).setIcon(
+                    R.drawable.ic_menu_add_trans_start).setVisible(
                     mMediaItem.getBeginTransition() == null && !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_end_transition).setVisible(
+            menu.findItem(R.id.action_add_end_transition).setIcon(
+                    R.drawable.ic_menu_add_trans_end).setVisible(
                     mMediaItem.getEndTransition() == null && !mPlaybackInProgress);
-            menu.findItem(R.id.action_rendering_mode).setVisible(mProject.hasMultipleAspectRatios()
+            menu.findItem(R.id.action_rendering_mode).setIcon(
+                    R.drawable.ic_menu_rendermode).setVisible(mProject.hasMultipleAspectRatios()
                     && !mPlaybackInProgress);
             if (mMediaItem.isVideoClip()) {
                 menu.findItem(R.id.action_mute_media_item).setVisible(!mMediaItem.isAppMuted());
@@ -569,6 +576,10 @@ public class MediaLinearLayout extends LinearLayout {
         addView(mRightHandle);
 
         mHandleWidth = (int)context.getResources().getDimension(R.dimen.handle_width);
+
+        mTransitionVerticalInset = (int)context.getResources().getDimension(
+                R.dimen.timelime_transition_vertical_inset);
+
         // Compute half the width of the screen (and therefore the parent view)
         final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
         mHalfParentWidth = display.getWidth() / 2;
@@ -1438,8 +1449,9 @@ public class MediaLinearLayout extends LinearLayout {
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
-                    } else {
-                        view.layout(left, paddingTop, right, b - t);
+                    } else { // Transition
+                        view.layout(left, paddingTop + mTransitionVerticalInset, right,
+                                b - t - mTransitionVerticalInset);
                     }
 
                     startMs += durationMs;
@@ -1475,8 +1487,9 @@ public class MediaLinearLayout extends LinearLayout {
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
-                    } else {
-                        view.layout(left, paddingTop, right, b - t);
+                    } else { // Transition
+                        view.layout(left, paddingTop + mTransitionVerticalInset, right,
+                                b - t - mTransitionVerticalInset);
                     }
 
                     startMs += durationMs;
@@ -1517,8 +1530,9 @@ public class MediaLinearLayout extends LinearLayout {
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
-                    } else {
-                        view.layout(left, paddingTop, right, b - t);
+                    } else { // Transition
+                        view.layout(left, paddingTop + mTransitionVerticalInset, right,
+                                b - t - mTransitionVerticalInset);
                     }
 
                     startMs += durationMs;

@@ -125,16 +125,16 @@ public class AudioTrackLinearLayout extends LinearLayout {
             final View view = mode.getCustomView();
             final ImageButton muteBtn = (ImageButton)view.findViewById(R.id.action_mute);
             if (mAudioTrack.isAppMuted()) {
-                muteBtn.setImageResource(R.drawable.unmute);
+                muteBtn.setImageResource(R.drawable.ic_menu_unmute);
             } else {
-                muteBtn.setImageResource(R.drawable.mute);
+                muteBtn.setImageResource(R.drawable.ic_menu_mute);
             }
 
             final ImageButton duckBtn = (ImageButton)view.findViewById(R.id.action_duck);
             if (mAudioTrack.isAppDuckingEnabled()) {
-                duckBtn.setImageResource(R.drawable.noduck);
+                duckBtn.setImageResource(R.drawable.ic_menu_noduck);
             } else {
-                duckBtn.setImageResource(R.drawable.duck);
+                duckBtn.setImageResource(R.drawable.ic_menu_duck);
             }
 
             return true;

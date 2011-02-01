@@ -50,7 +50,7 @@ public class OverlaysAdapter extends BaseAdapterWithImages<Integer> {
         super(context, listView);
 
         mGenericBitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.generic_image);
+                R.drawable.effects_generic);
         mTitle = context.getString(R.string.overlay_title_sample);
         mSubtitle = context.getString(R.string.overlay_subtitle_sample);
         mOverlays = OverlayType.getOverlays(context);

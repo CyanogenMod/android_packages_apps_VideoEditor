@@ -25,8 +25,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -48,7 +48,7 @@ public class TransitionView extends ImageView {
     private final GestureDetector mSimpleGestureDetector;
     private final ScrollViewListener mScrollListener;
     private final Rect mProgressDestRect;
-
+    private final Paint mSeparatorPaint;
     private boolean mIsScrolling;
     private int mScrollX, mScrollingX;
     private int mScreenWidth;
@@ -57,7 +57,6 @@ public class TransitionView extends ImageView {
     private ItemSimpleGestureListener mGestureListener;
     private int mProgress;
     private boolean mIsPlaying;
-    private Drawable mTransitionSeparator;
 
     /*
      * {@inheritDoc}
@@ -140,8 +139,10 @@ public class TransitionView extends ImageView {
         display.getMetrics(metrics);
         mScreenWidth = metrics.widthPixels;
 
-        // Prepare the transition separator
-        mTransitionSeparator = resources.getDrawable(R.drawable.transition_separator);
+        // Prepare the separator paint
+        mSeparatorPaint = new Paint();
+        mSeparatorPaint.setColor(Color.BLACK);
+        mSeparatorPaint.setStrokeWidth(2);
     }
 
     /*
@@ -305,12 +306,8 @@ public class TransitionView extends ImageView {
             }
             canvas.restore();
 
-            // Draw the transition separator
-            mTransitionSeparator.setBounds(
-                    halfWidth - (mTransitionSeparator.getIntrinsicWidth() / 2), getPaddingTop(),
-                    halfWidth + (mTransitionSeparator.getIntrinsicWidth() / 2),
-                    getHeight() - getPaddingBottom());
-            mTransitionSeparator.draw(canvas);
+            canvas.drawLine(halfWidth, getPaddingTop(), halfWidth,
+                    getHeight() - getPaddingBottom(), mSeparatorPaint);
         } else if (mIsPlaying) { // Playing
             requestThumbnails();
         } else if (mIsScrolling) { // Scrolling

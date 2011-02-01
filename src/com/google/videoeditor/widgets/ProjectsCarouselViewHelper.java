@@ -288,7 +288,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
             mPaint.setAlpha(255);
 
             final Bitmap newProjectBitmap = BitmapFactory.decodeResource(mContext.getResources(),
-                    R.drawable.new_project);
+                    R.drawable.ic_menu_add_video);
 
             final int x = (mCarouselTextureWidth - newProjectBitmap.getWidth()) / 2;
             final int y = (mCarouselTextureHeight - newProjectBitmap.getHeight()) / 2;

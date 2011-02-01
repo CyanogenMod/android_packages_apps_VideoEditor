@@ -17,6 +17,9 @@
 package com.google.videoeditor.widgets;
 
 import com.google.videoeditor.R;
+import com.google.videoeditor.service.MovieMediaItem;
+import com.google.videoeditor.service.MovieOverlay;
+import com.google.videoeditor.util.ImageUtils;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -129,14 +132,14 @@ public class OverlayView extends ImageView {
 
         switch (mState) {
             case STATE_STUB: {
-                setBackgroundResource(R.drawable.timeline_transparent_normal_item_selector);
+                setBackgroundDrawable(null);
                 setImageDrawable(null);
                 break;
             }
 
             case STATE_ADD_BUTTON: {
-                setBackgroundResource(R.drawable.timeline_transparent_normal_item_selector);
-                setImageResource(R.drawable.add_overlay);
+                setBackgroundDrawable(null);
+                setImageResource(R.drawable.ic_menu_add_title);
                 break;
             }
 
@@ -213,6 +216,35 @@ public class OverlayView extends ImageView {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        switch (mState) {
+            case STATE_STUB: {
+                break;
+            }
+
+            case STATE_ADD_BUTTON: {
+                break;
+            }
+
+            case STATE_OVERLAY: {
+                final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
+                if (mediaItem != null) {
+                    final MovieOverlay overlay = mediaItem.getOverlay();
+                    if (overlay != null) {
+                        ImageUtils.buildOverlayPreview(getContext(), canvas, overlay.getType(),
+                                overlay.getTitle(), overlay.getSubtitle(),
+                                getPaddingLeft(), getPaddingTop(),
+                                getWidth() - getPaddingLeft() - getPaddingRight(),
+                                getHeight() - getPaddingTop() - getPaddingBottom());
+                    }
+                }
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
 
         if (mLongPressMove) {
             final int halfWidth = getWidth() / 2;

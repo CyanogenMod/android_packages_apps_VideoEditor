@@ -35,11 +35,11 @@ public class EffectType {
 
     // Effect preview resources
     public final static int EFFECT_RESOURCE_IDS[] = {
-        R.drawable.effect_preview_ken_burns,
-        R.drawable.effect_preview_gradient,
-        R.drawable.effect_preview_sepia,
-        R.drawable.effect_preview_negative,
-        R.drawable.effect_preview_fifties,
+        R.drawable.effects_pan_zoom,
+        R.drawable.effects_gradient,
+        R.drawable.effects_sepia,
+        R.drawable.effects_negative,
+        R.drawable.effects_fifties
     };
 
     /**
