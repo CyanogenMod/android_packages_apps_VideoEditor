@@ -728,8 +728,7 @@ public class MediaLinearLayout extends LinearLayout {
         }
 
         // Now we can add clips by tapping the beginning view
-        final View beginView = getChildAt(0);
-        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(View.VISIBLE);
+        mLeftAddClipButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -805,8 +804,7 @@ public class MediaLinearLayout extends LinearLayout {
         }
 
         // Now we can add clips by tapping the beginning view
-        final View beginView = getChildAt(0);
-        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(View.VISIBLE);
+        mLeftAddClipButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -917,9 +915,7 @@ public class MediaLinearLayout extends LinearLayout {
 
                     if (mProject.getMediaItemCount() == 0) {
                         // We cannot add clips by tapping the beginning view
-                        final View beginView = getChildAt(0);
-                        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(
-                                View.GONE);
+                        mLeftAddClipButton.setVisibility(View.GONE);
                     }
                     return childView;
                 }
@@ -2300,8 +2296,7 @@ public class MediaLinearLayout extends LinearLayout {
         requestLayout();
 
         // We cannot add clips by tapping the beginning view
-        final View beginView = getChildAt(0);
-        beginView.findViewById(R.id.add_left_media_item_button).setVisibility(View.GONE);
+        mLeftAddClipButton.setVisibility(View.GONE);
     }
 
     /**
@@ -2884,11 +2879,13 @@ public class MediaLinearLayout extends LinearLayout {
      */
     private void showAddMediaItemButtons(boolean show) {
         if (show) {
-            mLeftAddClipButton.setVisibility(View.VISIBLE);
+            if (mProject.getMediaItemCount() > 0) {
+                mLeftAddClipButton.setVisibility(View.VISIBLE);
+            }
             mRightAddClipButton.setVisibility(View.VISIBLE);
         } else {
-            mLeftAddClipButton.setVisibility(View.INVISIBLE);
-            mRightAddClipButton.setVisibility(View.INVISIBLE);
+            mLeftAddClipButton.setVisibility(View.GONE);
+            mRightAddClipButton.setVisibility(View.GONE);
         }
     }
 }
