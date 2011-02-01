@@ -279,14 +279,14 @@ public class ImageUtils {
             String title, String subTitle, int startX, int startY, int width, int height) {
         switch (overlayType) {
             case MovieOverlay.OVERLAY_TYPE_CENTER_1:
-                case MovieOverlay.OVERLAY_TYPE_BOTTOM_1: {
+            case MovieOverlay.OVERLAY_TYPE_BOTTOM_1: {
                 drawOverlayPreview(context, canvas, R.drawable.overlay_background_1,
                         Color.WHITE, title, subTitle, startX, startY, width, height);
                 break;
             }
 
             case MovieOverlay.OVERLAY_TYPE_CENTER_2:
-                case MovieOverlay.OVERLAY_TYPE_BOTTOM_2: {
+            case MovieOverlay.OVERLAY_TYPE_BOTTOM_2: {
                 drawOverlayPreview(context, canvas, R.drawable.overlay_background_2,
                         Color.BLACK, title, subTitle, startX, startY, width, height);
                 break;
