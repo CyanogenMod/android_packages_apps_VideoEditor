@@ -487,10 +487,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_IMPORT_VIDEO_ID, Menu.NONE,
-                R.string.editor_import_video).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                R.string.editor_import_video).setIcon(
+                        R.drawable.ic_menu_add_video).setShowAsAction(
+                                MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(Menu.NONE, MENU_IMPORT_IMAGE_ID, Menu.NONE,
-                R.string.editor_import_image).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, MENU_IMPORT_AUDIO_ID, Menu.NONE, R.string.editor_import_audio);
+                R.string.editor_import_image).setIcon(
+                        R.drawable.ic_menu_add_image).setShowAsAction(
+                                MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, MENU_IMPORT_AUDIO_ID, Menu.NONE, R.string.editor_import_audio).setIcon(
+                R.drawable.ic_menu_add_audio_clip);
         menu.add(Menu.NONE, MENU_CHANGE_ASPECT_RATIO_ID, Menu.NONE,
                 R.string.editor_change_aspect_ratio);
         menu.add(Menu.NONE, MENU_EDIT_PROJECT_NAME_ID, Menu.NONE,
@@ -1969,7 +1974,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          */
         private void previewStarted(VideoEditorProject project) {
             // Change the button image back to a play icon
-            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_pause);
+            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_pause_selector);
 
             mTimelineScroller.enableUserScrolling(false);
             mMediaLayout.setPlaybackInProgress(true);
@@ -2106,7 +2111,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             // Change the button image back to a play icon
-            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_play);
+            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_play_selector);
 
             if (error == false) {
                 // Set the playhead position at the position where the playback stopped

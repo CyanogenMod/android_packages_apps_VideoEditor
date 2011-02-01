@@ -89,7 +89,7 @@ public class OverlayTitleActivity extends Activity {
         // Determine the bitmap dimensions
         final BitmapFactory.Options dbo = new BitmapFactory.Options();
         dbo.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), R.drawable.generic_image, dbo);
+        BitmapFactory.decodeResource(getResources(), R.drawable.effects_generic, dbo);
         mPreviewWidth = dbo.outWidth;
         mPreviewHeight = dbo.outHeight;
 

@@ -128,8 +128,9 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_NEW_PROJECT_ID, Menu.NONE,
-                R.string.projects_new_project).setIcon(R.drawable.new_project).setShowAsAction(
-                        MenuItem.SHOW_AS_ACTION_ALWAYS);
+                R.string.projects_new_project).setIcon(
+                        R.drawable.ic_menu_add_video).setShowAsAction(
+                                MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
 

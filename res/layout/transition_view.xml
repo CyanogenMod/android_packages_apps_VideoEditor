@@ -18,5 +18,4 @@
 <com.google.videoeditor.widgets.TransitionView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:scaleType="centerInside"
-    style="@style/media_timeline_item"/>
+    style="@style/transition_timeline_item"/>

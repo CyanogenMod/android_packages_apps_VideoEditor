@@ -34,14 +34,14 @@ public class TransitionType {
 
     // Transition preview resources
     public final static int TRANSITION_RESOURCE_IDS[] = {
-        R.drawable.transition_preview_alpha_contour,
-        R.drawable.transition_preview_alpha_diagonal,
-        R.drawable.transition_preview_crossfade,
-        R.drawable.transition_preview_fade_black,
-        R.drawable.transition_preview_sliding_right_out_left_in,
-        R.drawable.transition_preview_sliding_left_out_right_in,
-        R.drawable.transition_preview_sliding_top_out_bottom_in,
-        R.drawable.transition_preview_sliding_bottom_out_top_in,
+        R.drawable.transition_alpha_contour,
+        R.drawable.transition_alpha_diagonal,
+        R.drawable.transition_crossfade,
+        R.drawable.transition_fade_black,
+        R.drawable.transition_sliding_right_out_left_in,
+        R.drawable.transition_sliding_left_out_right_in,
+        R.drawable.transition_sliding_top_out_bottom_in,
+        R.drawable.transition_sliding_bottom_out_top_in
     };
 
     /**

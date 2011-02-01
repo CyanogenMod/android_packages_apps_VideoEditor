@@ -22,6 +22,8 @@
         android:id="@+id/add_left_media_item_button"
         android:layout_gravity="right"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/add_clip_left_selector"/>
+        android:layout_height="96dip"
+        android:layout_marginRight="5dip"
+        android:src="@drawable/add_clip_selector"
+        android:background="@null"/>
 </FrameLayout>

@@ -17,8 +17,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_edit_overlay"
         android:title="@string/editor_edit_overlay"
-        android:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_menu_edit"/>
     <item android:id="@+id/action_remove_overlay"
         android:title="@string/remove"
-        android:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_menu_delete"/>
 </menu>

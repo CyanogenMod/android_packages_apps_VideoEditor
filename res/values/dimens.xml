@@ -37,5 +37,9 @@
     <dimen name="carousel_detail_texture_width_portrait">220dip</dimen>
     <dimen name="carousel_detail_texture_height">80dip</dimen>
 
-    <dimen name="timelime_item_padding">2dip</dimen>
+    <dimen name="timelime_item_vertical_padding">2dip</dimen>
+    <dimen name="timelime_item_horizontal_padding">4dip</dimen>
+
+    <dimen name="timelime_transition_vertical_inset">12dip</dimen>
+
 </resources>

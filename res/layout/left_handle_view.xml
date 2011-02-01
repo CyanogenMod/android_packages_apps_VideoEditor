@@ -20,5 +20,4 @@
     android:layout_height="wrap_content"
     android:visibility="gone"
     android:clickable="true"
-    android:src="@drawable/handle_image"
     android:background="@drawable/handle_left_selector"/>

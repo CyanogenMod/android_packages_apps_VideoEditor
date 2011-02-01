@@ -23,8 +23,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -48,7 +46,6 @@ import com.google.videoeditor.service.MovieMediaItem;
 import com.google.videoeditor.service.MovieOverlay;
 import com.google.videoeditor.service.VideoEditorProject;
 import com.google.videoeditor.util.FileUtils;
-import com.google.videoeditor.util.ImageUtils;
 import com.google.videoeditor.util.MediaItemUtils;
 
 /**
@@ -67,7 +64,6 @@ public class OverlayLinearLayout extends LinearLayout {
     // Instance variables
     private final ItemMoveGestureListener mOverlayGestureListener;
     private final int mHalfParentWidth;
-    private final int mOverlayHeight;
     private final Handler mHandler;
     private final int mHandleWidth;
     private ActionMode mOverlayActionMode;
@@ -169,63 +165,6 @@ public class OverlayLinearLayout extends LinearLayout {
             mOverlayActionMode = null;
         }
     }
-
-    /**
-     * Overlay preview loader class
-     */
-    private class OverlayPreviewAsyncTask extends AsyncTask<Void, Void, Bitmap> {
-        // Instance variables
-        private final MovieMediaItem mMediaItem;
-        private final MovieOverlay mOverlay;
-
-        /**
-         * Constructor
-         *
-         * @param mediaItem The mediaItem
-         */
-        public OverlayPreviewAsyncTask(MovieMediaItem mediaItem) {
-            mMediaItem = mediaItem;
-            mOverlay = mediaItem.getOverlay();
-        }
-
-        /*
-         * {@inheritDoc}
-         */
-        @Override
-        protected Bitmap doInBackground(Void... zzz) {
-            return ImageUtils.buildOverlayBitmap(getContext(), null, mOverlay.getType(),
-                    mOverlay.getTitle(), mOverlay.getSubtitle(),
-                    (mOverlayHeight * mMediaItem.getWidth()) / mMediaItem.getHeight(),
-                    mOverlayHeight);
-        }
-
-        /*
-         * {@inheritDoc}
-         */
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            final String mediaItemId = mMediaItem.getId();
-            final int childrenCount = getChildCount();
-            for (int i = 0; i < childrenCount; i++) {
-                final Object tag = getChildAt(i).getTag();
-                if (tag != null) {
-                    final MovieMediaItem mi = (MovieMediaItem)tag;
-                    if (mediaItemId.equals(mi.getId())) {
-                        final OverlayView overlayView = (OverlayView)getChildAt(i);
-                        if (overlayView.getState() == OverlayView.STATE_OVERLAY) {
-                            overlayView.setImageBitmap(bitmap);
-                        }
-                        return;
-                    }
-                }
-            }
-
-            if (bitmap != null) {
-                bitmap.recycle();
-            }
-        }
-    };
-
 
     /*
      * {@inheritDoc}
@@ -410,11 +349,6 @@ public class OverlayLinearLayout extends LinearLayout {
         final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
         mHalfParentWidth = display.getWidth() / 2;
 
-        final View overlayView = inflate(getContext(), R.layout.overlay_item, null);
-
-        mOverlayHeight = (int)context.getResources().getDimension(R.dimen.overlay_layout_height) -
-            overlayView.getPaddingTop() - overlayView.getPaddingBottom();
-
         mHandler = new Handler();
 
         setMotionEventSplittingEnabled(false);
@@ -497,8 +431,6 @@ public class OverlayLinearLayout extends LinearLayout {
                 R.layout.overlay_item, null);
         if (mediaItem.getOverlay() != null) {
             overlayView.setState(OverlayView.STATE_OVERLAY);
-            // Load the preview
-            new OverlayPreviewAsyncTask(mediaItem).execute();
         } else {
             overlayView.setState(OverlayView.STATE_STUB);
         }
@@ -530,8 +462,6 @@ public class OverlayLinearLayout extends LinearLayout {
                 R.layout.overlay_item, null);
         if (mediaItem.getOverlay() != null) {
             overlayView.setState(OverlayView.STATE_OVERLAY);
-            // Load the preview
-            new OverlayPreviewAsyncTask(mediaItem).execute();
         } else {
             overlayView.setState(OverlayView.STATE_STUB);
         }
@@ -624,8 +554,6 @@ public class OverlayLinearLayout extends LinearLayout {
             return;
         }
 
-        new OverlayPreviewAsyncTask(mediaItem).execute();
-
         requestLayout();
         invalidate();
     }
@@ -664,14 +592,13 @@ public class OverlayLinearLayout extends LinearLayout {
             return;
         }
 
-        final MovieOverlay overlay = mediaItem.getOverlay();
-        if (overlay == null) {
+        final View overlayView = getOverlayView(mediaItemId);
+        if (overlayView == null) {
             Log.e(TAG, "updateOverlayAttributes: Overlay not found: " + overlayId);
             return;
         }
 
-        // Load the preview
-        new OverlayPreviewAsyncTask(mediaItem).execute();
+        overlayView.invalidate();
     }
 
     /**

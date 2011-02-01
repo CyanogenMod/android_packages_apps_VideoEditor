@@ -17,5 +17,4 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="false" android:state_selected="false" android:drawable="@drawable/round_button_normal" />
     <item android:state_pressed="true" android:state_selected="false" android:drawable="@drawable/round_button_pressed" />
-    <item android:state_selected="true" android:drawable="@drawable/round_button_selected" />
 </selector>

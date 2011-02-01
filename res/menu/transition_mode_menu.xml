@@ -16,7 +16,9 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_change_transition"
-        android:title="@string/editor_change_transition" android:showAsAction="ifRoom"/>
+        android:title="@string/editor_change_transition"
+        android:icon="@drawable/ic_menu_edit"/>
     <item android:id="@+id/action_remove_transition"
-        android:title="@string/remove" android:showAsAction="ifRoom"/>
+        android:title="@string/remove"
+        android:icon="@drawable/ic_menu_delete"/>
 </menu>

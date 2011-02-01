@@ -20,7 +20,6 @@ import com.google.videoeditor.R;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -31,14 +30,13 @@ import android.view.View;
  */
 public class ZoomControl extends View {
     // The thumb radius
-    private static final float RADIUS = 109;
+    private static final float RADIUS = 129;
     private static final float INTERNAL_RADIUS = 72;
 
     private static final double MAX_ANGLE = Math.PI / 3;
 
     // Instance variables
     private final Drawable mThumb;
-    private final Paint mCirclePaint;
     private int mMaxProgress, mProgress;
     private OnZoomChangeListener mListener;
     private int mThumbX, mThumbY;
@@ -62,11 +60,6 @@ public class ZoomControl extends View {
      */
     public ZoomControl(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        // Create the text Paint
-        mCirclePaint = new Paint();
-        mCirclePaint.setAntiAlias(true);
-        mCirclePaint.setColor(context.getResources().getColor(R.color.zoom_interior_color));
 
         // Set the default maximum progress
         mMaxProgress = 100;
@@ -141,9 +134,6 @@ public class ZoomControl extends View {
                 mThumbY + halfHeight);
         mThumb.setAlpha(isEnabled() ? 255 : 100);
         mThumb.draw(canvas);
-
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2,
-                (mProgress * INTERNAL_RADIUS) / mMaxProgress, mCirclePaint);
     }
 
     /*
