@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -149,6 +150,12 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
                 return true;
             }
         } else {
+            if (mScaleDetector.isInProgress()) {
+                final MotionEvent cancelEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                        SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0);
+                mScaleDetector.onTouchEvent(cancelEvent);
+                cancelEvent.recycle();
+            }
             return true;
         }
     }
