@@ -90,6 +90,7 @@ public class MediaLinearLayout extends LinearLayout {
     private final int mHalfParentWidth;
     private final int mHandleWidth;
     private final int mTransitionVerticalInset;
+    private final ImageButton mLeftAddClipButton, mRightAddClipButton;
     private MediaLayoutListener mListener;
     private ActionMode mMediaItemActionMode;
     private ActionMode mTransitionActionMode;
@@ -519,10 +520,10 @@ public class MediaLinearLayout extends LinearLayout {
             }
         });
 
-        final ImageButton leftAddClipButton = (ImageButton)beginView.findViewById(
+        mLeftAddClipButton = (ImageButton)beginView.findViewById(
                 R.id.add_left_media_item_button);
-        leftAddClipButton.setVisibility(View.GONE);
-        leftAddClipButton.setOnClickListener(new View.OnClickListener() {
+        mLeftAddClipButton.setVisibility(View.GONE);
+        mLeftAddClipButton.setOnClickListener(new View.OnClickListener() {
             /*
              * {@inheritDoc}
              */
@@ -548,9 +549,9 @@ public class MediaLinearLayout extends LinearLayout {
             }
         });
 
-        final ImageButton rightAddClipButton = (ImageButton)endView.findViewById(
+        mRightAddClipButton = (ImageButton)endView.findViewById(
                 R.id.add_right_media_item_button);
-        rightAddClipButton.setOnClickListener(new View.OnClickListener() {
+        mRightAddClipButton.setOnClickListener(new View.OnClickListener() {
             /*
              * {@inheritDoc}
              */
@@ -2372,7 +2373,11 @@ public class MediaLinearLayout extends LinearLayout {
             mLeftHandle.setListener(null);
             mRightHandle.setVisibility(View.GONE);
             mRightHandle.setListener(null);
+
             mSelectedView = null;
+
+            // Show the "Add video clip buttons"
+            showAddMediaItemButtons(true);
         }
 
         // Unselect all the children
@@ -2398,6 +2403,9 @@ public class MediaLinearLayout extends LinearLayout {
         if (selected) {
             // Unselect all other views
             unselectAllViews();
+
+            // Hide the "Add video clip buttons"
+            showAddMediaItemButtons(false);
         }
 
         // Select the new view
@@ -2866,6 +2874,21 @@ public class MediaLinearLayout extends LinearLayout {
         for (int i = 0; i < childrenCount; i++) {
             final View childView = getChildAt(i);
             childView.invalidate();
+        }
+    }
+
+    /**
+     * Show/hide the media buttons
+     *
+     * @param show true to show the "Add media item" buttons
+     */
+    private void showAddMediaItemButtons(boolean show) {
+        if (show) {
+            mLeftAddClipButton.setVisibility(View.VISIBLE);
+            mRightAddClipButton.setVisibility(View.VISIBLE);
+        } else {
+            mLeftAddClipButton.setVisibility(View.INVISIBLE);
+            mRightAddClipButton.setVisibility(View.INVISIBLE);
         }
     }
 }
