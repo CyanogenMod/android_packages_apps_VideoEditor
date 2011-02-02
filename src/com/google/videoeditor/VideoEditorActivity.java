@@ -117,7 +117,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public static final int REQUEST_CODE_EDIT_OVERLAY = 13;
     public static final int REQUEST_CODE_PICK_EFFECT = 14;
     public static final int REQUEST_CODE_EDIT_EFFECT = 15;
-    public static final int REQUEST_CODE_KEN_BURNS = 16;
 
     // The maximum zoom level
     private static final int MAX_ZOOM_LEVEL = 60;
@@ -174,11 +173,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private Bundle mEditOverlayUserAttributes;
     private String mAddEffectMediaItemId;
     private int mAddEffectType;
+    private Rect mAddKenBurnsStartRect;
+    private Rect mAddKenBurnsEndRect;
     private String mEditEffectMediaItemId;
     private int mEditEffectType;
-    private String mSetKenBurnsMediaItemId;
-    private Rect mSetKenBurnsStartRect;
-    private Rect mSetKenBurnsEndRect;
+    private Rect mEditKenBurnsStartRect;
+    private Rect mEditKenBurnsEndRect;
 
     /*
      * {@inheritDoc}
@@ -1125,12 +1125,16 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     extras.getStringExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID);
                 final int type = extras.getIntExtra(EffectsActivity.PARAM_EFFECT_TYPE,
                         EffectType.EFFECT_COLOR_GRADIENT);
+                final Rect startRect = extras.getParcelableExtra(EffectsActivity.PARAM_START_RECT);
+                final Rect endRect = extras.getParcelableExtra(EffectsActivity.PARAM_END_RECT);
                 if (mProject != null) {
-                    mMediaLayout.addEffect(type, mediaItemId);
+                    mMediaLayout.addEffect(type, mediaItemId, startRect, endRect);
                 } else {
-                    // Add this overlay after you load the project
+                    // Add this effect after you load the project
                     mAddEffectMediaItemId = mediaItemId;
                     mAddEffectType = type;
+                    mAddKenBurnsStartRect = startRect;
+                    mAddKenBurnsEndRect = endRect;
                 }
                 break;
             }
@@ -1140,29 +1144,16 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     extras.getStringExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID);
                 final int type = extras.getIntExtra(EffectsActivity.PARAM_EFFECT_TYPE,
                         EffectType.EFFECT_COLOR_GRADIENT);
+                final Rect startRect = extras.getParcelableExtra(EffectsActivity.PARAM_START_RECT);
+                final Rect endRect = extras.getParcelableExtra(EffectsActivity.PARAM_END_RECT);
                 if (mProject != null) {
-                    mMediaLayout.editEffect(type, mediaItemId);
+                    mMediaLayout.editEffect(type, mediaItemId, startRect, endRect);
                 } else {
-                    // Add this overlay after you load the project
+                    // Add this effect after you load the project
                     mEditEffectMediaItemId = mediaItemId;
                     mEditEffectType = type;
-                }
-                break;
-            }
-
-            case REQUEST_CODE_KEN_BURNS: {
-                final String mediaItemId =
-                    extras.getStringExtra(KenBurnsActivity.PARAM_MEDIA_ITEM_ID);
-                final Rect startRect =
-                    extras.getParcelableExtra(KenBurnsActivity.PARAM_START_RECT);
-                final Rect endRect =
-                    extras.getParcelableExtra(KenBurnsActivity.PARAM_END_RECT);
-                if (mProject != null) {
-                    mMediaLayout.addKenBurnsEffect(mediaItemId, startRect, endRect);
-                } else {
-                    mSetKenBurnsMediaItemId = mediaItemId;
-                    mSetKenBurnsStartRect = startRect;
-                    mSetKenBurnsEndRect = endRect;
+                    mEditKenBurnsStartRect = startRect;
+                    mEditKenBurnsEndRect = endRect;
                 }
                 break;
             }
@@ -1604,19 +1595,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         if (mAddEffectMediaItemId != null) {
-            mMediaLayout.addEffect(mAddEffectType, mAddEffectMediaItemId);
+            mMediaLayout.addEffect(mAddEffectType, mAddEffectMediaItemId,
+                        mAddKenBurnsStartRect, mAddKenBurnsEndRect);
             mAddEffectMediaItemId = null;
         }
 
         if (mEditEffectMediaItemId != null) {
-            mMediaLayout.editEffect(mEditEffectType, mEditEffectMediaItemId);
+            mMediaLayout.editEffect(mEditEffectType, mEditEffectMediaItemId,
+                    mEditKenBurnsStartRect, mEditKenBurnsEndRect);
             mEditEffectMediaItemId = null;
-        }
-
-        if (mSetKenBurnsMediaItemId != null) {
-            mMediaLayout.addKenBurnsEffect(mSetKenBurnsMediaItemId, mSetKenBurnsStartRect,
-                    mSetKenBurnsEndRect);
-            mSetKenBurnsMediaItemId = null;
         }
 
         enterReadyState();

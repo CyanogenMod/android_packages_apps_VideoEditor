@@ -31,6 +31,14 @@ public class EffectsActivity extends ListActivity {
     public static final String PARAM_MEDIA_ITEM_ID = "media_item_id";
     // Output effect type
     public static final String PARAM_EFFECT_TYPE = "effect";
+    public static final String PARAM_FILENAME = "filename";
+    public static final String PARAM_WIDTH = "width";
+    public static final String PARAM_HEIGHT = "height";
+    public static final String PARAM_START_RECT = "start_rect";
+    public static final String PARAM_END_RECT = "end_rect";
+
+    // Request codes
+    public static final int REQUEST_CODE_KEN_BURNS = 11;
 
     // Instance variables
     private EffectsAdapter mAdapter;
@@ -101,16 +109,67 @@ public class EffectsActivity extends ListActivity {
      */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        final Intent extras = new Intent();
-        extras.putExtra(PARAM_EFFECT_TYPE, ((EffectType)mAdapter.getItem(position)).getType());
-        extras.putExtra(PARAM_MEDIA_ITEM_ID, getIntent().getStringExtra(PARAM_MEDIA_ITEM_ID));
+        final int effectType = ((EffectType)mAdapter.getItem(position)).getType();
+        if (effectType == EffectType.EFFECT_KEN_BURNS) {
+            final Intent intent = new Intent(this, KenBurnsActivity.class);
+            intent.putExtra(KenBurnsActivity.PARAM_MEDIA_ITEM_ID, getIntent().getStringExtra(
+                    PARAM_MEDIA_ITEM_ID));
+            intent.putExtra(KenBurnsActivity.PARAM_FILENAME, getIntent().getStringExtra(
+                    PARAM_FILENAME));
+            intent.putExtra(KenBurnsActivity.PARAM_WIDTH, getIntent().getIntExtra(PARAM_WIDTH, 0));
+            intent.putExtra(KenBurnsActivity.PARAM_HEIGHT, getIntent().getIntExtra(
+                    PARAM_HEIGHT, 0));
+            intent.putExtra(KenBurnsActivity.PARAM_START_RECT, getIntent().getParcelableExtra(
+                    PARAM_START_RECT));
+            intent.putExtra(KenBurnsActivity.PARAM_END_RECT, getIntent().getParcelableExtra(
+                    PARAM_END_RECT));
 
-        // Release the adapter now
-        mAdapter.onDestroy();
-        mAdapter = null;
+            startActivityForResult(intent, REQUEST_CODE_KEN_BURNS);
+        } else {
+            final Intent extras = new Intent();
+            extras.putExtra(PARAM_EFFECT_TYPE, ((EffectType)mAdapter.getItem(position)).getType());
+            extras.putExtra(PARAM_MEDIA_ITEM_ID, getIntent().getStringExtra(PARAM_MEDIA_ITEM_ID));
 
-        setResult(RESULT_OK, extras);
-        finish();
+            // Release the adapter now
+            mAdapter.onDestroy();
+            mAdapter = null;
+
+            setResult(RESULT_OK, extras);
+            finish();
+        }
+    }
+
+    /*
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent extras) {
+        super.onActivityResult(requestCode, resultCode, extras);
+        if (resultCode == RESULT_CANCELED) {
+            return;
+        }
+
+        switch( requestCode) {
+            case REQUEST_CODE_KEN_BURNS: {
+                final Intent intent = new Intent();
+                intent.putExtra(PARAM_EFFECT_TYPE, EffectType.EFFECT_KEN_BURNS);
+                intent.putExtra(PARAM_MEDIA_ITEM_ID,
+                        getIntent().getStringExtra(PARAM_MEDIA_ITEM_ID));
+                intent.putExtra(PARAM_EFFECT_TYPE, EffectType.EFFECT_KEN_BURNS);
+                intent.putExtra(PARAM_START_RECT, extras.getParcelableExtra(
+                        KenBurnsActivity.PARAM_START_RECT));
+                intent.putExtra(PARAM_END_RECT, extras.getParcelableExtra(
+                        KenBurnsActivity.PARAM_END_RECT));
+
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            }
+
+            default: {
+                break;
+            }
+        }
     }
 
     /*
