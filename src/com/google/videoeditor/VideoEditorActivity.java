@@ -119,7 +119,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public static final int REQUEST_CODE_EDIT_EFFECT = 15;
 
     // The maximum zoom level
-    private static final int MAX_ZOOM_LEVEL = 60;
+    private static final int MAX_ZOOM_LEVEL = 120;
     private static final int ZOOM_STEP = 2;
 
     private final TimelineRelativeLayout.LayoutCallback mLayoutCallback =
@@ -1826,8 +1826,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                             }
                         }
                     } catch (Exception ex) {
-                        // For now handle the NullPointerException in the NXP code
-                        ex.printStackTrace();
+                        if (Log.isLoggable(TAG, Log.DEBUG)) {
+                            Log.d(TAG, "Cannot render preview frame at: " + timeMs, ex);
+                        } else {
+                            Log.d(TAG, "Cannot render preview frame at: " + timeMs);
+                        }
                     }
                 }
             });
