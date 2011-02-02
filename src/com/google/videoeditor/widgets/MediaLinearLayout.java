@@ -190,25 +190,19 @@ public class MediaLinearLayout extends LinearLayout {
          * {@inheritDoc}
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            menu.findItem(R.id.action_add_effect).setIcon(
-                    R.drawable.ic_menu_add_effects).setVisible(mMediaItem.getEffect() == null &&
+            menu.findItem(R.id.action_add_effect).setVisible(mMediaItem.getEffect() == null &&
                     !mPlaybackInProgress);
-            menu.findItem(R.id.action_change_effect).setIcon(
-                    R.drawable.ic_menu_edit).setVisible(mMediaItem.getEffect() != null &&
+            menu.findItem(R.id.action_change_effect).setVisible(mMediaItem.getEffect() != null &&
                     !mPlaybackInProgress);
-            menu.findItem(R.id.action_remove_effect).setIcon(
-                    R.drawable.ic_menu_delete).setVisible(mMediaItem.getEffect() != null &&
+            menu.findItem(R.id.action_remove_effect).setVisible(mMediaItem.getEffect() != null &&
                     !mPlaybackInProgress);
             menu.findItem(R.id.action_add_overlay).setVisible(mMediaItem.getOverlay() == null &&
                     !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_begin_transition).setIcon(
-                    R.drawable.ic_menu_add_trans_start).setVisible(
+            menu.findItem(R.id.action_add_begin_transition).setVisible(
                     mMediaItem.getBeginTransition() == null && !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_end_transition).setIcon(
-                    R.drawable.ic_menu_add_trans_end).setVisible(
+            menu.findItem(R.id.action_add_end_transition).setVisible(
                     mMediaItem.getEndTransition() == null && !mPlaybackInProgress);
-            menu.findItem(R.id.action_rendering_mode).setIcon(
-                    R.drawable.ic_menu_rendermode).setVisible(mProject.hasMultipleAspectRatios()
+            menu.findItem(R.id.action_rendering_mode).setVisible(mProject.hasMultipleAspectRatios()
                     && !mPlaybackInProgress);
             if (mMediaItem.isVideoClip()) {
                 menu.findItem(R.id.action_mute_media_item).setVisible(!mMediaItem.isAppMuted());

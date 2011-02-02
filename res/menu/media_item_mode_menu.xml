@@ -23,7 +23,7 @@
         android:icon="@drawable/ic_menu_edit"/>
     <item android:id="@+id/action_remove_effect"
         android:title="@string/editor_remove_effect"
-        android:icon="@drawable/ic_menu_delete"/>
+        android:icon="@drawable/ic_menu_remove_effects"/>
     <item android:id="@+id/action_add_overlay"
         android:title="@string/editor_add_overlay"
         android:icon="@drawable/ic_menu_add_title"/>
@@ -34,7 +34,8 @@
         android:title="@string/editor_add_end_transition"
         android:icon="@drawable/ic_menu_add_trans_end"/>
     <item android:id="@+id/action_rendering_mode"
-        android:title="@string/editor_change_rendering_mode"/>
+        android:title="@string/editor_change_rendering_mode"
+        android:icon="@drawable/ic_menu_rendermode"/>
     <item android:id="@+id/action_mute_media_item"
         android:title="@string/editor_mute"/>
     <item android:id="@+id/action_unmute_media_item"
