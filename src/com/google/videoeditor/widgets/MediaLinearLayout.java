@@ -50,7 +50,6 @@ import android.widget.Toast;
 import com.google.videoeditor.AlertDialogs;
 import com.google.videoeditor.EffectType;
 import com.google.videoeditor.EffectsActivity;
-import com.google.videoeditor.KenBurnsActivity;
 import com.google.videoeditor.OverlaysActivity;
 import com.google.videoeditor.R;
 import com.google.videoeditor.TransitionType;
@@ -222,20 +221,18 @@ public class MediaLinearLayout extends LinearLayout {
             switch (item.getItemId()) {
                 case R.id.action_add_effect: {
                     if (mMediaItem.isImage()) {
-                        pickEffect(EffectType.CATEGORY_IMAGE, mMediaItem.getId());
+                        pickEffect(EffectType.CATEGORY_IMAGE, mMediaItem);
                     } else {
-                        pickEffect(EffectType.CATEGORY_VIDEO, mMediaItem.getId());
+                        pickEffect(EffectType.CATEGORY_VIDEO, mMediaItem);
                     }
                     break;
                 }
 
                 case R.id.action_change_effect: {
                     if (mMediaItem.isImage()) {
-                        editEffect(EffectType.CATEGORY_IMAGE, mMediaItem.getId(),
-                                mMediaItem.getEffect().getType());
+                        editEffect(EffectType.CATEGORY_IMAGE, mMediaItem, mMediaItem.getEffect());
                     } else {
-                        editEffect(EffectType.CATEGORY_VIDEO, mMediaItem.getId(),
-                                mMediaItem.getEffect().getType());
+                        editEffect(EffectType.CATEGORY_VIDEO, mMediaItem, mMediaItem.getEffect());
                     }
                     break;
                 }
@@ -1184,8 +1181,10 @@ public class MediaLinearLayout extends LinearLayout {
      *
      * @param effectType The effect type
      * @param mediaItemId Add the effect for this media item id
+     * @param startRect The start rectangle
+     * @param endRect The end rectangle
      */
-    public void addEffect(int effectType, String mediaItemId) {
+    public void addEffect(int effectType, String mediaItemId, Rect startRect, Rect endRect) {
         final MovieMediaItem mediaItem = mProject.getMediaItem(mediaItemId);
         if (mediaItem == null) {
             Log.e(TAG, "addEffect media item not found: " + mediaItemId);
@@ -1195,14 +1194,8 @@ public class MediaLinearLayout extends LinearLayout {
         final String id = ApiService.generateId();
         switch (effectType) {
             case EffectType.EFFECT_KEN_BURNS: {
-                final Activity activity = (Activity)getContext();
-                final Intent intent = new Intent(activity, KenBurnsActivity.class);
-                intent.putExtra(KenBurnsActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
-                intent.putExtra(KenBurnsActivity.PARAM_FILENAME, mediaItem.getFilename());
-                intent.putExtra(KenBurnsActivity.PARAM_WIDTH, mediaItem.getWidth());
-                intent.putExtra(KenBurnsActivity.PARAM_HEIGHT, mediaItem.getHeight());
-                activity.startActivityForResult(intent,
-                        VideoEditorActivity.REQUEST_CODE_KEN_BURNS);
+                ApiService.addEffectKenBurns(getContext(), mProject.getPath(), mediaItemId,
+                        id, 0, mediaItem.getDuration(), startRect, endRect);
                 break;
             }
 
@@ -1242,8 +1235,10 @@ public class MediaLinearLayout extends LinearLayout {
      *
      * @param effectType The effect type
      * @param mediaItemId Add the effect for this media item id
+     * @param startRect The start rectangle
+     * @param endRect The end rectangle
      */
-    public void editEffect(int effectType, String mediaItemId) {
+    public void editEffect(int effectType, String mediaItemId, Rect startRect, Rect endRect) {
         final MovieMediaItem mediaItem = mProject.getMediaItem(mediaItemId);
         if (mediaItem == null) {
             Log.e(TAG, "editEffect media item not found: " + mediaItemId);
@@ -1255,22 +1250,13 @@ public class MediaLinearLayout extends LinearLayout {
         final String id = ApiService.generateId();
         switch (effectType) {
             case EffectType.EFFECT_KEN_BURNS: {
-                // Note that we remove the old effect only once the user
-                // clicks Done in the Ken Burns activity.
-                // See addKenBurnsEffect below.
-                final Activity activity = (Activity)getContext();
-                final Intent intent = new Intent(activity, KenBurnsActivity.class);
-                intent.putExtra(KenBurnsActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
-                intent.putExtra(KenBurnsActivity.PARAM_FILENAME, mediaItem.getFilename());
-                intent.putExtra(KenBurnsActivity.PARAM_WIDTH, mediaItem.getWidth());
-                intent.putExtra(KenBurnsActivity.PARAM_HEIGHT, mediaItem.getHeight());
-                if (effect.getType() == EffectType.EFFECT_KEN_BURNS) {
-                    intent.putExtra(KenBurnsActivity.PARAM_START_RECT, effect.getStartRect());
-                    intent.putExtra(KenBurnsActivity.PARAM_END_RECT, effect.getEndRect());
-                }
+                // Remove the old effect in case this method is called
+                // because the effect is changed
+                ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
+                        effect.getId());
 
-                activity.startActivityForResult(intent,
-                        VideoEditorActivity.REQUEST_CODE_KEN_BURNS);
+                ApiService.addEffectKenBurns(getContext(), mProject.getPath(), mediaItemId,
+                        id, 0, mediaItem.getDuration(), startRect, endRect);
                 break;
             }
 
@@ -1331,32 +1317,6 @@ public class MediaLinearLayout extends LinearLayout {
                 break;
             }
         }
-    }
-
-    /**
-     * Create a Ken Burns effect
-     *
-     * @param mediaItemId Add the effect for this media item id
-     * @param startRect The start rectangle
-     * @param endRect The end rectangle
-     */
-    public void addKenBurnsEffect(String mediaItemId, Rect startRect, Rect endRect) {
-        final MovieMediaItem mediaItem = mProject.getMediaItem(mediaItemId);
-        if (mediaItem == null) {
-            Log.e(TAG, "addKenBurnsEffect media item not found: " + mediaItemId);
-            return;
-        }
-
-        final MovieEffect effect = mediaItem.getEffect();
-        if (effect != null) {
-            // Remove the old effect in case this method is called
-            // because the effect is changed
-            ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                    effect.getId());
-        }
-
-        ApiService.addEffectKenBurns(getContext(), mProject.getPath(), mediaItemId,
-                ApiService.generateId(), 0, mediaItem.getDuration(), startRect, endRect);
     }
 
     /**
@@ -2103,12 +2063,15 @@ public class MediaLinearLayout extends LinearLayout {
      * Pick an effect of the specified category
      *
      * @param category The category
-     * @param mediaItemId Media item id
+     * @param mediaItem The media item
      */
-    private void pickEffect(int category, String mediaItemId) {
+    private void pickEffect(int category, MovieMediaItem mediaItem) {
         final Intent intent = new Intent(getContext(), EffectsActivity.class);
         intent.putExtra(EffectsActivity.PARAM_CATEGORY, category);
-        intent.putExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID, mediaItemId);
+        intent.putExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
+        intent.putExtra(EffectsActivity.PARAM_FILENAME, mediaItem.getFilename());
+        intent.putExtra(EffectsActivity.PARAM_WIDTH, mediaItem.getWidth());
+        intent.putExtra(EffectsActivity.PARAM_HEIGHT, mediaItem.getHeight());
         ((Activity)getContext()).startActivityForResult(intent,
                 VideoEditorActivity.REQUEST_CODE_PICK_EFFECT);
     }
@@ -2117,14 +2080,22 @@ public class MediaLinearLayout extends LinearLayout {
      * Edit an effect of the specified category
      *
      * @param category The category
-     * @param mediaItemId Media item id
-     * @param type The effect type
+     * @param mediaItem Media item
+     * @param effect The effect
      */
-    private void editEffect(int category, String mediaItemId, int type) {
+    private void editEffect(int category, MovieMediaItem mediaItem, MovieEffect effect) {
         final Intent intent = new Intent(getContext(), EffectsActivity.class);
         intent.putExtra(EffectsActivity.PARAM_CATEGORY, category);
-        intent.putExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID, mediaItemId);
-        intent.putExtra(EffectsActivity.PARAM_EFFECT_TYPE, type);
+        intent.putExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
+        intent.putExtra(EffectsActivity.PARAM_EFFECT_TYPE, effect.getType());
+        intent.putExtra(EffectsActivity.PARAM_FILENAME, mediaItem.getFilename());
+        intent.putExtra(EffectsActivity.PARAM_WIDTH, mediaItem.getWidth());
+        intent.putExtra(EffectsActivity.PARAM_HEIGHT, mediaItem.getHeight());
+        if (effect.getType() == EffectType.EFFECT_KEN_BURNS) {
+            intent.putExtra(EffectsActivity.PARAM_START_RECT, effect.getStartRect());
+            intent.putExtra(EffectsActivity.PARAM_END_RECT, effect.getEndRect());
+        }
+
         ((Activity)getContext()).startActivityForResult(intent,
                 VideoEditorActivity.REQUEST_CODE_EDIT_EFFECT);
     }
