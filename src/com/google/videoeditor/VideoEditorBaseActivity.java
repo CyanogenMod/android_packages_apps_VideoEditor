@@ -905,6 +905,11 @@ public abstract class VideoEditorBaseActivity extends Activity {
         super.onResume();
 
         mProjectEditState = ApiService.isProjectEdited(mProjectPath);
+        if (mProjectEditState) {
+            // The editors is busy
+            onProjectEditStateChange(true);
+        }
+
         ApiService.registerListener(mServiceListener);
 
         // Check if we need to load the project
