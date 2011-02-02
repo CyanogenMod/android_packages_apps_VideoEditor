@@ -1442,7 +1442,7 @@ public class MediaLinearLayout extends LinearLayout {
                             final int oldLeft = view.getLeft();
                             final int oldRight = view.getRight();
                             view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).onPositionChanged(oldLeft, oldRight);
+                            ((MediaItemView)view).onLayoutPerformed(oldLeft, oldRight);
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
@@ -1480,7 +1480,7 @@ public class MediaLinearLayout extends LinearLayout {
                             final int oldLeft = view.getLeft();
                             final int oldRight = view.getRight();
                             view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).onPositionChanged(oldLeft, oldRight);
+                            ((MediaItemView)view).onLayoutPerformed(oldLeft, oldRight);
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }
@@ -1523,7 +1523,7 @@ public class MediaLinearLayout extends LinearLayout {
                             final int oldLeft = view.getLeft();
                             final int oldRight = view.getRight();
                             view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).onPositionChanged(oldLeft, oldRight);
+                            ((MediaItemView)view).onLayoutPerformed(oldLeft, oldRight);
                         } else {
                             view.layout(left, paddingTop, right, b - t);
                         }

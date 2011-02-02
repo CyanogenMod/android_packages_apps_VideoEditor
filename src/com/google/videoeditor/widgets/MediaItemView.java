@@ -50,6 +50,7 @@ public class MediaItemView extends View {
     private static final int REASON_PLAYBACK = 5;
 
     private static Drawable mAddTransitionDrawable;
+    private static Drawable mEmptyFrameDrawable;
 
     // Instance variables
     private final GestureDetector mGestureDetector;
@@ -58,13 +59,11 @@ public class MediaItemView extends View {
 
     private boolean mIsScrolling;
     private boolean mWaitForThumbnailsAfterScroll;
-    private boolean mScrollingRight;
     private int mScrollX, mScrollingX;
     private int mStart, mEnd;
     private int mStartOffset, mEndOffset;
     private int mRequestedStartOffset, mRequestedEndOffset;
     private long mRequestedStartMs, mRequestedEndMs;
-    private long mPlaybackRequestTime;
     private int mRequestedCount;
     private int mScreenWidth;
     private String mProjectPath;
@@ -74,6 +73,7 @@ public class MediaItemView extends View {
     private int[] mLeftState, mRightState;
     private boolean mIsTrimming;
     private boolean mIsPlaying;
+    private int mThumbnailWidth, mThumbnailHeight;
 
     /**
      * Shadow builder for the media item
@@ -179,8 +179,8 @@ public class MediaItemView extends View {
              * {@inheritDoc}
              */
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
-                mScrollingRight = scrollX > mScrollingX;
                 mScrollingX = scrollX;
+                invalidate();
             }
 
             /*
@@ -190,6 +190,7 @@ public class MediaItemView extends View {
                 mIsScrolling = false;
                 mScrollX = scrollX;
                 mScrollingX = scrollX;
+
                 if (requestThumbnails(REASON_SCROLL_END)) {
                     invalidate();
                 }
@@ -212,6 +213,10 @@ public class MediaItemView extends View {
                     R.drawable.add_transition_selector);
         }
 
+        if (mEmptyFrameDrawable == null) {
+            mEmptyFrameDrawable = getResources().getDrawable(R.drawable.timeline_loading);
+        }
+
         // Get the screen width
         final Display display = ((WindowManager)context.getSystemService(
                 Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -221,8 +226,6 @@ public class MediaItemView extends View {
 
         mRequestedStartMs = -1;
         mRequestedEndMs = -1;
-
-        mPlaybackRequestTime = 0;
 
         mLeftState = View.EMPTY_STATE_SET;
         mRightState = View.EMPTY_STATE_SET;
@@ -312,7 +315,12 @@ public class MediaItemView extends View {
      * @param oldLeft The old left position
      * @param oldRight The old right position
      */
-    public void onPositionChanged(int oldLeft, int oldRight) {
+    public void onLayoutPerformed(int oldLeft, int oldRight) {
+        // Compute the thumbnail width and height
+        final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
+        mThumbnailHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+        mThumbnailWidth = (mThumbnailHeight * mediaItem.getWidth()) / mediaItem.getHeight();
+
         releaseBitmapsAndClear();
 
         if (!mIsScrolling && !mIsTrimming && mProgress < 0) {
@@ -368,8 +376,6 @@ public class MediaItemView extends View {
      */
     public void setPlaybackMode(boolean playback) {
         mIsPlaying = playback;
-
-        mPlaybackRequestTime = 0;
     }
 
     /**
@@ -430,7 +436,7 @@ public class MediaItemView extends View {
             ProgressBar.getProgressBar(getContext()).draw(canvas, mProgress,
                     mProgressDestRect, getPaddingLeft(), getWidth() - getPaddingRight());
         } else if (mIsPlaying || mIsTrimming || mIsScrolling || mWaitForThumbnailsAfterScroll) {
-            drawWhileScrolling(canvas);
+            drawThumbnails(canvas);
         } else if (mBitmaps != null) {
             final int paddingTop = getPaddingTop();
             // Do not draw in the padding area
@@ -448,6 +454,8 @@ public class MediaItemView extends View {
                 drawAddTransitions(canvas);
             }
         } else { // Not scrolling
+            drawThumbnails(canvas);
+
             requestThumbnails(REASON_NEED_THUMBNAILS);
 
             if (isSelected()) {
@@ -461,20 +469,7 @@ public class MediaItemView extends View {
      *
      * @param canvas The canvas
      */
-    private void drawWhileScrolling(Canvas canvas) {
-        if (mIsPlaying) {
-            // During playback request thumbnails at a predefined time interval
-            final long now = System.currentTimeMillis();
-            if (now - mPlaybackRequestTime > 10000) {
-                requestThumbnails(REASON_PLAYBACK);
-                mPlaybackRequestTime = now;
-            }
-        }
-
-        if (mBitmaps == null || mBitmaps.length == 0) {
-            return;
-        }
-
+    private void drawThumbnails(Canvas canvas) {
         int start = getLeft() + getPaddingLeft() - mScrollingX;
         int end = getRight() - getPaddingRight() - mScrollingX;
 
@@ -491,7 +486,7 @@ public class MediaItemView extends View {
         end -= start - getPaddingLeft();
         if (start < 0) {
             start = -start;
-            final int off = start % mBitmaps[0].getWidth();
+            final int off = start % mThumbnailWidth;
             if (off > 0) {
                 start = start - off + getPaddingLeft();
             } else {
@@ -508,20 +503,31 @@ public class MediaItemView extends View {
         // Do not draw in the padding area
         canvas.clipRect(getPaddingLeft(), paddingTop, getWidth() - getPaddingRight(),
                 getHeight() - getPaddingBottom());
-        final int bitmapWidth = mBitmaps[0].getWidth();
-        final Bitmap repeatBitmap = mScrollingRight ? mBitmaps[mBitmaps.length - 1] : mBitmaps[0];
-        int offsetX = start;
-        while (offsetX < end) {
-            final Bitmap bitmap;
-            if (offsetX >= mStartOffset && offsetX < mEndOffset) {
-                bitmap = mBitmaps[Math.min((offsetX - mStartOffset) / bitmapWidth,
-                        mBitmaps.length - 1)];
-            } else {
-                bitmap = repeatBitmap;
-            }
 
-            canvas.drawBitmap(bitmap, offsetX, paddingTop, null);
-            offsetX += bitmapWidth;
+        if (mBitmaps == null || mBitmaps.length == 0) {
+            while (start < end) {
+                // Draw a frame placeholder
+                mEmptyFrameDrawable.setBounds(start, paddingTop,
+                        start + mThumbnailWidth, paddingTop + mThumbnailHeight);
+                mEmptyFrameDrawable.draw(canvas);
+                start += mThumbnailWidth;
+            }
+        } else {
+            Bitmap bitmap;
+            while (start < end) {
+                if (start >= mStartOffset && start < mEndOffset) {
+                    bitmap = mBitmaps[Math.min((start - mStartOffset) / mThumbnailWidth,
+                            mBitmaps.length - 1)];
+                    canvas.drawBitmap(bitmap, start, paddingTop, null);
+                } else {
+                    // Draw a frame placeholder
+                    mEmptyFrameDrawable.setBounds(start, paddingTop,
+                            start + mThumbnailWidth, paddingTop + mThumbnailHeight);
+                    mEmptyFrameDrawable.draw(canvas);
+                }
+
+                start += mThumbnailWidth;
+            }
         }
 
         if (isSelected()) {
@@ -675,16 +681,13 @@ public class MediaItemView extends View {
         if (start != mStart || mEnd != end) {
             // Compute the thumbnail width
             final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-            final int thumbnailHeight = getHeight() - getPaddingTop() - getPaddingBottom();
-            final int thumbnailWidth = (thumbnailHeight * mediaItem.getWidth()) /
-                    mediaItem.getHeight();
             final long durationMs = mediaItem.getAppTimelineDuration();
             final int viewWidth = getWidth() - getPaddingLeft() - getPaddingRight();
 
             // Compute the start offset
             final long startMs;
             // Adjust the start to be a thumbnail boundary
-            final int off = (start % thumbnailWidth);
+            final int off = (start % mThumbnailWidth);
             int startOffset;
             if (off > 0) {
                 startOffset = start - off + getPaddingLeft();
@@ -713,7 +716,8 @@ public class MediaItemView extends View {
 
             if (startOffset < endOffset) {
                 // Compute the thumbnail count
-                final int count = ((endOffset - startOffset) / thumbnailWidth) + 1;
+                final int count = ((endOffset - startOffset) / mThumbnailWidth) + 1;
+
                 if (startMs >= mRequestedStartMs && endMs <= mRequestedEndMs &&
                         count <= mRequestedCount && startOffset >= mRequestedStartOffset &&
                         endOffset <= mRequestedEndOffset) {
@@ -731,6 +735,8 @@ public class MediaItemView extends View {
                     if (mBitmaps != null) {
                         result = true;
                     }
+                } else if (mIsPlaying) {
+                    // Do not request thumbnails during playback
                 } else {
                     mWaitForThumbnailsAfterScroll = reason == REASON_SCROLL_END;
                     if (Log.isLoggable(TAG, Log.VERBOSE)) {
@@ -742,7 +748,7 @@ public class MediaItemView extends View {
 
                     // Request the thumbnails
                     ApiService.getMediaItemThumbnails(getContext(), mProjectPath,
-                            mediaItem.getId(), thumbnailWidth, thumbnailHeight, startMs, endMs,
+                            mediaItem.getId(), mThumbnailWidth, mThumbnailHeight, startMs, endMs,
                             count);
 
                     mRequestedStartMs = startMs;

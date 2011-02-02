@@ -50,7 +50,7 @@ public class TransitionView extends ImageView {
     private final Rect mProgressDestRect;
     private final Paint mSeparatorPaint;
     private boolean mIsScrolling;
-    private int mScrollX, mScrollingX;
+    private int mScrollX;
     private int mScreenWidth;
     private String mProjectPath;
     private Bitmap[] mBitmaps;
@@ -103,7 +103,7 @@ public class TransitionView extends ImageView {
              * {@inheritDoc}
              */
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
-                mScrollingX = scrollX;
+                invalidate();
             }
 
             /*
@@ -112,7 +112,6 @@ public class TransitionView extends ImageView {
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 mIsScrolling = false;
                 mScrollX = scrollX;
-                mScrollingX = scrollX;
 
                 if (requestThumbnails()) {
                     invalidate();
@@ -124,7 +123,8 @@ public class TransitionView extends ImageView {
         // Prepare the bitmap rectangles
         final ProgressBar progressBar = ProgressBar.getProgressBar(context);
         final int layoutHeight = (int)(resources.getDimension(R.dimen.media_layout_height) -
-                resources.getDimension(R.dimen.media_layout_padding));
+                resources.getDimension(R.dimen.media_layout_padding) -
+                (2 * resources.getDimension(R.dimen.timelime_transition_vertical_inset)));
         mProgressDestRect = new Rect(getPaddingLeft(),
                 layoutHeight - progressBar.getHeight() - getPaddingBottom(), 0,
                 layoutHeight - getPaddingBottom());
@@ -167,7 +167,7 @@ public class TransitionView extends ImageView {
         // Add the horizontal scroll view listener
         final TimelineHorizontalScrollView scrollView =
                 (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
-        mScrollingX = mScrollX = scrollView.getScrollX();
+        mScrollX = scrollView.getScrollX();
         scrollView.addScrollListener(mScrollListener);
     }
 
@@ -309,7 +309,6 @@ public class TransitionView extends ImageView {
             canvas.drawLine(halfWidth, getPaddingTop(), halfWidth,
                     getHeight() - getPaddingBottom(), mSeparatorPaint);
         } else if (mIsPlaying) { // Playing
-            requestThumbnails();
         } else if (mIsScrolling) { // Scrolling
         } else { // Not scrolling and not playing
             requestThumbnails();
@@ -337,21 +336,19 @@ public class TransitionView extends ImageView {
             return true;
         }
 
+        // Do not request thumbnails during playback
+        if (mIsScrolling) {
+            return false;
+        }
+
         final MovieTransition transition = (MovieTransition)getTag();
         // Check if we already requested the thumbnails
         if (ApiService.isTransitionThumbnailsPending(mProjectPath, transition.getId())) {
             return false;
         }
 
-        final int start;
-        final int end;
-        if (mIsPlaying) {
-            start = getLeft() + getPaddingLeft() - mScrollingX;
-            end = getRight() - getPaddingRight() - mScrollingX;
-        } else {
-            start = getLeft() + getPaddingLeft() - mScrollX;
-            end = getRight() - getPaddingRight() - mScrollX;
-        }
+        final int start = getLeft() + getPaddingLeft() - mScrollX;
+        final int end = getRight() - getPaddingRight() - mScrollX;
 
         if (start >= mScreenWidth || end < 0 || start == end) {
             if (Log.isLoggable(TAG, Log.VERBOSE)) {
