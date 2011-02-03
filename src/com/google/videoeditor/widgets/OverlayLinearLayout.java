@@ -728,7 +728,10 @@ public class OverlayLinearLayout extends LinearLayout {
                      * {@inheritDoc}
                      */
                     public void onClick(DialogInterface dialog, int which) {
-                        mOverlayActionMode.finish();
+                        if (mOverlayActionMode != null) {
+                            mOverlayActionMode.finish();
+                            mOverlayActionMode = null;
+                        }
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_OVERLAY_ID);
 
                         ApiService.removeOverlay(activity, mProject.getPath(), mediaItem.getId(),
