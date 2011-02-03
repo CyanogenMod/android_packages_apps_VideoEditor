@@ -155,7 +155,9 @@ public class AudioTrackLinearLayout extends LinearLayout {
                 case R.id.action_mute: {
                     final boolean mute = !mAudioTrack.isAppMuted();
                     mAudioTrack.setAppMute(mute);
-                    mAudioTrackActionMode.invalidate();
+                    if (mAudioTrackActionMode != null) {
+                        mAudioTrackActionMode.invalidate();
+                    }
                     ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
                             mAudioTrack.getId(), mute);
                     break;
@@ -164,7 +166,9 @@ public class AudioTrackLinearLayout extends LinearLayout {
                 case R.id.action_duck: {
                     final boolean duck = !mAudioTrack.isAppDuckingEnabled();
                     mAudioTrack.enableAppDucking(duck);
-                    mAudioTrackActionMode.invalidate();
+                    if (mAudioTrackActionMode != null) {
+                        mAudioTrackActionMode.invalidate();
+                    }
                     ApiService.setAudioTrackDuck(getContext(), mProject.getPath(),
                             mAudioTrack.getId(), duck);
                     break;
@@ -647,7 +651,10 @@ public class AudioTrackLinearLayout extends LinearLayout {
                      * {@inheritDoc}
                      */
                     public void onClick(DialogInterface dialog, int which) {
-                        mAudioTrackActionMode.finish();
+                        if (mAudioTrackActionMode != null) {
+                            mAudioTrackActionMode.finish();
+                            mAudioTrackActionMode = null;
+                        }
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_AUDIO_TRACK_ID);
 
                         ApiService.removeAudioTrack(activity, mProject.getPath(),

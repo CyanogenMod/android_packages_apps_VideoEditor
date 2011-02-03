@@ -1568,7 +1568,10 @@ public class MediaLinearLayout extends LinearLayout {
                      * {@inheritDoc}
                      */
                     public void onClick(DialogInterface dialog, int which) {
-                        mMediaItemActionMode.finish();
+                        if (mMediaItemActionMode != null) {
+                            mMediaItemActionMode.finish();
+                            mMediaItemActionMode = null;
+                        }
                         unselectAllViews();
 
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_MEDIA_ITEM_ID);
@@ -1695,7 +1698,10 @@ public class MediaLinearLayout extends LinearLayout {
                      * {@inheritDoc}
                      */
                     public void onClick(DialogInterface dialog, int which) {
-                        mTransitionActionMode.finish();
+                        if (mTransitionActionMode != null) {
+                            mTransitionActionMode.finish();
+                            mTransitionActionMode = null;
+                        }
                         unselectAllViews();
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_TRANSITION_ID);
 
@@ -1736,7 +1742,10 @@ public class MediaLinearLayout extends LinearLayout {
                      * {@inheritDoc}
                      */
                     public void onClick(DialogInterface dialog, int which) {
-                        mMediaItemActionMode.finish();
+                        if (mMediaItemActionMode != null) {
+                            mMediaItemActionMode.finish();
+                            mMediaItemActionMode = null;
+                        }
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID);
 
                         ApiService.removeEffect(activity, mProject.getPath(),
