@@ -1781,9 +1781,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                 }
                             }
                         } catch (Exception ex) {
-                            Log.e(TAG, "Requested timeMs: " + timeMs);
+                            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                Log.d(TAG, "renderPreviewFrame failed at timeMs: " + timeMs, ex);
+                            }
                             mOverlayDataQueue.add(overlayData);
-                            ex.printStackTrace();
                         }
                     }
                 }
@@ -1828,8 +1829,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     } catch (Exception ex) {
                         if (Log.isLoggable(TAG, Log.DEBUG)) {
                             Log.d(TAG, "Cannot render preview frame at: " + timeMs, ex);
-                        } else {
-                            Log.d(TAG, "Cannot render preview frame at: " + timeMs);
                         }
                     }
                 }
@@ -1934,8 +1933,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         // (e.g. when fromMs == clip duration)
                         if (Log.isLoggable(TAG, Log.DEBUG)) {
                             Log.d(TAG, "Cannot start preview at: " + fromMs, ex);
-                        } else {
-                            Log.d(TAG, "Cannot start preview at: " + fromMs);
                         }
 
                         mMainHandler.post(new Runnable() {
