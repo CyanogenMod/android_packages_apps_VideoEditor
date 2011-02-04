@@ -918,15 +918,11 @@ public class ApiService extends Service {
                 case OP_VIDEO_EDITOR_SAVE:
                 case OP_MEDIA_ITEM_SET_VOLUME:
                 case OP_MEDIA_ITEM_SET_MUTE:
-                case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM:
-                case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS:
                 case OP_MEDIA_ITEM_GET_THUMBNAIL:
                 case OP_MEDIA_ITEM_GET_THUMBNAILS:
                 case OP_TRANSITION_GET_THUMBNAIL:
                 case OP_AUDIO_TRACK_SET_VOLUME:
-                case OP_AUDIO_TRACK_SET_MUTE:
-                case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM:
-                case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS: {
+                case OP_AUDIO_TRACK_SET_MUTE: {
                     break;
                 }
 
@@ -2671,23 +2667,15 @@ public class ApiService extends Service {
                         final MediaVideoItem movieMediaItem = ((MediaVideoItem)mediaItem);
                         final WaveformData waveformData = movieMediaItem.getWaveformData();
                         if (waveformData == null) {
-                            extractMediaItemAudioWaveform(intent, movieMediaItem);
+                            extractMediaItemAudioWaveform(intent, videoEditor, movieMediaItem);
+                            completeRequest(intent, videoEditor, null,
+                                    movieMediaItem.getWaveformData(), null, true);
                         } else {
                             completeRequest(intent, videoEditor, null, waveformData, null, true);
                         }
                     } else {
                         throw new IllegalArgumentException("MediaItem not found: " + mediaItemId);
                     }
-                    break;
-                }
-
-                case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS: {
-                    final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    final MediaVideoItem mediaItem =
-                        (MediaVideoItem)videoEditor.getMediaItem(mediaItemId);
-
-                    completeRequest(intent, videoEditor, null, mediaItem.getWaveformData(), null,
-                            true);
                     break;
                 }
 
@@ -3334,23 +3322,12 @@ public class ApiService extends Service {
 
                     final WaveformData waveformData = audioTrack.getWaveformData();
                     if (waveformData == null) {
-                        extractAudioTrackAudioWaveform(intent, audioTrack);
+                        extractAudioTrackAudioWaveform(intent, videoEditor, audioTrack);
+                        completeRequest(intent, videoEditor, null, audioTrack.getWaveformData(),
+                                null, true);
                     } else {
                         completeRequest(intent, videoEditor, null, waveformData, null, true);
                     }
-                    break;
-                }
-
-                case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS: {
-                    final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
-                    if (audioTrack == null) {
-                        throw new IllegalArgumentException("AudioTrack not found: " +
-                                audioTrackId);
-                    }
-
-                    completeRequest(intent, videoEditor, null, audioTrack.getWaveformData(), null,
-                            true);
                     break;
                 }
 
@@ -3935,60 +3912,37 @@ public class ApiService extends Service {
                 }
 
                 final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
+                final int progress = intent.getIntExtra(PARAM_PROGRESS_VALUE, 0);
 
-                // This operation is for internal use only
-                if (intent.hasExtra(PARAM_EXCEPTION)) { // Complete
-                    finalizeRequest((Intent)intent.getParcelableExtra(PARAM_INTENT));
-
-                    final VideoEditorProject videoProject = getProject(projectPath);
-                    if (videoProject != null) {
-                        if (result != null) {
-                            final MovieMediaItem mediaItem =
-                                videoProject.getMediaItem(mediaItemId);
-                            if (mediaItem != null) {
-                                mediaItem.setWaveformData((WaveformData)result);
-                            }
-                        }
-                    }
-
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onMediaItemExtractAudioWaveformComplete(projectPath, mediaItemId,
-                            (Exception)intent.getSerializableExtra(PARAM_EXCEPTION));
-                    }
-                } else { // Progress
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onMediaItemExtractAudioWaveformProgress(projectPath,
-                                mediaItemId, intent.getIntExtra(PARAM_PROGRESS_VALUE, -1));
-                    }
-                    // The original request is still pending
+                for (ApiServiceListener listener : mListeners) {
+                    listener.onMediaItemExtractAudioWaveformProgress(projectPath, mediaItemId,
+                        progress);
                 }
 
                 break;
             }
 
             case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM: {
-                if (ex != null || result != null) {
-                    if (finalize) {
-                        finalizeRequest(intent);
-                    }
+                if (finalize) {
+                    finalizeRequest(intent);
+                }
 
-                    final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
+                final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
 
-                    final VideoEditorProject videoProject = getProject(projectPath);
-                    if (videoProject != null) {
-                        if (result != null) {
-                            final MovieMediaItem mediaItem =
-                                videoProject.getMediaItem(mediaItemId);
+                final VideoEditorProject videoProject = getProject(projectPath);
+                if (ex == null && videoProject != null) {
+                    if (result != null) {
+                        final MovieMediaItem mediaItem =
+                            videoProject.getMediaItem(mediaItemId);
+                        if (mediaItem != null) {
                             mediaItem.setWaveformData((WaveformData)result);
                         }
                     }
+                }
 
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onMediaItemExtractAudioWaveformComplete(projectPath,
-                                mediaItemId, ex);
-                    }
-                } else {
-                    // The request is still pending
+                for (ApiServiceListener listener : mListeners) {
+                    listener.onMediaItemExtractAudioWaveformComplete(projectPath,
+                            mediaItemId, ex);
                 }
 
                 break;
@@ -4437,67 +4391,43 @@ public class ApiService extends Service {
                 break;
             }
 
-            case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM: {
-                if (ex != null || result != null) {
-                    if (finalize) {
-                        finalizeRequest(intent);
-                    }
-
-                    final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-
-                    final VideoEditorProject videoProject = getProject(projectPath);
-                    if (videoProject != null) {
-                        if (result != null) {
-                            final MovieAudioTrack audioTrack =
-                                videoProject.getAudioTrack(audioTrackId);
-                            if (audioTrack != null) {
-                                audioTrack.setWaveformData((WaveformData)result);
-                            }
-                        }
-                    }
-
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onAudioTrackExtractAudioWaveformComplete(projectPath,
-                                audioTrackId, ex);
-                    }
-                } else {
-                    // The request is still pending
-                }
-
-                break;
-            }
-
             case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS: {
                 if (finalize) {
                     finalizeRequest(intent);
                 }
 
                 final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                // This operation is for internal use only
-                if (intent.hasExtra(PARAM_EXCEPTION)) { // Complete
-                    finalizeRequest((Intent)intent.getParcelableExtra(PARAM_INTENT));
+                final int progress = intent.getIntExtra(PARAM_PROGRESS_VALUE, 0);
 
-                    final VideoEditorProject videoProject = getProject(projectPath);
-                    if (videoProject != null) {
-                        if (result != null) {
-                            final MovieAudioTrack audioTrack =
-                                videoProject.getAudioTrack(audioTrackId);
-                            if (audioTrack != null) {
-                                audioTrack.setWaveformData((WaveformData)result);
-                            }
+                for (ApiServiceListener listener : mListeners) {
+                    listener.onAudioTrackExtractAudioWaveformProgress(projectPath, audioTrackId,
+                            progress);
+                }
+
+                break;
+            }
+
+            case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM: {
+                if (finalize) {
+                    finalizeRequest(intent);
+                }
+
+                final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
+
+                final VideoEditorProject videoProject = getProject(projectPath);
+                if (ex == null && videoProject != null) {
+                    if (result != null) {
+                        final MovieAudioTrack audioTrack =
+                            videoProject.getAudioTrack(audioTrackId);
+                        if (audioTrack != null) {
+                            audioTrack.setWaveformData((WaveformData)result);
                         }
                     }
+                }
 
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onAudioTrackExtractAudioWaveformComplete(projectPath,
-                                audioTrackId,
-                                (Exception)intent.getSerializableExtra(PARAM_EXCEPTION));
-                    }
-                } else { // Progress
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onAudioTrackExtractAudioWaveformProgress(projectPath,
-                                audioTrackId, intent.getIntExtra(PARAM_PROGRESS_VALUE, -1));
-                    }
+                for (ApiServiceListener listener : mListeners) {
+                    listener.onAudioTrackExtractAudioWaveformComplete(projectPath,
+                            audioTrackId, ex);
                 }
 
                 break;
@@ -4737,98 +4667,57 @@ public class ApiService extends Service {
      * Extract the audio waveform of a media item
      *
      * @param intent The original Intent
+     * @param videoEditor The video editor
      * @param mediaItem The media item
      */
-    private void extractMediaItemAudioWaveform(final Intent intent,
-            final MediaVideoItem mediaItem) {
-        new Thread() {
+    private void extractMediaItemAudioWaveform(final Intent intent, final VideoEditor videoEditor,
+            final MediaVideoItem mediaItem) throws IOException {
+        mediaItem.extractAudioWaveform(
+            new ExtractAudioWaveformProgressListener() {
             /*
              * {@inheritDoc}
              */
-            @Override
-            public void run() {
-                final Intent statusIntent = mIntentPool.get();
-                statusIntent.putExtra(PARAM_OP, OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS);
-                statusIntent.putExtra(PARAM_PROJECT_PATH,
+            public void onProgress(int progress) {
+                final Intent progressIntent = mIntentPool.get();
+                progressIntent.putExtra(PARAM_OP, OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS);
+                progressIntent.putExtra(PARAM_PROJECT_PATH,
                         intent.getStringExtra(PARAM_PROJECT_PATH));
-                statusIntent.putExtra(PARAM_INTENT, intent);
-                statusIntent.putExtra(PARAM_STORYBOARD_ITEM_ID, mediaItem.getId());
-                try {
-                    mediaItem.extractAudioWaveform(
-                        new ExtractAudioWaveformProgressListener() {
-                        /*
-                         * {@inheritDoc}
-                         */
-                        public void onProgress(int progress) {
-                            final Intent progressIntent = mIntentPool.get();
-                            progressIntent.putExtra(PARAM_OP, OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS);
-                            progressIntent.putExtra(PARAM_PROJECT_PATH,
-                                    intent.getStringExtra(PARAM_PROJECT_PATH));
-                            progressIntent.putExtra(PARAM_INTENT, intent);
-                            progressIntent.putExtra(PARAM_STORYBOARD_ITEM_ID, mediaItem.getId());
-                            progressIntent.putExtra(PARAM_PROGRESS_VALUE, progress);
-                            mVideoThread.put(progressIntent);
-                        }
-                    });
-                    statusIntent.putExtra(PARAM_EXCEPTION, (Exception)null);
-                } catch (Exception ex) {
-                    statusIntent.putExtra(PARAM_EXCEPTION, ex);
-                }
-                mVideoThread.put(statusIntent);
+                progressIntent.putExtra(PARAM_INTENT, intent);
+                progressIntent.putExtra(PARAM_STORYBOARD_ITEM_ID, mediaItem.getId());
+                progressIntent.putExtra(PARAM_PROGRESS_VALUE, progress);
+
+                completeRequest(progressIntent, videoEditor, null, null, null, true);
             }
-        }.start();
+        });
     }
 
     /**
      * Extract the audio waveform of an AudioTrack
      *
      * @param intent The original Intent
+     * @param videoEditor The video editor
      * @param audioTrack The audio track
      */
-    private void extractAudioTrackAudioWaveform(final Intent intent, final AudioTrack audioTrack) {
-        new Thread() {
+    private void extractAudioTrackAudioWaveform(final Intent intent, final VideoEditor videoEditor,
+            final AudioTrack audioTrack) throws IOException {
+        audioTrack.extractAudioWaveform(
+            new ExtractAudioWaveformProgressListener() {
             /*
              * {@inheritDoc}
              */
-            @Override
-            public void run() {
-                final Intent statusIntent = mIntentPool.get();
-                statusIntent.putExtra(PARAM_OP, OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS);
-                statusIntent.putExtra(PARAM_PROJECT_PATH,
+            public void onProgress(int progress) {
+                final Intent progressIntent = mIntentPool.get();
+                progressIntent.putExtra(PARAM_OP,
+                        OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS);
+                progressIntent.putExtra(PARAM_PROJECT_PATH,
                         intent.getStringExtra(PARAM_PROJECT_PATH));
-                statusIntent.putExtra(PARAM_INTENT, intent);
-                statusIntent.putExtra(PARAM_STORYBOARD_ITEM_ID, audioTrack.getId());
-                try {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "extractAudioTrackAudioWaveform: start: " + audioTrack.getId());
-                    }
-                    audioTrack.extractAudioWaveform(
-                        new ExtractAudioWaveformProgressListener() {
-                        /*
-                         * {@inheritDoc}
-                         */
-                        public void onProgress(int progress) {
-                            final Intent progressIntent = mIntentPool.get();
-                            progressIntent.putExtra(PARAM_OP,
-                                    OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS);
-                            progressIntent.putExtra(PARAM_PROJECT_PATH,
-                                    intent.getStringExtra(PARAM_PROJECT_PATH));
-                            progressIntent.putExtra(PARAM_INTENT, intent);
-                            progressIntent.putExtra(PARAM_STORYBOARD_ITEM_ID, audioTrack.getId());
-                            progressIntent.putExtra(PARAM_PROGRESS_VALUE, progress);
-                            mVideoThread.put(progressIntent);
-                        }
-                    });
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "extractAudioTrackAudioWaveform: stop: " + audioTrack.getId());
-                    }
-                    statusIntent.putExtra(PARAM_EXCEPTION, (Exception)null);
-                } catch (Exception ex) {
-                    statusIntent.putExtra(PARAM_EXCEPTION, ex);
-                }
-                mVideoThread.put(statusIntent);
+                progressIntent.putExtra(PARAM_INTENT, intent);
+                progressIntent.putExtra(PARAM_STORYBOARD_ITEM_ID, audioTrack.getId());
+                progressIntent.putExtra(PARAM_PROGRESS_VALUE, progress);
+
+                completeRequest(progressIntent, videoEditor, null, null, null, true);
             }
-        }.start();
+        });
     }
 
     /**
