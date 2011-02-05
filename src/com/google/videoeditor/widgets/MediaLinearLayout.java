@@ -203,13 +203,6 @@ public class MediaLinearLayout extends LinearLayout {
                     mMediaItem.getEndTransition() == null && !mPlaybackInProgress);
             menu.findItem(R.id.action_rendering_mode).setVisible(mProject.hasMultipleAspectRatios()
                     && !mPlaybackInProgress);
-            if (mMediaItem.isVideoClip()) {
-                menu.findItem(R.id.action_mute_media_item).setVisible(!mMediaItem.isAppMuted());
-                menu.findItem(R.id.action_unmute_media_item).setVisible(mMediaItem.isAppMuted());
-            } else {
-                menu.findItem(R.id.action_mute_media_item).setVisible(false);
-                menu.findItem(R.id.action_unmute_media_item).setVisible(false);
-            }
 
             return true;
         }
@@ -269,22 +262,6 @@ public class MediaLinearLayout extends LinearLayout {
                             mMediaItem.getAppRenderingMode());
                     ((Activity)getContext()).showDialog(
                             VideoEditorActivity.DIALOG_CHANGE_RENDERING_MODE_ID, bundle);
-                    break;
-                }
-
-                case R.id.action_mute_media_item: {
-                    mMediaItem.setAppMute(true);
-                    mode.invalidate();
-                    ApiService.setMediaItemMute(getContext(), mProject.getPath(),
-                            mMediaItem.getId(), true);
-                    break;
-                }
-
-                case R.id.action_unmute_media_item: {
-                    mMediaItem.setAppMute(false);
-                    mode.invalidate();
-                    ApiService.setMediaItemMute(getContext(), mProject.getPath(),
-                            mMediaItem.getId(), false);
                     break;
                 }
 

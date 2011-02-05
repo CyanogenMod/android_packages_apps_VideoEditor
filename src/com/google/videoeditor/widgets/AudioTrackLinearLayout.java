@@ -107,7 +107,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
             final TextView titleView = (TextView)titleBarView.findViewById(R.id.action_bar_title);
             titleView.setText(FileUtils.getSimpleName(mAudioTrack.getFilename()));
 
-            titleBarView.findViewById(R.id.action_mute).setOnClickListener(this);
             titleBarView.findViewById(R.id.action_duck).setOnClickListener(this);
             titleBarView.findViewById(R.id.action_remove).setOnClickListener(this);
             final SeekBar seekBar =
@@ -123,12 +122,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             final View view = mode.getCustomView();
-            final ImageButton muteBtn = (ImageButton)view.findViewById(R.id.action_mute);
-            if (mAudioTrack.isAppMuted()) {
-                muteBtn.setImageResource(R.drawable.ic_menu_unmute);
-            } else {
-                muteBtn.setImageResource(R.drawable.ic_menu_mute);
-            }
 
             final ImageButton duckBtn = (ImageButton)view.findViewById(R.id.action_duck);
             if (mAudioTrack.isAppDuckingEnabled()) {
@@ -152,17 +145,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
          */
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.action_mute: {
-                    final boolean mute = !mAudioTrack.isAppMuted();
-                    mAudioTrack.setAppMute(mute);
-                    if (mAudioTrackActionMode != null) {
-                        mAudioTrackActionMode.invalidate();
-                    }
-                    ApiService.setAudioTrackMute(getContext(), mProject.getPath(),
-                            mAudioTrack.getId(), mute);
-                    break;
-                }
-
                 case R.id.action_duck: {
                     final boolean duck = !mAudioTrack.isAppDuckingEnabled();
                     mAudioTrack.enableAppDucking(duck);
