@@ -290,10 +290,17 @@ public class AudioTrackView extends View {
      *
      * @param progress The progress
      */
-    public void updateProgress(int progress) {
+    public void setProgress(int progress) {
         mProgress = progress;
 
         invalidate();
+    }
+
+    /**
+     * @return The waveform data
+     */
+    public WaveformData getWaveformData() {
+        return mWaveformData;
     }
 
     /*

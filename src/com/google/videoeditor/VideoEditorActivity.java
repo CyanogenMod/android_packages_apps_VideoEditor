@@ -475,6 +475,19 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
      * {@inheritDoc}
      */
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mProject != null) {
+            mMediaLayout.onResume();
+            mAudioTrackLayout.onResume();
+        }
+    }
+
+    /*
+     * {@inheritDoc}
+     */
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 

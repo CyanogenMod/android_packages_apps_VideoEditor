@@ -312,6 +312,27 @@ public class AudioTrackLinearLayout extends LinearLayout {
     }
 
     /**
+     * The activity was resumed
+     */
+    public void onResume() {
+        final int childrenCount = getChildCount();
+        for (int i = 0; i < childrenCount; i++) {
+            final View childView = getChildAt(i);
+            final Object tag = childView.getTag();
+            if (tag != null) { // This view represents an audio track
+                final AudioTrackView audioTrackView = (AudioTrackView)childView;
+                if (audioTrackView.getWaveformData() == null) {
+                    final MovieAudioTrack audioTrack = (MovieAudioTrack)tag;
+                    if (audioTrack.getWaveformData() != null) {
+                        audioTrackView.setWaveformData(audioTrack.getWaveformData());
+                        audioTrackView.invalidate();
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * @param listener The listener
      */
     public void setListener(AudioTracksLayoutListener listener) {
@@ -467,7 +488,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             return;
         }
 
-        audioTrackView.updateProgress(progress);
+        audioTrackView.setProgress(progress);
     }
 
     /**
@@ -484,7 +505,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             return;
         }
 
-        audioTrackView.updateProgress(progress);
+        audioTrackView.setProgress(progress);
     }
 
     /**
@@ -500,7 +521,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             return;
         }
 
-        audioTrackView.updateProgress(-1);
+        audioTrackView.setProgress(-1);
 
         final MovieAudioTrack audioTrack = (MovieAudioTrack)audioTrackView.getTag();
         if (audioTrack.getWaveformData() != null) {
