@@ -36,10 +36,6 @@
     <item android:id="@+id/action_rendering_mode"
         android:title="@string/editor_change_rendering_mode"
         android:icon="@drawable/ic_menu_rendermode"/>
-    <item android:id="@+id/action_mute_media_item"
-        android:title="@string/editor_mute"/>
-    <item android:id="@+id/action_unmute_media_item"
-        android:title="@string/editor_unmute"/>
     <item android:id="@+id/action_delete_media_item"
         android:title="@string/remove"
         android:icon="@drawable/ic_menu_delete"/>
