@@ -573,6 +573,26 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
+     * The activity was resumed
+     */
+    public void onResume() {
+        // Invalidate all progress in case the transition generation
+        // or Ken Burns effect completed while the activity was be paused.
+        final int childrenCount = getChildCount();
+        for (int i = 0; i < childrenCount; i++) {
+            final View childView = getChildAt(i);
+            final Object tag = childView.getTag();
+            if (tag != null) {
+                if (tag instanceof MovieMediaItem) {
+                    ((MediaItemView)childView).setProgress(-1);
+                } else if (tag instanceof MovieTransition) {
+                    ((TransitionView)childView).setProgress(-1);
+                }
+            }
+        }
+    }
+
+    /**
      * @param listener The listener
      */
     public void setListener(MediaLayoutListener listener) {
