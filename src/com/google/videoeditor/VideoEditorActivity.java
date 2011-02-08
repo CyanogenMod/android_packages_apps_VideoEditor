@@ -50,6 +50,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.videoeditor.service.ApiService;
 import com.google.videoeditor.service.MovieMediaItem;
 import com.google.videoeditor.service.VideoEditorProject;
@@ -580,7 +582,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 intent.setType("video/*");
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
                 return true;
@@ -596,7 +597,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_IMAGE);
                 return true;
@@ -1018,9 +1018,18 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             case REQUEST_CODE_IMPORT_VIDEO: {
                 final Uri mediaUri = extras.getData();
                 if (mProject != null) {
-                    ApiService.addMediaItemVideoUri(this, mProjectPath, ApiService.generateId(),
-                            mInsertMediaItemAfterMediaItemId,
-                            mediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER, mProject.getTheme());
+                    if ("media".equals(mediaUri.getAuthority())) {
+                        ApiService.addMediaItemVideoUri(this, mProjectPath,
+                                ApiService.generateId(), mInsertMediaItemAfterMediaItemId,
+                                mediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
+                                mProject.getTheme());
+                    } else {
+                        // Notify the user that this item needs to be downloaded.
+                        Toast.makeText(this, getString(R.string.editor_video_load),
+                                Toast.LENGTH_LONG).show();
+                        // When the download is complete insert it into the project.
+                        ApiService.loadMediaItem(this, mProjectPath, mediaUri, "video/*");
+                    }
                     mInsertMediaItemAfterMediaItemId = null;
                 } else {
                     // Add this video after the project loads
@@ -1032,10 +1041,18 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             case REQUEST_CODE_IMPORT_IMAGE: {
                 final Uri mediaUri = extras.getData();
                 if (mProject != null) {
-                    ApiService.addMediaItemImageUri(this, mProjectPath, ApiService.generateId(),
-                            mInsertMediaItemAfterMediaItemId,
-                            mediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
-                            MediaItemUtils.getDefaultImageDuration(), mProject.getTheme());
+                    if ("media".equals(mediaUri.getAuthority())) {
+                        ApiService.addMediaItemImageUri(this, mProjectPath,
+                                ApiService.generateId(), mInsertMediaItemAfterMediaItemId,
+                                mediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
+                                MediaItemUtils.getDefaultImageDuration(), mProject.getTheme());
+                    } else {
+                        // Notify the user that this item needs to be downloaded.
+                        Toast.makeText(this, getString(R.string.editor_image_load),
+                                Toast.LENGTH_LONG).show();
+                        // When the download is complete insert it into the project.
+                        ApiService.loadMediaItem(this, mProjectPath, mediaUri, "image/*");
+                    }
                     mInsertMediaItemAfterMediaItemId = null;
                 } else {
                     // Add this image after the project loads

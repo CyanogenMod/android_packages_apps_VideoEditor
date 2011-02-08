@@ -58,6 +58,10 @@
     <string name="editor_add_end_transition">Add ending transition</string>
     <!-- Menu item used to change a transition type and/or duration. -->
     <string name="editor_change_transition">Change transition</string>
+    <!-- Toast message used when a video clip needs to be downloaded before it can be used -->
+    <string name="editor_video_load">The video clip download was started. You will be notified when it completes.</string>
+    <!-- Toast message used when an image needs to be downloaded before it can be used -->
+    <string name="editor_image_load">The image download was started. You will be notified when it completes.</string>
 
     <!-- Audio tracks -->
     <!-- Enable looping for the audio track. -->
@@ -144,7 +148,9 @@
     <string name="editor_set_audio_track_boundaries_error">Audio track cannot be trimmed.</string>
     <!-- Error message displayed in a toast if a transition cannot be added. -->
     <string name="editor_transition_too_short">Cannot add a transition. The transition would be too short.</string>
- 
+    <!-- Error message displayed in a toast when a video clip or an image cannot be downloaded. -->
+    <string name="editor_media_load_error">Cannot download file.</string>
+
      <!-- Export options dialog-->
     <!-- The title of the export dialog. -->
     <string name="export_dialog_export">Export</string>

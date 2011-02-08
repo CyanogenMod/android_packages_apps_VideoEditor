@@ -25,6 +25,7 @@ import android.media.videoeditor.AudioTrack;
 import android.media.videoeditor.MediaItem;
 import android.media.videoeditor.MediaVideoItem;
 import android.media.videoeditor.Transition;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -351,6 +352,28 @@ public abstract class VideoEditorBaseActivity extends Activity {
                 }
 
                 updateTimelineDuration();
+            }
+        }
+
+        /*
+         * {@inheritDoc}
+         */
+        @Override
+        public void onMediaLoaded(String projectPath, Uri mediaIUri, String mimeType,
+                String filename, Exception exception) {
+            // Check if the VideoEditor is the one we are expecting
+            if (!projectPath.equals(mProjectPath)) {
+                return;
+            }
+
+            if (mProject == null) {
+                return;
+            }
+            if (exception != null) {
+                Toast.makeText(VideoEditorBaseActivity.this, R.string.editor_media_load_error,
+                            Toast.LENGTH_LONG).show();
+            } else {
+                // Update the status of the downloaded item in the user interface
             }
         }
 

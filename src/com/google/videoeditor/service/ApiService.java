@@ -18,7 +18,9 @@ package com.google.videoeditor.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -153,6 +155,8 @@ public class ApiService extends Service {
     private static final int OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS = 110;
     private static final int OP_MEDIA_ITEM_GET_THUMBNAIL = 111;
     private static final int OP_MEDIA_ITEM_GET_THUMBNAILS = 112;
+    private static final int OP_MEDIA_ITEM_LOAD = 113;
+    private static final int OP_MEDIA_ITEM_LOAD_STATUS = 114;
 
     private static final int OP_EFFECT_ADD_COLOR = 200;
     private static final int OP_EFFECT_ADD_IMAGE_KEN_BURNS = 201;
@@ -415,6 +419,19 @@ public class ApiService extends Service {
         public void onMediaItemAdded(String projectPath, String mediaItemId,
                 MovieMediaItem mediaItem, String afterMediaId, Class<?> mediaItemClass,
                 Integer aspectRatio, Exception exception) {
+        }
+
+        /**
+         * Media load complete
+         *
+         * @param projectPath The project path
+         * @param mediaUri The media URI
+         * @param mimeType The mime type
+         * @param filename The filename of the downloaded media item
+         * @param exception The exception which occurred
+         */
+        public void onMediaLoaded(String projectPath, Uri mediaIUri, String mimeType,
+                String filename, Exception exception) {
         }
 
         /**
@@ -920,6 +937,7 @@ public class ApiService extends Service {
                 case OP_MEDIA_ITEM_SET_MUTE:
                 case OP_MEDIA_ITEM_GET_THUMBNAIL:
                 case OP_MEDIA_ITEM_GET_THUMBNAILS:
+                case OP_MEDIA_ITEM_LOAD:
                 case OP_TRANSITION_GET_THUMBNAIL:
                 case OP_AUDIO_TRACK_SET_VOLUME:
                 case OP_AUDIO_TRACK_SET_MUTE: {
@@ -1025,12 +1043,26 @@ public class ApiService extends Service {
         final Intent intent = mIntentPool.get(context, ApiService.class);
         intent.putExtra(PARAM_OP, OP_MEDIA_ITEM_ADD_IMAGE_URI);
         intent.putExtra(PARAM_PROJECT_PATH, projectPath);
-        intent.putExtra(PARAM_STORYBOARD_ITEM_ID, mediaItemId);
-        intent.putExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID, afterMediaItemId);
         intent.putExtra(PARAM_FILENAME, uri);
-        intent.putExtra(PARAM_MEDIA_ITEM_RENDERING_MODE, renderingMode);
-        intent.putExtra(PARAM_DURATION, durationMs);
-        intent.putExtra(PARAM_THEME, themeId);
+
+        startCommand(context, intent);
+    }
+
+    /**
+     * Download or make a copy of an image from the specified URI
+     *
+     * @param context The context
+     * @param projectPath The project path
+     * @param uri The media item URI
+     * @param mimeType The MIME type
+     */
+    public static void loadMediaItem(Context context, String projectPath, Uri uri,
+            String mimeType) {
+        final Intent intent = mIntentPool.get(context, ApiService.class);
+        intent.putExtra(PARAM_OP, OP_MEDIA_ITEM_LOAD);
+        intent.putExtra(PARAM_PROJECT_PATH, projectPath);
+        intent.putExtra(PARAM_FILENAME, uri);
+        intent.putExtra(PARAM_ATTRIBUTES, mimeType);
 
         startCommand(context, intent);
     }
@@ -1882,6 +1914,8 @@ public class ApiService extends Service {
             case OP_MEDIA_ITEM_SET_BOUNDARIES:
             case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM:
             case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS:
+            case OP_MEDIA_ITEM_LOAD:
+            case OP_MEDIA_ITEM_LOAD_STATUS:
 
             case OP_EFFECT_ADD_COLOR:
             case OP_EFFECT_ADD_IMAGE_KEN_BURNS:
@@ -2117,7 +2151,7 @@ public class ApiService extends Service {
                         // Create the video editor project
                         final VideoEditorProject videoProject = new VideoEditorProject(
                                 videoEditor, projectPath, projectName, System.currentTimeMillis(),
-                                0, 0, VideoEditorProject.DEFAULT_ZOOM_LEVEL, null, themeId);
+                                0, 0, VideoEditorProject.DEFAULT_ZOOM_LEVEL, null, themeId, null);
                         videoProject.setMediaItems(copyMediaItems(
                                 videoEditor.getAllMediaItems()));
                         videoProject.setAudioTracks(copyAudioTracks(
@@ -2397,6 +2431,84 @@ public class ApiService extends Service {
                             aspectRatio, false);
                     generatePreview(videoEditor, true);
                     completeRequest(intent);
+                    break;
+                }
+
+                case OP_MEDIA_ITEM_LOAD: {
+                    final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
+                    if (Log.isLoggable(TAG, Log.DEBUG)) {
+                        Log.d(TAG, "OP_MEDIA_ITEM_LOAD: " + data);
+                    }
+
+                    final Intent requestIntent = intent;
+                    new Thread() {
+                        /*
+                         * {@inheritDoc}
+                         */
+                        @Override
+                        public void run() {
+                            InputStream is = null;
+                            FileOutputStream fos = null;
+                            final File file = new File(projectPath, "download_" + generateId());
+
+                            final Intent statusIntent = mIntentPool.get();
+                            statusIntent.putExtra(PARAM_OP, OP_MEDIA_ITEM_LOAD_STATUS);
+                            statusIntent.putExtra(PARAM_PROJECT_PATH,
+                                    requestIntent.getStringExtra(PARAM_PROJECT_PATH));
+                            statusIntent.putExtra(PARAM_INTENT, requestIntent);
+                            try {
+                                is = getContentResolver().openInputStream(data);
+
+                                // Save the input stream to a file
+                                fos = new FileOutputStream(file);
+                                final byte[] readBuffer = new byte[2048];
+                                int readBytes;
+                                while ((readBytes = is.read(readBuffer)) >= 0) {
+                                    fos.write(readBuffer, 0, readBytes);
+                                }
+
+                                // The load was successful
+                                statusIntent.putExtra(PARAM_FILENAME, file.getAbsolutePath());
+                            } catch (Exception ex) {
+                                Log.e(TAG, "Cannot open input stream for: " + data);
+                                statusIntent.putExtra(PARAM_EXCEPTION, ex);
+                            } finally {
+                                if (is != null) {
+                                    try {
+                                        is.close();
+                                    } catch (IOException ex) {
+                                        Log.e(TAG, "Cannot close input stream for: " + data);
+                                    }
+                                }
+
+                                if (fos != null) {
+                                    try {
+                                        fos.flush();
+                                        fos.close();
+                                    } catch (IOException ex) {
+                                        Log.e(TAG, "Cannot close output stream for: " + data);
+                                    }
+                                }
+                            }
+
+                            mVideoThread.put(statusIntent);
+                        }
+                    }.start();
+
+                    break;
+                }
+
+                case OP_MEDIA_ITEM_LOAD_STATUS: {
+                    final Intent originalIntent = (Intent)intent.getParcelableExtra(PARAM_INTENT);
+                    if (intent.hasExtra(PARAM_EXCEPTION)) { //
+                        final Exception exception =
+                            (Exception)intent.getSerializableExtra(PARAM_EXCEPTION);
+                        completeRequest(intent, videoEditor, exception, null, originalIntent,
+                                true);
+                    } else {
+                        completeRequest(intent, videoEditor, null,
+                                intent.getStringExtra(PARAM_FILENAME), originalIntent, true);
+                    }
                     break;
                 }
 
@@ -3177,10 +3289,8 @@ public class ApiService extends Service {
 
                     completeRequest(intent, videoEditor, null, new MovieAudioTrack(audioTrack),
                             null, false);
-
                     // This is needed to decode the audio file into a PCM file
                     generatePreview(videoEditor, false);
-
                     completeRequest(intent);
                     break;
                 }
@@ -3553,7 +3663,9 @@ public class ApiService extends Service {
 
                 final String filename = intent.getStringExtra(PARAM_FILENAME);
                 if (intent.hasExtra(PARAM_EXCEPTION)) { // Complete
-                    finalizeRequest((Intent)intent.getParcelableExtra(PARAM_INTENT));
+                    final Intent originalIntent = (Intent)intent.getParcelableExtra(PARAM_INTENT);
+                    finalizeRequest(originalIntent);
+                    mIntentPool.put(originalIntent);
 
                     final Exception exception =
                         (Exception)intent.getSerializableExtra(PARAM_EXCEPTION);
@@ -3685,6 +3797,46 @@ public class ApiService extends Service {
                             afterMediaItemId, MediaImageItem.class, (Integer)extraResult, ex);
                 }
 
+                break;
+            }
+
+            case OP_MEDIA_ITEM_LOAD: {
+                // Note that this message is handled only if the download
+                // cannot start.
+                final Uri data = (Uri)intent.getParcelableExtra(PARAM_FILENAME);
+                final String mimeType = intent.getStringExtra(PARAM_ATTRIBUTES);
+                if (finalize) {
+                    finalizeRequest(intent);
+                }
+
+                for (ApiServiceListener listener : mListeners) {
+                    listener.onMediaLoaded(projectPath, data, mimeType, null, ex);
+                }
+                break;
+            }
+
+            case OP_MEDIA_ITEM_LOAD_STATUS: {
+                if (finalize) {
+                    finalizeRequest(intent);
+                }
+
+                final Intent originalIntent = (Intent)intent.getParcelableExtra(PARAM_INTENT);
+                final Uri data = (Uri)originalIntent.getParcelableExtra(PARAM_FILENAME);
+                final String mimeType = originalIntent.getStringExtra(PARAM_ATTRIBUTES);
+
+                finalizeRequest(originalIntent);
+                mIntentPool.put(originalIntent);
+
+                final String filename = intent.getStringExtra(PARAM_FILENAME);
+
+                if (ex == null && filename != null) {
+                    final VideoEditorProject videoProject = getProject(projectPath);
+                    videoProject.addDownload(data.toString(), mimeType, filename);
+                }
+
+                for (ApiServiceListener listener : mListeners) {
+                    listener.onMediaLoaded(projectPath, data, mimeType, filename, ex);
+                }
                 break;
             }
 

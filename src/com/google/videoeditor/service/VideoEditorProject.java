@@ -50,6 +50,7 @@ public class VideoEditorProject {
     // XML definitions
     private static final String TAG_PROJECT = "project";
     private static final String TAG_MOVIE = "movie";
+    private static final String TAG_DOWNLOAD = "download";
     private static final String ATTR_NAME = "name";
     private static final String ATTR_URI = "uri";
     private static final String ATTR_SAVED = "saved";
@@ -57,11 +58,15 @@ public class VideoEditorProject {
     private static final String ATTR_PLAYHEAD_POSITION = "playhead";
     private static final String ATTR_DURATION = "duration";
     private static final String ATTR_ZOOM_LEVEL = "zoom_level";
+    private static final String ATTR_MIME = "mime";
+    private static final String ATTR_FILENAME = "filename";
+    private static final String ATTR_TIME = "time";
 
     // Instance variables
     private final VideoEditor mVideoEditor;
     private final String mProjectPath;
     private final long mProjectDurationMs;
+    private final List<Download> mDownloads;
     private String mProjectName;
     private long mLastSaved;
     private Uri mExportedMovieUri;
@@ -71,6 +76,59 @@ public class VideoEditorProject {
     private int mZoomLevel;
     private List<MovieMediaItem> mMediaItems = new ArrayList<MovieMediaItem>();
     private List<MovieAudioTrack> mAudioTracks = new ArrayList<MovieAudioTrack>();
+
+    /**
+     * Download item
+     */
+    public static class Download {
+        private final String mMediaUri;
+        private final String mMimeType;
+        private final String mFilename;
+        private final long mTime;
+
+        /**
+         * Constructor
+         *
+         * @param mediaUri The media URI
+         * @param mimeType The mime type
+         * @param filename The filename
+         * @param time The time when the file was downloaded
+         */
+        private Download(String mediaUri, String mimeType, String filename, long time) {
+            mMediaUri = mediaUri;
+            mMimeType = mimeType;
+            mFilename = filename;
+            mTime = time;
+        }
+
+        /**
+         * @return the media URI
+         */
+        public String getMediaUri() {
+            return mMediaUri;
+        }
+
+        /**
+         * @return the mime type
+         */
+        public String getMimeType() {
+            return mMimeType;
+        }
+
+        /**
+         * @return the filename
+         */
+        public String getFilename() {
+            return mFilename;
+        }
+
+        /**
+         * @return the mTime
+         */
+        public long getTime() {
+            return mTime;
+        }
+    }
 
     /**
      * Constructor
@@ -85,15 +143,21 @@ public class VideoEditorProject {
      * @param zoomLevel The zoom level
      * @param exportedMovieUri The exported movie URI
      * @param theme The project theme
+     * @param downloads The list of downloads
      */
     VideoEditorProject(VideoEditor videoEditor, String projectPath, String projectName,
             long lastSaved, long playheadPosMs, long durationMs, int zoomLevel,
-            Uri exportedMovieUri, String theme) {
+            Uri exportedMovieUri, String theme, List<Download> downloads) {
         mVideoEditor = videoEditor;
         if (videoEditor != null) {
             mAspectRatio = videoEditor.getAspectRatio();
         }
 
+        if (downloads != null) {
+            mDownloads = downloads;
+        } else {
+            mDownloads = new ArrayList<Download>();
+        }
         mProjectPath = projectPath;
         mProjectName = projectName;
         mLastSaved = lastSaved;
@@ -1014,6 +1078,46 @@ public class VideoEditorProject {
     }
 
     /**
+     * Add a new download to the project
+     *
+     * @param mediaUri The media URI
+     * @param mimeType The mime type
+     * @param filename The local filename
+     */
+    public void addDownload(String mediaUri, String mimeType, String filename) {
+        mDownloads.add(new Download(mediaUri, mimeType, filename, System.currentTimeMillis()));
+    }
+
+    /**
+     * Remove a download
+     *
+     * @param mediaUri The media URI
+     */
+    public void removeDownload(String mediaUri) {
+        final int count = mDownloads.size();
+        for (int i = 0; i < count; i++) {
+            final Download download = mDownloads.get(i);
+            final String uri = download.getMediaUri();
+            if (mediaUri.equals(uri)) {
+                // Delete the file associated with the download
+                final String filename = download.getFilename();
+                new File(filename).delete();
+
+                // Remove the download from the list
+                mDownloads.remove(i);
+                break;
+            }
+        }
+    }
+
+    /**
+     * @return The list of downloads
+     */
+    public List<Download> getDownloads() {
+        return mDownloads;
+    }
+
+    /**
      * Load metadata from file
      *
      * @param videoEditor The video editor
@@ -1025,6 +1129,7 @@ public class VideoEditorProject {
             throws XmlPullParserException, FileNotFoundException, IOException {
         final File file = new File(projectPath, PROJECT_METADATA_FILENAME);
         final FileInputStream fis = new FileInputStream(file);
+        final List<Download> downloads = new ArrayList<Download>();
         try {
             // Load the metadata
             final XmlPullParser parser = Xml.newPullParser();
@@ -1055,7 +1160,13 @@ public class VideoEditorProject {
                                     ATTR_ZOOM_LEVEL));
                         } else if (name.equalsIgnoreCase(TAG_MOVIE)) {
                             exportedMovieUri = Uri.parse(parser.getAttributeValue("", ATTR_URI));
+                        } else if (name.equalsIgnoreCase(TAG_DOWNLOAD)) {
+                            downloads.add(new Download(parser.getAttributeValue("", ATTR_URI),
+                                    parser.getAttributeValue("", ATTR_MIME),
+                                    parser.getAttributeValue("", ATTR_FILENAME),
+                                    Long.parseLong(parser.getAttributeValue("", ATTR_TIME))));
                         }
+
                         break;
                     }
 
@@ -1067,7 +1178,7 @@ public class VideoEditorProject {
             }
 
             return new VideoEditorProject(videoEditor, projectPath, projectName, lastSaved,
-                    playheadPosMs, durationMs, zoomLevel, exportedMovieUri, themeId);
+                    playheadPosMs, durationMs, zoomLevel, exportedMovieUri, themeId, downloads);
         } finally {
             if (fis != null) {
                 fis.close();
@@ -1104,6 +1215,14 @@ public class VideoEditorProject {
             serializer.endTag("", TAG_MOVIE);
         }
 
+        for (Download download : mDownloads) {
+            serializer.startTag("", TAG_DOWNLOAD);
+            serializer.attribute("", ATTR_URI, download.getMediaUri());
+            serializer.attribute("", ATTR_MIME, download.getMimeType());
+            serializer.attribute("", ATTR_FILENAME, download.getFilename());
+            serializer.attribute("", ATTR_TIME, Long.toString(download.getTime()));
+            serializer.endTag("", TAG_DOWNLOAD);
+        }
         serializer.endTag("", TAG_PROJECT);
         serializer.endDocument();
 
