@@ -1043,7 +1043,12 @@ public class ApiService extends Service {
         final Intent intent = mIntentPool.get(context, ApiService.class);
         intent.putExtra(PARAM_OP, OP_MEDIA_ITEM_ADD_IMAGE_URI);
         intent.putExtra(PARAM_PROJECT_PATH, projectPath);
+        intent.putExtra(PARAM_STORYBOARD_ITEM_ID, mediaItemId);
+        intent.putExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID, afterMediaItemId);
         intent.putExtra(PARAM_FILENAME, uri);
+        intent.putExtra(PARAM_MEDIA_ITEM_RENDERING_MODE, renderingMode);
+        intent.putExtra(PARAM_DURATION, durationMs);
+        intent.putExtra(PARAM_THEME, themeId);
 
         startCommand(context, intent);
     }
