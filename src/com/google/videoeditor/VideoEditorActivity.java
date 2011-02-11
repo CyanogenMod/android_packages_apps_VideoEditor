@@ -1122,6 +1122,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                 ApiService.generateId(), bundle,
                                 mediaItem.getAppBoundaryBeginTime(),
                                 OverlayLinearLayout.DEFAULT_TITLE_DURATION);
+                        mOverlayLayout.invalidateCAB();
                     }
                 } else {
                     // Add this overlay after you load the project
@@ -1141,6 +1142,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 if (mProject != null) {
                     ApiService.setOverlayUserAttributes(this, mProject.getPath(), mediaItemId,
                             overlayId, bundle);
+                    mOverlayLayout.invalidateCAB();
                 } else {
                     // Edit this overlay after you load the project
                     mEditOverlayMediaItemId = mediaItemId;
@@ -1511,6 +1513,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mPreviewRewindButton.setEnabled(!projectEdited);
         mPreviewNextButton.setEnabled(!projectEdited);
         mPreviewPrevButton.setEnabled(!projectEdited);
+
+        mMediaLayout.invalidateCAB();
+        mOverlayLayout.invalidateCAB();
     }
 
     /*
@@ -1518,7 +1523,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
      */
     @Override
     protected void initializeFromProject(boolean updateUI) {
-        if (updateUI) {
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "Project was clean: " + mProject.isClean());
+        }
+
+        if (updateUI || !mProject.isClean()) {
             getActionBar().setTitle(mProject.getName());
 
             // Clear the media related to the previous project and
@@ -1618,7 +1627,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         if (mEditOverlayMediaItemId != null) {
             ApiService.setOverlayUserAttributes(this, mProject.getPath(), mEditOverlayMediaItemId,
                     mEditOverlayId, mEditOverlayUserAttributes);
-
             mEditOverlayMediaItemId = null;
             mEditOverlayId = null;
             mEditOverlayUserAttributes = null;

@@ -416,15 +416,13 @@ public class MovieMediaItem {
      * @param overlayId The overlay id
      */
     void removeOverlay(String overlayId) {
-        if (mOverlay == null) {
-            throw new IllegalStateException("Overlay not set for media item: " + mUniqueId);
+        if (mOverlay != null) {
+            if (!mOverlay.getId().equals(overlayId)) {
+                throw new IllegalStateException("Overlay does not match: " + mOverlay.getId() + " "
+                        + overlayId);
+            }
+            mOverlay = null;
         }
-
-        if (!mOverlay.getId().equals(overlayId)) {
-            throw new IllegalStateException("Overlay does not match: " + mOverlay.getId() + " "
-                    + overlayId);
-        }
-        mOverlay = null;
     }
 
     /**
@@ -450,15 +448,14 @@ public class MovieMediaItem {
      * @param effectId The effect id
      */
     void removeEffect(String effectId) {
-        if (mEffect == null) {
-            throw new IllegalStateException("Effect not set for media item: " + mUniqueId);
-        }
+        if (mEffect != null) {
+            if (!mEffect.getId().equals(effectId)) {
+                throw new IllegalStateException("Effect does not match: " + mEffect.getId() + " "
+                        + effectId);
+            }
 
-        if (!mEffect.getId().equals(effectId)) {
-            throw new IllegalStateException("Effect does not match: " + mEffect.getId() + " "
-                    + effectId);
+            mEffect = null;
         }
-        mEffect = null;
     }
 
     /**

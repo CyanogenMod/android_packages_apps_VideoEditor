@@ -955,8 +955,8 @@ public class ApiService extends Service {
         }
 
         return false;
-
     }
+
     /**
      * Save the VideoEditor project
      *
@@ -1932,7 +1932,6 @@ public class ApiService extends Service {
             case OP_TRANSITION_INSERT_SLIDING:
             case OP_TRANSITION_REMOVE:
             case OP_TRANSITION_SET_DURATION:
-            case OP_TRANSITION_GET_THUMBNAIL:
 
             case OP_OVERLAY_ADD:
             case OP_OVERLAY_REMOVE:
@@ -1946,6 +1945,11 @@ public class ApiService extends Service {
             case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM:
             case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS: {
                 mVideoThread.put(intent);
+                break;
+            }
+
+            case OP_TRANSITION_GET_THUMBNAIL: {
+                mThumbnailThread.put(intent);
                 break;
             }
 
@@ -3007,6 +3011,12 @@ public class ApiService extends Service {
                                 intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
                     }
 
+                    // Remove any existing effect
+                    final List<Effect> effects = mediaItem.getAllEffects();
+                    for (Effect effect : effects) {
+                        mediaItem.removeEffect(effect.getId());
+                    }
+
                     final Effect effect = new EffectColor(mediaItem,
                             intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID),
                             intent.getLongExtra(PARAM_START_TIME, -1),
@@ -3033,6 +3043,12 @@ public class ApiService extends Service {
                     if (mediaItem == null) {
                         throw new IllegalArgumentException("MediaItem not found: " +
                                 intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
+                    }
+
+                    // Remove any existing effect
+                    final List<Effect> effects = mediaItem.getAllEffects();
+                    for (Effect effect : effects) {
+                        mediaItem.removeEffect(effect.getId());
                     }
 
                     final Effect effect = new EffectKenBurns(mediaItem,
@@ -3082,6 +3098,12 @@ public class ApiService extends Service {
                     if (mediaItem == null) {
                         throw new IllegalArgumentException("MediaItem not found: " +
                                 intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
+                    }
+
+                    // Remove any existing overlays
+                    final List<Overlay> overlays = mediaItem.getAllOverlays();
+                    for (Overlay overlay : overlays) {
+                        mediaItem.removeOverlay(overlay.getId());
                     }
 
                     final int scaledWidth, scaledHeight;
@@ -3900,6 +3922,7 @@ public class ApiService extends Service {
                 if (videoProject != null) {
                     final MovieMediaItem mediaItem = videoProject.getMediaItem(mediaItemId);
                     if (mediaItem != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             mediaItem.setRenderingMode(renderingMode);
                         } else {
@@ -3930,6 +3953,7 @@ public class ApiService extends Service {
                     } else {
                         final MovieMediaItem oldMediaItem = videoProject.getMediaItem(mediaItemId);
                         if (oldMediaItem != null) {
+                            videoProject.setClean(false);
                             oldMediaItem.setAppExtractBoundaries(0, oldMediaItem.getDuration());
                         }
                     }
@@ -3958,6 +3982,7 @@ public class ApiService extends Service {
                     } else {
                         final MovieMediaItem oldMediaItem = videoProject.getMediaItem(mediaItemId);
                         if (oldMediaItem != null) {
+                            videoProject.setClean(false);
                             oldMediaItem.setAppExtractBoundaries(
                                     oldMediaItem.getBoundaryBeginTime(),
                                     oldMediaItem.getBoundaryEndTime());
@@ -4031,6 +4056,7 @@ public class ApiService extends Service {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     final MovieMediaItem mediaItem = videoProject.getMediaItem(mediaItemId);
                     if (mediaItem != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             mediaItem.setVolume(intent.getIntExtra(PARAM_VOLUME, 0));
                         } else {
@@ -4052,6 +4078,7 @@ public class ApiService extends Service {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     final MovieMediaItem mediaItem = videoProject.getMediaItem(mediaItemId);
                     if (mediaItem != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             mediaItem.setMute(intent.getBooleanExtra(PARAM_MUTE, false));
                         } else {
@@ -4089,17 +4116,16 @@ public class ApiService extends Service {
                 final VideoEditorProject videoProject = getProject(projectPath);
                 if (ex == null && videoProject != null) {
                     if (result != null) {
-                        final MovieMediaItem mediaItem =
-                            videoProject.getMediaItem(mediaItemId);
+                        final MovieMediaItem mediaItem = videoProject.getMediaItem(mediaItemId);
                         if (mediaItem != null) {
+                            videoProject.setClean(false);
                             mediaItem.setWaveformData((WaveformData)result);
                         }
                     }
                 }
 
                 for (ApiServiceListener listener : mListeners) {
-                    listener.onMediaItemExtractAudioWaveformComplete(projectPath,
-                            mediaItemId, ex);
+                    listener.onMediaItemExtractAudioWaveformComplete(projectPath, mediaItemId, ex);
                 }
 
                 break;
@@ -4172,6 +4198,7 @@ public class ApiService extends Service {
                 if (videoProject != null) {
                     final MovieTransition transition = videoProject.getTransition(transitionId);
                     if (transition != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             transition.setDuration(durationMs);
                         } else {
@@ -4273,6 +4300,7 @@ public class ApiService extends Service {
                 if (videoProject != null) {
                     final MovieOverlay overlay = videoProject.getOverlay(mediaItemId, overlayId);
                     if (overlay != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             overlay.setStartTime(startTimeMs);
                         } else {
@@ -4303,6 +4331,7 @@ public class ApiService extends Service {
                 if (videoProject != null) {
                     final MovieOverlay overlay = videoProject.getOverlay(mediaItemId, overlayId);
                     if (overlay != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             overlay.setDuration(durationMs);
                         } else {
@@ -4335,6 +4364,7 @@ public class ApiService extends Service {
                         final MovieOverlay overlay = videoProject.getOverlay(mediaItemId,
                                 overlayId);
                         if (overlay != null) {
+                            videoProject.setClean(false);
                             overlay.updateUserAttributes(userAttributes);
                         }
                     }
@@ -4451,6 +4481,7 @@ public class ApiService extends Service {
                         final MovieAudioTrack audioTrack =
                             videoProject.getAudioTrack(audioTrackId);
                         if (audioTrack != null) {
+                            videoProject.setClean(false);
                             audioTrack.setExtractBoundaries(beginBoundary, endBoundary);
                         }
                     }
@@ -4474,6 +4505,7 @@ public class ApiService extends Service {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     final MovieAudioTrack audioTrack = videoProject.getAudioTrack(audioTrackId);
                     if (audioTrack != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             audioTrack.enableLoop(intent.getBooleanExtra(PARAM_LOOP, false));
                         } else {
@@ -4495,6 +4527,7 @@ public class ApiService extends Service {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     final MovieAudioTrack audioTrack = videoProject.getAudioTrack(audioTrackId);
                     if (audioTrack != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             audioTrack.enableDucking(intent.getBooleanExtra(PARAM_DUCK, false));
                         } else {
@@ -4516,6 +4549,7 @@ public class ApiService extends Service {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     final MovieAudioTrack audioTrack = videoProject.getAudioTrack(audioTrackId);
                     if (audioTrack != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             audioTrack.setVolume(intent.getIntExtra(PARAM_VOLUME, 0));
                         } else {
@@ -4537,6 +4571,7 @@ public class ApiService extends Service {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                     final MovieAudioTrack audioTrack = videoProject.getAudioTrack(audioTrackId);
                     if (audioTrack != null) {
+                        videoProject.setClean(false);
                         if (ex == null) {
                             audioTrack.setMute(intent.getBooleanExtra(PARAM_MUTE, false));
                         } else {
@@ -4577,6 +4612,7 @@ public class ApiService extends Service {
                         final MovieAudioTrack audioTrack =
                             videoProject.getAudioTrack(audioTrackId);
                         if (audioTrack != null) {
+                            videoProject.setClean(false);
                             audioTrack.setWaveformData((WaveformData)result);
                         }
                     }

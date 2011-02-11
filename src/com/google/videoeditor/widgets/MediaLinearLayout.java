@@ -189,20 +189,36 @@ public class MediaLinearLayout extends LinearLayout {
          * {@inheritDoc}
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            menu.findItem(R.id.action_add_effect).setVisible(mMediaItem.getEffect() == null &&
-                    !mPlaybackInProgress);
-            menu.findItem(R.id.action_change_effect).setVisible(mMediaItem.getEffect() != null &&
-                    !mPlaybackInProgress);
-            menu.findItem(R.id.action_remove_effect).setVisible(mMediaItem.getEffect() != null &&
-                    !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_overlay).setVisible(mMediaItem.getOverlay() == null &&
-                    !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_begin_transition).setVisible(
-                    mMediaItem.getBeginTransition() == null && !mPlaybackInProgress);
-            menu.findItem(R.id.action_add_end_transition).setVisible(
-                    mMediaItem.getEndTransition() == null && !mPlaybackInProgress);
-            menu.findItem(R.id.action_rendering_mode).setVisible(mProject.hasMultipleAspectRatios()
-                    && !mPlaybackInProgress);
+            final boolean enable = !ApiService.isProjectEdited(mProject.getPath()) &&
+                !mPlaybackInProgress;
+
+            final MenuItem aemi = menu.findItem(R.id.action_add_effect);
+            aemi.setVisible(mMediaItem.getEffect() == null);
+            aemi.setEnabled(enable);
+
+            final MenuItem eemi = menu.findItem(R.id.action_change_effect);
+            eemi.setVisible(mMediaItem.getEffect() != null);
+            eemi.setEnabled(enable);
+
+            final MenuItem remi = menu.findItem(R.id.action_remove_effect);
+            remi.setVisible(mMediaItem.getEffect() != null);
+            remi.setEnabled(enable);
+
+            final MenuItem aomi = menu.findItem(R.id.action_add_overlay);
+            aomi.setVisible(mMediaItem.getOverlay() == null);
+            aomi.setEnabled(enable);
+
+            final MenuItem btmi = menu.findItem(R.id.action_add_begin_transition);
+            btmi.setVisible(mMediaItem.getBeginTransition() == null);
+            btmi.setEnabled(enable);
+
+            final MenuItem etmi = menu.findItem(R.id.action_add_end_transition);
+            etmi.setVisible(mMediaItem.getEndTransition() == null);
+            etmi.setEnabled(enable);
+
+            final MenuItem rmmi = menu.findItem(R.id.action_rendering_mode);
+            rmmi.setVisible(mProject.hasMultipleAspectRatios());
+            rmmi.setEnabled(enable);
 
             return true;
         }
@@ -331,6 +347,15 @@ public class MediaLinearLayout extends LinearLayout {
          * {@inheritDoc}
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            final boolean enable = !ApiService.isProjectEdited(mProject.getPath()) &&
+                !mPlaybackInProgress;
+
+            final MenuItem etmi = menu.findItem(R.id.action_change_transition);
+            etmi.setEnabled(enable);
+
+            final MenuItem rtmi = menu.findItem(R.id.action_remove_transition);
+            rtmi.setEnabled(enable);
+
             return true;
         }
 
@@ -997,6 +1022,10 @@ public class MediaLinearLayout extends LinearLayout {
                 break;
             }
         }
+
+        if (mMediaItemActionMode != null) {
+            mMediaItemActionMode.invalidate();
+        }
     }
 
     /**
@@ -1023,6 +1052,10 @@ public class MediaLinearLayout extends LinearLayout {
             transition.setAppDuration(transitionDurationMs);
             ApiService.setTransitionDuration(getContext(), mProject.getPath(), transitionId,
                     transitionDurationMs);
+        }
+
+        if (mMediaItemActionMode != null) {
+            mMediaItemActionMode.invalidate();
         }
     }
 
@@ -1119,6 +1152,15 @@ public class MediaLinearLayout extends LinearLayout {
                     return;
                 }
             }
+        }
+    }
+
+    /**
+     * Invalidate the CAB
+     */
+    public void invalidateCAB() {
+        if (mMediaItemActionMode != null) {
+            mMediaItemActionMode.invalidate();
         }
     }
 
@@ -1225,6 +1267,10 @@ public class MediaLinearLayout extends LinearLayout {
                 break;
             }
         }
+
+        if (mMediaItemActionMode != null) {
+            mMediaItemActionMode.invalidate();
+        }
     }
 
     /**
@@ -1247,11 +1293,6 @@ public class MediaLinearLayout extends LinearLayout {
         final String id = ApiService.generateId();
         switch (effectType) {
             case EffectType.EFFECT_KEN_BURNS: {
-                // Remove the old effect in case this method is called
-                // because the effect is changed
-                ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                        effect.getId());
-
                 ApiService.addEffectKenBurns(getContext(), mProject.getPath(), mediaItemId,
                         id, 0, mediaItem.getDuration(), startRect, endRect);
                 break;
@@ -1260,10 +1301,6 @@ public class MediaLinearLayout extends LinearLayout {
             case EffectType.EFFECT_COLOR_GRADIENT: {
                 // Check if the type has changed
                 if (effect.getType() != effectType) {
-                    // Remove the old effect
-                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                            effect.getId());
-
                     ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
                             mediaItem.getDuration(), EffectColor.TYPE_GRADIENT,
                             EffectColor.GRAY);
@@ -1274,10 +1311,6 @@ public class MediaLinearLayout extends LinearLayout {
             case EffectType.EFFECT_COLOR_SEPIA: {
                 // Check if the type has changed
                 if (effect.getType() != effectType) {
-                    // Remove the old effect
-                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                            effect.getId());
-
                     ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
                             mediaItem.getDuration(), EffectColor.TYPE_SEPIA, 0);
                 }
@@ -1287,10 +1320,6 @@ public class MediaLinearLayout extends LinearLayout {
             case EffectType.EFFECT_COLOR_NEGATIVE: {
                 // Check if the type has changed
                 if (effect.getType() != effectType) {
-                    // Remove the old effect
-                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                            effect.getId());
-
                     ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
                             mediaItem.getDuration(), EffectColor.TYPE_NEGATIVE, 0);
                 }
@@ -1300,10 +1329,6 @@ public class MediaLinearLayout extends LinearLayout {
             case EffectType.EFFECT_COLOR_FIFTIES: {
                 // Check if the type has changed
                 if (effect.getType() != effectType) {
-                    // Remove the old effect
-                    ApiService.removeEffect(getContext(), mProject.getPath(), mediaItemId,
-                            effect.getId());
-
                     ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
                             mediaItem.getDuration(), EffectColor.TYPE_FIFTIES, 0);
                 }
@@ -1313,6 +1338,10 @@ public class MediaLinearLayout extends LinearLayout {
             default: {
                 break;
             }
+        }
+
+        if (mMediaItemActionMode != null) {
+            mMediaItemActionMode.invalidate();
         }
     }
 
@@ -1739,14 +1768,14 @@ public class MediaLinearLayout extends LinearLayout {
                      * {@inheritDoc}
                      */
                     public void onClick(DialogInterface dialog, int which) {
-                        if (mMediaItemActionMode != null) {
-                            mMediaItemActionMode.finish();
-                            mMediaItemActionMode = null;
-                        }
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID);
 
                         ApiService.removeEffect(activity, mProject.getPath(),
                                 mediaItem.getId(), mediaItem.getEffect().getId());
+
+                        if (mMediaItemActionMode != null) {
+                            mMediaItemActionMode.invalidate();
+                        }
                     }
                 }, activity.getString(R.string.no), new DialogInterface.OnClickListener() {
                     /*

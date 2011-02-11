@@ -76,6 +76,7 @@ public class VideoEditorProject {
     private int mZoomLevel;
     private List<MovieMediaItem> mMediaItems = new ArrayList<MovieMediaItem>();
     private List<MovieAudioTrack> mAudioTracks = new ArrayList<MovieAudioTrack>();
+    private boolean mClean;
 
     /**
      * Download item
@@ -166,6 +167,21 @@ public class VideoEditorProject {
         mZoomLevel = zoomLevel;
         mExportedMovieUri = exportedMovieUri;
         mTheme = theme;
+        mClean = true;
+    }
+
+    /**
+     * @param clean true if this is clean
+     */
+    public void setClean(boolean clean) {
+        mClean = clean;
+    }
+
+    /**
+     * @return true if no change was made
+     */
+    public boolean isClean() {
+        return mClean;
     }
 
     /**
@@ -180,6 +196,7 @@ public class VideoEditorProject {
      */
     public void setProjectName(String projectName) {
         mProjectName = projectName;
+        mClean = false;
     }
 
     /**
@@ -247,6 +264,7 @@ public class VideoEditorProject {
      */
     void setAspectRatio(int aspectRatio) {
         mAspectRatio = aspectRatio;
+        mClean = false;
     }
 
     /**
@@ -256,6 +274,7 @@ public class VideoEditorProject {
      */
     void addExportedMovieUri(Uri uri) {
         mExportedMovieUri = uri;
+        mClean = false;
     }
 
     /**
@@ -270,6 +289,7 @@ public class VideoEditorProject {
      */
     void setTheme(String theme) {
         mTheme = theme;
+        mClean = false;
     }
 
     /**
@@ -286,21 +306,7 @@ public class VideoEditorProject {
      */
     void setMediaItems(List<MovieMediaItem> mediaItems) {
         mMediaItems = mediaItems;
-    }
-
-    /**
-     * Add a media item at the end of the list
-     *
-     * @param mediaItem The media item
-     */
-    void addMediaItem(MovieMediaItem mediaItem) {
-        final int count = mMediaItems.size();
-        if (count > 0) {
-            // Replace the end transition of the last item in the list
-            mMediaItems.get(count - 1).setEndTransition(mediaItem.getBeginTransition());
-        }
-
-        mMediaItems.add(mediaItem);
+        mClean = false;
     }
 
     /**
@@ -320,6 +326,7 @@ public class VideoEditorProject {
             }
 
             mMediaItems.add(0, mediaItem);
+            mClean = false;
         } else {
             final int mediaItemCount = mMediaItems.size();
             for (int i = 0; i < mediaItemCount; i++) {
@@ -334,6 +341,7 @@ public class VideoEditorProject {
 
                     // Insert the new media item
                     mMediaItems.add(i + 1, mediaItem);
+                    mClean = false;
                     return;
                 }
             }
@@ -355,6 +363,7 @@ public class VideoEditorProject {
             final MovieMediaItem mediaItem = mMediaItems.get(i);
             if (mediaItem.getId().equals(newMediaItemId)) {
                 mMediaItems.set(i, newMediaItem);
+                mClean = false;
                 // Update the transitions of the previous and next item
                 if (i > 0) {
                     final MovieMediaItem prevMediaItem = mMediaItems.get(i - 1);
@@ -384,6 +393,7 @@ public class VideoEditorProject {
             final MovieMediaItem mediaItem = mMediaItems.get(i);
             if (mediaItem.getId().equals(mediaItemId)) {
                 mMediaItems.remove(i);
+                mClean = false;
                 if (transition != null) {
                     addTransition(transition, prevMediaItemId);
                 } else {
@@ -740,6 +750,8 @@ public class VideoEditorProject {
             final MovieMediaItem beforeMediaItem = mMediaItems.get(0);
             beforeMediaItem.setBeginTransition(transition);
         }
+
+        mClean = false;
     }
 
     /**
@@ -762,6 +774,8 @@ public class VideoEditorProject {
                 mediaItem.setEndTransition(null);
             }
         }
+
+        mClean = false;
     }
 
     /**
@@ -799,7 +813,15 @@ public class VideoEditorProject {
      */
     void addOverlay(String mediaItemId, MovieOverlay overlay) {
         final MovieMediaItem mediaItem = getMediaItem(mediaItemId);
+
+        // Remove an existing overlay (if any)
+        final MovieOverlay oldOverlay = mediaItem.getOverlay();
+        if (oldOverlay != null) {
+            mediaItem.removeOverlay(oldOverlay.getId());
+        }
+
         mediaItem.addOverlay(overlay);
+        mClean = false;
     }
 
     /**
@@ -811,6 +833,7 @@ public class VideoEditorProject {
     void removeOverlay(String mediaItemId, String overlayId) {
         final MovieMediaItem mediaItem = getMediaItem(mediaItemId);
         mediaItem.removeOverlay(overlayId);
+        mClean = false;
     }
 
     /**
@@ -833,7 +856,14 @@ public class VideoEditorProject {
      */
     void addEffect(String mediaItemId, MovieEffect effect) {
         final MovieMediaItem mediaItem = getMediaItem(mediaItemId);
+        // Remove an existing effect
+        final MovieEffect oldEffect = mediaItem.getEffect();
+        if (oldEffect != null) {
+            mediaItem.removeEffect(oldEffect.getId());
+        }
+
         mediaItem.addEffect(effect);
+        mClean = false;
     }
 
     /**
@@ -845,6 +875,7 @@ public class VideoEditorProject {
     void removeEffect(String mediaItemId, String effectId) {
         final MovieMediaItem mediaItem = getMediaItem(mediaItemId);
         mediaItem.removeEffect(effectId);
+        mClean = false;
     }
 
     /**
@@ -866,6 +897,7 @@ public class VideoEditorProject {
      */
     void setAudioTracks(List<MovieAudioTrack> audioTracks) {
         mAudioTracks = audioTracks;
+        mClean = false;
     }
 
     /**
@@ -875,6 +907,7 @@ public class VideoEditorProject {
      */
     void addAudioTrack(MovieAudioTrack audioTrack) {
         mAudioTracks.add(audioTrack);
+        mClean = false;
     }
 
     /**
@@ -888,6 +921,7 @@ public class VideoEditorProject {
             final MovieAudioTrack audioTrack = mAudioTracks.get(i);
             if (audioTrack.getId().equals(audioTrackId)) {
                 mAudioTracks.remove(i);
+                mClean = false;
                 break;
             }
         }
@@ -1086,6 +1120,7 @@ public class VideoEditorProject {
      */
     public void addDownload(String mediaUri, String mimeType, String filename) {
         mDownloads.add(new Download(mediaUri, mimeType, filename, System.currentTimeMillis()));
+        mClean = false;
     }
 
     /**
@@ -1105,6 +1140,7 @@ public class VideoEditorProject {
 
                 // Remove the download from the list
                 mDownloads.remove(i);
+                mClean = false;
                 break;
             }
         }

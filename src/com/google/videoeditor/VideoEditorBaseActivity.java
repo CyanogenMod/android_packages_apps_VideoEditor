@@ -649,6 +649,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
                 Toast.makeText(VideoEditorBaseActivity.this, R.string.editor_add_overlay_error,
                             Toast.LENGTH_LONG).show();
             } else {
+                getMediaLayout().invalidateCAB();
                 getOverlayLayout().addOverlay(mediaItemId, overlay);
             }
         }
@@ -955,6 +956,10 @@ public abstract class VideoEditorBaseActivity extends Activity {
         ApiService.unregisterListener(mServiceListener);
 
         if (mProject != null) {
+            // Mark the project as clean. If/when we resume the activity
+            // we can check this flag in order to refresh the UI for changes
+            // which may had occurred when the activity was paused.
+            mProject.setClean(true);
             // Save the contents of the current project
             ApiService.saveVideoEditor(this, mProjectPath);
         }

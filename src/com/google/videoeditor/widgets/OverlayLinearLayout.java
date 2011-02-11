@@ -115,6 +115,15 @@ public class OverlayLinearLayout extends LinearLayout {
          * {@inheritDoc}
          */
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            final boolean enable = !ApiService.isProjectEdited(mProject.getPath()) &&
+                !mPlaybackInProgress;
+
+            final MenuItem eomi = menu.findItem(R.id.action_edit_overlay);
+            eomi.setEnabled(enable);
+
+            final MenuItem romi = menu.findItem(R.id.action_remove_overlay);
+            romi.setEnabled(enable);
+
             return true;
         }
 
@@ -546,13 +555,12 @@ public class OverlayLinearLayout extends LinearLayout {
      */
     public void addOverlay(String mediaItemId, MovieOverlay overlay) {
         final OverlayView view = (OverlayView)getOverlayView(mediaItemId);
-        view.setState(OverlayView.STATE_OVERLAY);
-
-        final MovieMediaItem mediaItem = mProject.getMediaItem(mediaItemId);
-        if (mediaItem == null) {
+        if (view == null) {
             Log.e(TAG, "addOverlay: Media item not found: " + mediaItemId);
             return;
         }
+
+        view.setState(OverlayView.STATE_OVERLAY);
 
         requestLayout();
         invalidate();
@@ -575,6 +583,11 @@ public class OverlayLinearLayout extends LinearLayout {
 
         requestLayout();
         invalidate();
+
+        if (mOverlayActionMode != null) {
+            mOverlayActionMode.finish();
+            mOverlayActionMode = null;
+        }
     }
 
     /**
@@ -607,6 +620,15 @@ public class OverlayLinearLayout extends LinearLayout {
     public void refresh() {
         requestLayout();
         invalidate();
+    }
+
+    /**
+     * Invalidate the CAB
+     */
+    public void invalidateCAB() {
+        if (mOverlayActionMode != null) {
+            mOverlayActionMode.invalidate();
+        }
     }
 
     /*
