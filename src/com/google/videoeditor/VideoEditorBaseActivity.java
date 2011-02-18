@@ -970,6 +970,10 @@ public abstract class VideoEditorBaseActivity extends Activity {
             // Save the contents of the current project
             ApiService.saveVideoEditor(this, mProjectPath);
         }
+
+        // Release the audio focus
+        final AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager.abandonAudioFocus(null);
     }
 
     /*

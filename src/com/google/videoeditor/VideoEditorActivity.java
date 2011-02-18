@@ -79,6 +79,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     // State keys
     private static final String STATE_INSERT_AFTER_MEDIA_ITEM_ID = "insert_after_media_item_id";
+    private static final String STATE_PLAYING = "playing";
 
     // Menu ids
     private static final int MENU_IMPORT_IMAGE_ID = 2;
@@ -181,6 +182,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private int mEditEffectType;
     private Rect mEditKenBurnsStartRect;
     private Rect mEditKenBurnsEndRect;
+    private boolean mRestartPreview;
 
     /*
      * {@inheritDoc}
@@ -407,6 +409,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         if (savedInstanceState != null) {
             mInsertMediaItemAfterMediaItemId = savedInstanceState.getString(
                     STATE_INSERT_AFTER_MEDIA_ITEM_ID);
+            mRestartPreview = savedInstanceState.getBoolean(STATE_PLAYING);
+        } else {
+            mRestartPreview = false;
         }
 
         // Compute the activity width
@@ -494,6 +499,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         super.onSaveInstanceState(outState);
 
         outState.putString(STATE_INSERT_AFTER_MEDIA_ITEM_ID, mInsertMediaItemAfterMediaItemId);
+        outState.putBoolean(STATE_PLAYING,
+                mPreviewThread != null ? mPreviewThread.isPlaying() : false);
     }
 
     /*
@@ -1205,6 +1212,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         mPreviewThread = new PreviewThread(mSurfaceHolder);
+
+        restartPreview();
     }
 
     /*
@@ -1658,6 +1667,26 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         invalidateOptionsMenu();
+
+        restartPreview();
+    }
+
+    /**
+     * Restart preview
+     */
+    private void restartPreview() {
+        if (mRestartPreview == false) {
+            return;
+        }
+
+        if (mProject == null) {
+            return;
+        }
+
+        if (mPreviewThread != null) {
+            mRestartPreview = false;
+            mPreviewThread.startPreviewPlayback(mProject, mProject.getPlayheadPos());
+        }
     }
 
     /**
