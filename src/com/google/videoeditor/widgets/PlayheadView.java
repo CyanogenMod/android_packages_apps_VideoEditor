@@ -186,10 +186,11 @@ public class PlayheadView extends View {
         float startMs = ((tickMs * (startX - (mScreenWidth / 2))) / spacing);
         startMs = Math.round(startMs);
         startMs -= (startMs % tickMs);
-        final float endX = Math.min(mScrollX + mScreenWidth, getWidth() - (mScreenWidth / 2));
+
+        final float endX = mScrollX + mScreenWidth;
+        final Context context = getContext();
         for (float i = startX; i <= endX; i += spacing, startMs += tickMs) {
-            final String timeText = StringUtils.getSimpleTimestampAsString(getContext(),
-                    (long)startMs);
+            final String timeText = StringUtils.getSimpleTimestampAsString(context, (long)startMs);
             canvas.drawText(timeText, i - 35, 28, mTextPaint);
             canvas.drawLine(i, 0, i, mTicksHeight, mLinePaint);
         }
