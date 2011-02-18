@@ -19,8 +19,10 @@ package com.google.videoeditor;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.media.videoeditor.AudioTrack;
 import android.media.videoeditor.MediaItem;
 import android.media.videoeditor.MediaVideoItem;
@@ -945,6 +947,11 @@ public abstract class VideoEditorBaseActivity extends Activity {
         } else {
             enterDisabledState(R.string.editor_no_project);
         }
+
+        // Request the audio focus so that other apps can pause playback.
+        final AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
     }
 
     /*
