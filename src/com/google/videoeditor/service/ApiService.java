@@ -4957,7 +4957,8 @@ public class ApiService extends Service {
         // Add a new record (identified by uri)
         final Uri uri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 values);
-        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://"+ filename)));
         return uri;
     }
 
