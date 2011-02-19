@@ -24,6 +24,10 @@
     <string name="editor_edit_project_name">Change project name</string>
     <!-- Menu item used to delete the project. -->
     <string name="editor_delete_project">Delete project</string>
+    <!-- Menu item for capturing a new video clip. -->
+    <string name="editor_capture_video">New video clip</string>
+    <!-- Menu item for capturing a new image. -->
+    <string name="editor_capture_image">New image</string>
     <!-- Text displayed in the delete project confirmation dialog. -->
     <string name="editor_delete_project_question">Do you want to delete this project?</string>
     <!-- Text displayed in the playback widget to indicate the current playhead time position [CHAR_LIMIT=11] -->

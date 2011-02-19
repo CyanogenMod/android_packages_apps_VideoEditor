@@ -23,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +36,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Display;
@@ -91,6 +93,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private static final int MENU_EXPORT_MOVIE_ID = 8;
     private static final int MENU_PLAY_EXPORTED_MOVIE = 9;
     private static final int MENU_SHARE_VIDEO = 10;
+    private static final int MENU_CAPTURE_VIDEO_ID = 11;
+    private static final int MENU_CAPTURE_IMAGE_ID = 12;
 
     // Dialog ids
     private static final int DIALOG_DELETE_PROJECT_ID = 1;
@@ -113,6 +117,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private static final int REQUEST_CODE_IMPORT_VIDEO = 1;
     private static final int REQUEST_CODE_IMPORT_IMAGE = 2;
     private static final int REQUEST_CODE_IMPORT_MUSIC = 3;
+    private static final int REQUEST_CODE_CAPTURE_VIDEO = 4;
+    private static final int REQUEST_CODE_CAPTURE_IMAGE = 5;
 
     public static final int REQUEST_CODE_EDIT_TRANSITION = 10;
     public static final int REQUEST_CODE_PICK_TRANSITION = 11;
@@ -183,6 +189,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private Rect mEditKenBurnsStartRect;
     private Rect mEditKenBurnsEndRect;
     private boolean mRestartPreview;
+    private Uri mCaptureMediaUri;
 
     /*
      * {@inheritDoc}
@@ -508,6 +515,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE, MENU_CAPTURE_VIDEO_ID, Menu.NONE,
+                R.string.editor_capture_video).setIcon(
+                        R.drawable.ic_menu_video_camera).setShowAsAction(
+                                MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, MENU_CAPTURE_IMAGE_ID, Menu.NONE,
+                R.string.editor_capture_image).setIcon(
+                        R.drawable.ic_menu_camera).setShowAsAction(
+                                MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(Menu.NONE, MENU_IMPORT_VIDEO_ID, Menu.NONE,
                 R.string.editor_import_video).setIcon(
                         R.drawable.ic_menu_add_video).setShowAsAction(
@@ -537,6 +552,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         final boolean haveProject = mProject != null;
         final boolean haveMediaItems = haveProject && mProject.getMediaItemCount() > 0;
+        menu.findItem(MENU_CAPTURE_VIDEO_ID).setVisible(haveProject);
+        menu.findItem(MENU_CAPTURE_IMAGE_ID).setVisible(haveProject);
         menu.findItem(MENU_IMPORT_VIDEO_ID).setVisible(haveProject);
         menu.findItem(MENU_IMPORT_IMAGE_ID).setVisible(haveProject);
         menu.findItem(MENU_IMPORT_AUDIO_ID).setVisible(haveProject &&
@@ -576,6 +593,46 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 startActivity(intent);
 
                 finish();
+                return true;
+            }
+
+            case MENU_CAPTURE_VIDEO_ID: {
+                final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
+                        mProject.getPlayheadPos());
+                if (mediaItem != null) {
+                    mInsertMediaItemAfterMediaItemId = mediaItem.getId();
+                } else {
+                    mInsertMediaItemAfterMediaItemId = null;
+                }
+
+                // Create parameters for Intent with filename
+                ContentValues values = new ContentValues();
+                mCaptureMediaUri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mCaptureMediaUri);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                startActivityForResult(intent, REQUEST_CODE_CAPTURE_VIDEO);
+                return true;
+            }
+
+            case MENU_CAPTURE_IMAGE_ID: {
+                final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
+                        mProject.getPlayheadPos());
+                if (mediaItem != null) {
+                    mInsertMediaItemAfterMediaItemId = mediaItem.getId();
+                } else {
+                    mInsertMediaItemAfterMediaItemId = null;
+                }
+
+                // Create parameters for Intent with filename
+                ContentValues values = new ContentValues();
+                mCaptureMediaUri = getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mCaptureMediaUri);
+                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+                startActivityForResult(intent, REQUEST_CODE_CAPTURE_IMAGE);
                 return true;
             }
 
@@ -1022,6 +1079,37 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         switch (requestCode) {
+            case REQUEST_CODE_CAPTURE_VIDEO: {
+                if (mProject != null) {
+                    ApiService.addMediaItemVideoUri(this, mProjectPath,
+                            ApiService.generateId(), mInsertMediaItemAfterMediaItemId,
+                            mCaptureMediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
+                            mProject.getTheme());
+                    mInsertMediaItemAfterMediaItemId = null;
+                    mCaptureMediaUri = null;
+                } else {
+                    // Add this video after the project loads
+                    mAddMediaItemVideoUri = mCaptureMediaUri;
+                }
+                break;
+            }
+
+            case REQUEST_CODE_CAPTURE_IMAGE: {
+                if (mProject != null) {
+                    ApiService.addMediaItemImageUri(this, mProjectPath,
+                            ApiService.generateId(), mInsertMediaItemAfterMediaItemId,
+                            mCaptureMediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
+                            MediaItemUtils.getDefaultImageDuration(),
+                            mProject.getTheme());
+                    mInsertMediaItemAfterMediaItemId = null;
+                    mCaptureMediaUri = null;
+                } else {
+                    // Add this image after the project loads
+                    mAddMediaItemImageUri = mCaptureMediaUri;
+                }
+                break;
+            }
+
             case REQUEST_CODE_IMPORT_VIDEO: {
                 final Uri mediaUri = extras.getData();
                 if (mProject != null) {
