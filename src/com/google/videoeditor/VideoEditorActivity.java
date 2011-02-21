@@ -716,6 +716,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             case MENU_PLAY_EXPORTED_MOVIE: {
                 final Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(mProject.getExportedMovieUri(), "video/*");
+                intent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, false);
                 startActivity(intent);
                 return true;
             }
