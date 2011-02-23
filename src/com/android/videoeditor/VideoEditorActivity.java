@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Bitmap.Config;
 import android.media.videoeditor.MediaItem;
@@ -1897,6 +1898,17 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 public void run() {
                     if (clear) {
                         project.clearSurface(mSurfaceHolder);
+                        mMainHandler.post(new Runnable() {
+                            /*
+                             * {@inheritDoc}
+                             */
+                            public void run() {
+                                if (mOverlayBitmap != null) {
+                                    mOverlayBitmap.eraseColor(Color.TRANSPARENT);
+                                    mOverlayView.invalidate();
+                                }
+                            }
+                        });
                     } else {
                         final VideoEditor.OverlayData overlayData;
                         try {
