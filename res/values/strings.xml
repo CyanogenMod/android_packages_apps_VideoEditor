@@ -66,6 +66,8 @@
     <string name="editor_video_load">The video clip download was started. You will be notified when it completes.</string>
     <!-- Toast message used when an image needs to be downloaded before it can be used -->
     <string name="editor_image_load">The image download was started. You will be notified when it completes.</string>
+    <!-- The title displayed in the contextual action bar when a transition is selected. -->
+    <string name="editor_transition_title">Transition</string>
 
     <!-- Audio tracks -->
     <!-- Enable looping for the audio track. -->

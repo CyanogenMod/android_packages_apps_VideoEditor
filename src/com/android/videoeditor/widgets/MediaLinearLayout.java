@@ -78,7 +78,7 @@ public class MediaLinearLayout extends LinearLayout {
     // Transition duration limits
     private static final long MAXIMUM_IMAGE_DURATION = 6000;
     private static final long MAXIMUM_TRANSITION_DURATION = 3000;
-    private static final long MINIMUM_TRANSITION_DURATION = 500;
+    private static final long MINIMUM_TRANSITION_DURATION = 250;
 
     private static final long TIME_TOLERANCE = 30;
 
@@ -341,6 +341,8 @@ public class MediaLinearLayout extends LinearLayout {
 
             final Activity activity = (Activity)getContext();
             activity.getMenuInflater().inflate(R.menu.transition_mode_menu, menu);
+
+            mode.setTitle(activity.getString(R.string.editor_transition_title));
 
             return true;
         }
