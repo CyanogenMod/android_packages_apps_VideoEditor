@@ -176,7 +176,8 @@
     <string name="pan_zoom_start">Start</string>
     <!-- The label for the end rectangle checkbox. -->
     <string name="pan_zoom_end">End</string>
- 
+    <string name="pan_zoom_small_image_error">The pan &amp; zoom effect cannot be applied on this image. The image is too small.</string>
+
     <!-- Themes names and titles-->
     <!-- The label/name for Theme 1. -->
     <string name="theme_name_travel">Travel</string>

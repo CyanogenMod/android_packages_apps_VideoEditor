@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.google.videoeditor.widgets.ImageViewTouchBase;
 
@@ -45,6 +46,8 @@ public class KenBurnsActivity extends Activity {
     public static final String PARAM_START_RECT = "start_rect";
     public static final String PARAM_END_RECT = "end_rect";
 
+    private static final int MAX_HW_BITMAP_WIDTH = 2048;
+    private static final int MAX_HW_BITMAP_HEIGHT = 2048;
     private static final int MAX_WIDTH = 1296;
     private static final int MAX_HEIGHT = 720;
     private static final int MAX_PAN = 3;
@@ -244,6 +247,13 @@ public class KenBurnsActivity extends Activity {
             mImageSubsample = mMediaItemHeight / (lp.height * MAX_PAN);
         }
 
+        // Ensure that the size of the bitmap will not exceed the size supported
+        // by HW vendors
+        while ((mMediaItemWidth / mImageSubsample > MAX_HW_BITMAP_WIDTH) ||
+                (mMediaItemHeight / mImageSubsample > MAX_HW_BITMAP_HEIGHT)) {
+            mImageSubsample++;
+        }
+
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "View size: " + lp.width + "x" + lp.height
                     + ", subsample: " + mImageSubsample);
@@ -254,6 +264,9 @@ public class KenBurnsActivity extends Activity {
             if (Log.isLoggable(TAG, Log.DEBUG)) {
                 Log.d(TAG, "Image is too small: " + lp.width + "x" + lp.height);
             }
+
+            Toast.makeText(this, getString(R.string.pan_zoom_small_image_error),
+                    Toast.LENGTH_LONG).show();
             finish();
             return;
         }
