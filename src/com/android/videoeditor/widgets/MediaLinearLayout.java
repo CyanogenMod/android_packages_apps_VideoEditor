@@ -312,6 +312,8 @@ public class MediaLinearLayout extends LinearLayout {
             }
 
             mMediaItemActionMode = null;
+
+            showAddMediaItemButtons(true);
         }
     }
 
@@ -395,6 +397,8 @@ public class MediaLinearLayout extends LinearLayout {
             }
 
             mTransitionActionMode = null;
+
+            showAddMediaItemButtons(true);
         }
     }
 
