@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<com.google.videoeditor.widgets.TransitionView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.videoeditor.widgets.TransitionView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     style="@style/transition_timeline_item"/>
