@@ -607,7 +607,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
 
                 // Create parameters for Intent with filename
-                ContentValues values = new ContentValues();
+                final ContentValues values = new ContentValues();
                 mCaptureMediaUri = getContentResolver().insert(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -627,7 +627,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
 
                 // Create parameters for Intent with filename
-                ContentValues values = new ContentValues();
+                final ContentValues values = new ContentValues();
                 mCaptureMediaUri = getContentResolver().insert(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

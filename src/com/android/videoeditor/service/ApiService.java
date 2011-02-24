@@ -36,7 +36,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.Bitmap.CompressFormat;
 import android.media.videoeditor.AudioTrack;
 import android.media.videoeditor.Effect;
 import android.media.videoeditor.EffectColor;
@@ -2394,13 +2397,77 @@ public class ApiService extends Service {
 
                     final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
                     String filename = null;
+                    int orientation = 0;
                     // Get the filename
                     Cursor cursor = null;
                     try {
                         cursor = getContentResolver().query(data,
-                                new String[] {Images.Media.DATA}, null, null, null);
+                                new String[] {Images.Media.DATA, Images.Media.ORIENTATION},
+                                null, null, null);
                         if (cursor.moveToFirst()) {
                             filename = cursor.getString(0);
+                            orientation = cursor.getInt(1);
+                            if (orientation != 0) {
+                                // Rotate the image according to the orientation
+                                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                                    Log.d(TAG, "Image orientation: " + orientation);
+                                }
+                                final Bitmap originalBmp = BitmapFactory.decodeFile(filename,
+                                        null);
+                                final Matrix mtx = new Matrix();
+                                mtx.postRotate(orientation);
+                                final Bitmap rotatedBmp = Bitmap.createBitmap(originalBmp, 0, 0,
+                                        originalBmp.getWidth(), originalBmp.getHeight(), mtx,
+                                        true);
+                                originalBmp.recycle();
+
+                                // Save the rotated image to a file in the current project folder
+                                filename = projectPath + "/" + StringUtils.randomString(6) +
+                                    ".jpg";
+                                final FileOutputStream fos = new FileOutputStream(filename);
+                                rotatedBmp.compress(CompressFormat.JPEG, 100, fos);
+                                fos.close();
+
+                                rotatedBmp.recycle();
+                            } else {
+                                InputStream is = null;
+                                FileOutputStream fos = null;
+                                final File file = new File(projectPath, "gallery_image_" +
+                                        generateId() + ".jpg");
+                                try {
+                                    is = getContentResolver().openInputStream(data);
+
+                                    // Save the input stream to a file
+                                    fos = new FileOutputStream(file);
+                                    final byte[] readBuffer = new byte[2048];
+                                    int readBytes;
+                                    while ((readBytes = is.read(readBuffer)) >= 0) {
+                                        fos.write(readBuffer, 0, readBytes);
+                                    }
+
+                                    // The load was successful
+                                    filename = file.getAbsolutePath();
+                                } catch (Exception ex) {
+                                    Log.e(TAG, "Cannot open input stream for: " + data);
+                                } finally {
+                                    if (is != null) {
+                                        try {
+                                            is.close();
+                                        } catch (IOException ex) {
+                                            Log.e(TAG, "Cannot close input stream for: " + data);
+                                        }
+                                    }
+
+                                    if (fos != null) {
+                                        try {
+                                            fos.flush();
+                                            fos.close();
+                                        } catch (IOException ex) {
+                                            Log.e(TAG, "Cannot close output stream for: " + data);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } finally {
                         if (cursor != null) {
