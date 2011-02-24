@@ -1077,6 +1077,20 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent extras) {
         super.onActivityResult(requestCode, resultCode, extras);
         if (resultCode == RESULT_CANCELED) {
+            switch (requestCode) {
+                case REQUEST_CODE_CAPTURE_VIDEO:
+                case REQUEST_CODE_CAPTURE_IMAGE: {
+                    if (mCaptureMediaUri != null) {
+                        getContentResolver().delete(mCaptureMediaUri, null, null);
+                        mCaptureMediaUri = null;
+                    }
+                    break;
+                }
+
+                default: {
+                    break;
+                }
+            }
             return;
         }
 
