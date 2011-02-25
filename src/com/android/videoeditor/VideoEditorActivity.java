@@ -141,7 +141,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         public void onLayoutComplete() {
             // Scroll the timeline such that the specified position
             // is in the center of the screen
-            mTimelineScroller.appScrollTo(timeToDimension(mProject.getPlayheadPos()), true);
+            mTimelineScroller.appScrollTo(timeToDimension(mProject.getPlayheadPos()), false);
         }
     };
 
