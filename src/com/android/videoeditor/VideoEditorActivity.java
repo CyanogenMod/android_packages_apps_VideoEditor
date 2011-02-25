@@ -83,6 +83,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     // State keys
     private static final String STATE_INSERT_AFTER_MEDIA_ITEM_ID = "insert_after_media_item_id";
     private static final String STATE_PLAYING = "playing";
+    private static final String STATE_CAPTURE_URI = "capture_uri";
 
     // Menu ids
     private static final int MENU_IMPORT_IMAGE_ID = 2;
@@ -418,6 +419,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mInsertMediaItemAfterMediaItemId = savedInstanceState.getString(
                     STATE_INSERT_AFTER_MEDIA_ITEM_ID);
             mRestartPreview = savedInstanceState.getBoolean(STATE_PLAYING);
+            mCaptureMediaUri = savedInstanceState.getParcelable(STATE_CAPTURE_URI);
         } else {
             mRestartPreview = false;
         }
@@ -509,6 +511,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         outState.putString(STATE_INSERT_AFTER_MEDIA_ITEM_ID, mInsertMediaItemAfterMediaItemId);
         outState.putBoolean(STATE_PLAYING,
                 mPreviewThread != null ? mPreviewThread.isPlaying() : false);
+        outState.putParcelable(STATE_CAPTURE_URI, mCaptureMediaUri);
     }
 
     /*
@@ -609,7 +612,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 // Create parameters for Intent with filename
                 final ContentValues values = new ContentValues();
                 mCaptureMediaUri = getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                        MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
                 final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mCaptureMediaUri);
                 intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -1102,11 +1105,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                             mCaptureMediaUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
                             mProject.getTheme());
                     mInsertMediaItemAfterMediaItemId = null;
-                    mCaptureMediaUri = null;
                 } else {
                     // Add this video after the project loads
                     mAddMediaItemVideoUri = mCaptureMediaUri;
                 }
+                mCaptureMediaUri = null;
                 break;
             }
 
@@ -1118,11 +1121,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                             MediaItemUtils.getDefaultImageDuration(),
                             mProject.getTheme());
                     mInsertMediaItemAfterMediaItemId = null;
-                    mCaptureMediaUri = null;
                 } else {
                     // Add this image after the project loads
                     mAddMediaItemImageUri = mCaptureMediaUri;
                 }
+                mCaptureMediaUri = null;
                 break;
             }
 
@@ -1704,7 +1707,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         if (mAddMediaItemImageUri != null) {
             ApiService.addMediaItemImageUri(this, mProjectPath, ApiService.generateId(),
                     mInsertMediaItemAfterMediaItemId,
-                    mAddMediaItemVideoUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
+                    mAddMediaItemImageUri, MediaItem.RENDERING_MODE_BLACK_BORDER,
                     MediaItemUtils.getDefaultImageDuration(), mProject.getTheme());
             mAddMediaItemImageUri = null;
             mInsertMediaItemAfterMediaItemId = null;
