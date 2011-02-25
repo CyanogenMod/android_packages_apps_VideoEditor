@@ -36,10 +36,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.Bitmap.CompressFormat;
 import android.media.videoeditor.AudioTrack;
 import android.media.videoeditor.Effect;
 import android.media.videoeditor.EffectColor;
@@ -2397,75 +2394,25 @@ public class ApiService extends Service {
 
                     final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
                     String filename = null;
-                    int orientation = 0;
                     // Get the filename
                     Cursor cursor = null;
                     try {
                         cursor = getContentResolver().query(data,
-                                new String[] {Images.Media.DATA, Images.Media.ORIENTATION},
+                                new String[] {Images.Media.DATA, Images.Media.MIME_TYPE},
                                 null, null, null);
                         if (cursor.moveToFirst()) {
                             filename = cursor.getString(0);
-                            orientation = cursor.getInt(1);
-                            if (orientation != 0) {
-                                // Rotate the image according to the orientation
-                                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "Image orientation: " + orientation);
-                                }
-                                final Bitmap originalBmp = BitmapFactory.decodeFile(filename,
-                                        null);
-                                final Matrix mtx = new Matrix();
-                                mtx.postRotate(orientation);
-                                final Bitmap rotatedBmp = Bitmap.createBitmap(originalBmp, 0, 0,
-                                        originalBmp.getWidth(), originalBmp.getHeight(), mtx,
-                                        true);
-                                originalBmp.recycle();
-
-                                // Save the rotated image to a file in the current project folder
-                                filename = projectPath + "/" + StringUtils.randomString(6) +
-                                    ".jpg";
-                                final FileOutputStream fos = new FileOutputStream(filename);
-                                rotatedBmp.compress(CompressFormat.JPEG, 100, fos);
-                                fos.close();
-
-                                rotatedBmp.recycle();
-                            } else {
-                                InputStream is = null;
-                                FileOutputStream fos = null;
-                                final File file = new File(projectPath, "gallery_image_" +
-                                        generateId() + ".jpg");
+                            final String mimeType = cursor.getString(1);
+                            if ("image/jpeg".equals(mimeType)) {
                                 try {
-                                    is = getContentResolver().openInputStream(data);
-
-                                    // Save the input stream to a file
-                                    fos = new FileOutputStream(file);
-                                    final byte[] readBuffer = new byte[2048];
-                                    int readBytes;
-                                    while ((readBytes = is.read(readBuffer)) >= 0) {
-                                        fos.write(readBuffer, 0, readBytes);
+                                    final File outputFile = new File(projectPath,
+                                            "gallery_image_" + generateId() + ".jpg");
+                                    if (ImageUtils.transformJpeg(filename, outputFile)) {
+                                        filename = outputFile.getAbsolutePath();
                                     }
-
-                                    // The load was successful
-                                    filename = file.getAbsolutePath();
                                 } catch (Exception ex) {
-                                    Log.e(TAG, "Cannot open input stream for: " + data);
-                                } finally {
-                                    if (is != null) {
-                                        try {
-                                            is.close();
-                                        } catch (IOException ex) {
-                                            Log.e(TAG, "Cannot close input stream for: " + data);
-                                        }
-                                    }
-
-                                    if (fos != null) {
-                                        try {
-                                            fos.flush();
-                                            fos.close();
-                                        } catch (IOException ex) {
-                                            Log.e(TAG, "Cannot close output stream for: " + data);
-                                        }
-                                    }
+                                    // Ignore the exception and continue
+                                    Log.w(TAG, "Could not transform JPEG: " + filename, ex);
                                 }
                             }
                         }
@@ -2534,7 +2481,6 @@ public class ApiService extends Service {
                             statusIntent.putExtra(PARAM_INTENT, requestIntent);
                             try {
                                 is = getContentResolver().openInputStream(data);
-
                                 // Save the input stream to a file
                                 fos = new FileOutputStream(file);
                                 final byte[] readBuffer = new byte[2048];
@@ -2542,12 +2488,10 @@ public class ApiService extends Service {
                                 while ((readBytes = is.read(readBuffer)) >= 0) {
                                     fos.write(readBuffer, 0, readBytes);
                                 }
-
-                                // The load was successful
-                                statusIntent.putExtra(PARAM_FILENAME, file.getAbsolutePath());
                             } catch (Exception ex) {
                                 Log.e(TAG, "Cannot open input stream for: " + data);
                                 statusIntent.putExtra(PARAM_EXCEPTION, ex);
+                                file.delete();
                             } finally {
                                 if (is != null) {
                                     try {
@@ -2564,6 +2508,31 @@ public class ApiService extends Service {
                                     } catch (IOException ex) {
                                         Log.e(TAG, "Cannot close output stream for: " + data);
                                     }
+                                }
+                            }
+
+                            if (!statusIntent.hasExtra(PARAM_EXCEPTION)) {
+                                final String filename = file.getAbsolutePath();
+                                try {
+                                    final String mimeType = getContentResolver().getType(data);
+                                    if ("image/jpeg".equals(mimeType)) {
+                                        final File outputFile = new File(projectPath,
+                                                "download_" + generateId() + ".jpg");
+                                        if (ImageUtils.transformJpeg(filename, outputFile)) {
+                                            // Delete the downloaded file
+                                            file.delete();
+                                            statusIntent.putExtra(PARAM_FILENAME,
+                                                    outputFile.getAbsolutePath());
+                                        } else {
+                                            statusIntent.putExtra(PARAM_FILENAME, filename);
+                                        }
+                                    } else {
+                                        statusIntent.putExtra(PARAM_FILENAME, filename);
+                                    }
+                                } catch (Exception ex) {
+                                    // Ignore the exception and continue
+                                    Log.w(TAG, "Could not transform JPEG: " + filename, ex);
+                                    statusIntent.putExtra(PARAM_FILENAME, filename);
                                 }
                             }
 

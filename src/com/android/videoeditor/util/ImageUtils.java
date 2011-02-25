@@ -16,6 +16,9 @@
 
 package com.android.videoeditor.util;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.content.Context;
@@ -23,10 +26,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
+import android.util.Log;
 
 import com.android.videoeditor.R;
 import com.android.videoeditor.service.MovieOverlay;
@@ -35,6 +42,11 @@ import com.android.videoeditor.service.MovieOverlay;
  * Image utility methods
  */
 public class ImageUtils {
+    /**
+     *  Logging
+     */
+    private static final String TAG = "ImageUtils";
+
     // The resize paint
     private static final Paint sResizePaint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
@@ -117,6 +129,91 @@ public class ImageUtils {
         // Release the source bitmap
         srcBitmap.recycle();
         return bitmap;
+    }
+
+    /**
+     * Rotate a JPEG according to the EXIF data
+     *
+     * @param inputFilename The name of the input file (must be a JPEG filename)
+     * @param outputFile The rotated file
+     *
+     * @return true if the image was rotated
+     */
+    public static boolean transformJpeg(String inputFilename, File outputFile)
+            throws IOException {
+        final ExifInterface exif = new ExifInterface(inputFilename);
+        final int orientation = exif.getAttributeInt( ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "Exif orientation: " + orientation);
+        }
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90: {
+                rotateImage(inputFilename, 90, outputFile);
+                return true;
+            }
+
+            case ExifInterface.ORIENTATION_ROTATE_180: {
+                rotateImage(inputFilename, 180, outputFile);
+                return true;
+            }
+
+            case ExifInterface.ORIENTATION_ROTATE_270: {
+                rotateImage(inputFilename, 270, outputFile);
+                return true;
+            }
+
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL: {
+                return false; // Not supported
+            }
+
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL: {
+                return false; // Not supported
+            }
+
+            case ExifInterface.ORIENTATION_TRANSPOSE: {
+                return false; // Not supported
+            }
+
+            case ExifInterface.ORIENTATION_TRANSVERSE: {
+                return false; // Not supported
+            }
+
+            case ExifInterface.ORIENTATION_UNDEFINED:
+            case ExifInterface.ORIENTATION_NORMAL:
+            default: {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Rotate an image
+     *
+     * @param inputFilename The input filename
+     * @param orientation The rotation angle
+     * @param outputFile The output file
+     */
+    private static void rotateImage(String inputFilename, int orientation, File outputFile)
+            throws FileNotFoundException, IOException {
+        final Bitmap originalBmp = BitmapFactory.decodeFile(inputFilename, null);
+
+        // Create the rotation Matrix
+        final Matrix mtx = new Matrix();
+        mtx.postRotate(orientation);
+
+        final Bitmap rotatedBmp = Bitmap.createBitmap(originalBmp, 0, 0,
+                originalBmp.getWidth(), originalBmp.getHeight(), mtx, true);
+        originalBmp.recycle();
+
+        // Save the rotated image to a file in the current project folder
+        final FileOutputStream fos = new FileOutputStream(outputFile);
+        rotatedBmp.compress(CompressFormat.JPEG, 100, fos);
+        fos.close();
+
+        rotatedBmp.recycle();
     }
 
     /**
