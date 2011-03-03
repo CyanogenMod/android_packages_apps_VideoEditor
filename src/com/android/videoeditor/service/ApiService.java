@@ -946,7 +946,7 @@ public class ApiService extends Service {
 
                 default: {
                     final String pp = intent.getStringExtra(PARAM_PROJECT_PATH);
-                    if (pp.equals(projectPath)) {
+                    if (pp != null && pp.equals(projectPath)) {
                         return true;
                     }
                     break;
