@@ -18,10 +18,15 @@
     <!-- Base application theme is the default theme. -->
     <style name="Theme" parent="android:Theme"></style>
 
+    <style name="VideoEditorActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:displayOptions">useLogo|showHome</item>
+    </style>
+
     <!-- Variation on the Holo theme with a custom window background and an action bar -->
     <style name="Theme.VideoEditorHolo" parent="android:Theme.Holo">
         <item name="android:windowBackground">@drawable/activity_background</item>
         <item name="android:windowActionBar">true</item>
+        <item name="android:actionBarStyle">@style/VideoEditorActionBarStyle</item>
     </style>
 
     <style name="media_timeline_item">
