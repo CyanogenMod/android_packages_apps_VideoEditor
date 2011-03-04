@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -200,6 +202,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Turn on the title display.
+        // It is turned off in the style used for the activity.
+        final ActionBar actionBar = getActionBar();
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions() | ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setTitle(R.string.full_app_name);
+
         // Prepare the surface holder
         mSurfaceView = (PreviewSurfaceView)findViewById(R.id.video_view);
         mSurfaceHolder = mSurfaceView.getHolder();
@@ -224,7 +232,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         mTimeView = (TextView)findViewById(R.id.editor_time);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         mMediaLayout.setListener(new MediaLinearLayout.MediaLayoutListener() {
             /*
              * {@inheritDoc}
@@ -1372,7 +1381,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mEditorProjectView.setVisibility(View.GONE);
         mEditorEmptyView.setVisibility(View.VISIBLE);
 
-        getActionBar().setTitle(R.string.app_name);
+        getActionBar().setTitle(R.string.full_app_name);
 
         ((TextView)findViewById(R.id.empty_project_text)).setText(statusStringId);
         findViewById(R.id.empty_project_progress).setVisibility(View.GONE);

@@ -18,6 +18,7 @@ package com.android.videoeditor;
 
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -90,6 +91,12 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.carousel_container);
+
+        // Turn on the title display
+        // It is turned off in the style used for the activity.
+        final ActionBar actionBar = getActionBar();
+        actionBar.setDisplayOptions(actionBar.getDisplayOptions() | ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setTitle(R.string.full_app_name);
 
         mCarouselView = (ProjectsCarouselView)findViewById(R.id.carousel);
         mCarouselView.getHolder().setFormat(PixelFormat.TRANSPARENT);

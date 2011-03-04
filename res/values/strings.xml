@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Movie Studio</string>
+    <string name="short_app_name">Movie Studio</string>
+    <string name="full_app_name">Android Movie Studio</string>
 
     <!-- Displayed in the center of the activity while a project is loading. -->
     <string name="editor_loading_project">Loading project...</string>
