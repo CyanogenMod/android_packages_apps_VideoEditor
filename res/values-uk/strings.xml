@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name" msgid="3791892025434320704">"Movie Studio"</string>
+    <!-- no translation found for short_app_name (5507177282765852169) -->
+    <skip />
+    <!-- no translation found for full_app_name (5729546228978363869) -->
+    <skip />
     <string name="editor_loading_project" msgid="3510642162166476100">"Завантаження проекту..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Жодного проекту не знайдено"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Імпортувати відеоролик"</string>
