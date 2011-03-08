@@ -14,7 +14,7 @@
     <string name="editor_export_movie" msgid="6179595763732596532">"Film exportieren"</string>
     <string name="editor_play_exported_movie" msgid="4312100359380734615">"Exportierten Film wiedergeben"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Seitenverhältnis ändern"</string>
-    <string name="editor_edit_project_name" msgid="1910357904276802782">"Projektname ändern"</string>
+    <string name="editor_edit_project_name" msgid="1910357904276802782">"Projektnamen ändern"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"Projekt löschen"</string>
     <string name="editor_capture_video" msgid="8062206918403182504">"Neuer Videoclip"</string>
     <string name="editor_capture_image" msgid="7286273213965159369">"Neues Bild"</string>
