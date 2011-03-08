@@ -660,6 +660,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("video/*");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
                 return true;
             }
@@ -675,6 +676,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_IMAGE);
                 return true;
             }
