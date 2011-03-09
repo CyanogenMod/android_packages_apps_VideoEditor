@@ -1925,7 +1925,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                  */
                 public void run() {
                     if (clear) {
+                        try {
                         project.clearSurface(mSurfaceHolder);
+                        } catch (Exception ex) {
+                            Log.w(TAG, "Surface cannot be cleared");
+                        }
+
                         mMainHandler.post(new Runnable() {
                             /*
                              * {@inheritDoc}
