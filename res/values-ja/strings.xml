@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- no translation found for short_app_name (5507177282765852169) -->
-    <skip />
-    <!-- no translation found for full_app_name (5729546228978363869) -->
-    <skip />
+    <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"プロジェクトを読み込み中..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"プロジェクトがありません"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"動画クリップをインポート"</string>
