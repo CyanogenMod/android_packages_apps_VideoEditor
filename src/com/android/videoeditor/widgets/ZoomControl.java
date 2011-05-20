@@ -29,14 +29,15 @@ import android.view.View;
  * The zoom control
  */
 public class ZoomControl extends View {
-    // The thumb radius
-    private static final float RADIUS = 129;
-    private static final float INTERNAL_RADIUS = 72;
-
+    
     private static final double MAX_ANGLE = Math.PI / 3;
+    private static final double THUMB_RADIUS_CONTAINER_SIZE_RATIO = 0.432;
+    private static final double THUMB_INTERNAL_RADIUS_CONTAINER_SIZE_RATIO = 0.24;
 
     // Instance variables
     private final Drawable mThumb;
+    private double mRadius;
+    private double mInternalRadius;
     private int mMaxProgress, mProgress;
     private OnZoomChangeListener mListener;
     private int mThumbX, mThumbY;
@@ -67,6 +68,14 @@ public class ZoomControl extends View {
 
         // Load the thumb selector
         mThumb = context.getResources().getDrawable(R.drawable.zoom_thumb_selector);
+    }
+    
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+      super.onLayout(changed, left, top, right, bottom);
+      double width = right - left;
+      mRadius = width * THUMB_RADIUS_CONTAINER_SIZE_RATIO;
+      mInternalRadius = width * THUMB_INTERNAL_RADIUS_CONTAINER_SIZE_RATIO;
     }
 
     /*
@@ -162,20 +171,20 @@ public class ZoomControl extends View {
 
                     final int progress;
                     if (x >= 0 && y >= 0) {
-                        mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
-                        mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
+                        mThumbX = (int)((mRadius * Math.cos(alpha)) + (getWidth() / 2));
+                        mThumbY = (int)((getHeight() / 2) - (mRadius * Math.sin(alpha)));
                         progress = (int)((mMaxProgress / 2) - (alpha / mInterval));
                     } else if (x >= 0 && y <= 0) {
-                        mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
-                        mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
+                        mThumbX = (int)((mRadius * Math.cos(alpha)) + (getWidth() / 2));
+                        mThumbY = (int)((getHeight() / 2) - (mRadius * Math.sin(alpha)));
                         progress = (int)((mMaxProgress / 2) - (alpha / mInterval));
                     } else if (x <= 0 && y >= 0) {
-                        mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
-                        mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
+                        mThumbX = (int)((getWidth() / 2) - (mRadius * Math.cos(alpha)));
+                        mThumbY = (int)((getHeight() / 2) + (mRadius * Math.sin(alpha)));
                         progress = -(int)(((alpha + MAX_ANGLE) / mInterval));
                     } else {
-                        mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
-                        mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
+                        mThumbX = (int)((getWidth() / 2) - (mRadius * Math.cos(alpha)));
+                        mThumbY = (int)((getHeight() / 2) + (mRadius * Math.sin(alpha)));
                         progress = (int)(mMaxProgress - ((alpha - MAX_ANGLE) / mInterval));
                     }
 
@@ -214,7 +223,7 @@ public class ZoomControl extends View {
      */
     private boolean checkHit(float x, float y, double alpha) {
         final double radius = Math.sqrt((x * x) + (y * y));
-        if (radius < INTERNAL_RADIUS) {
+        if (radius < mInternalRadius) {
             return false;
         }
 
@@ -251,20 +260,20 @@ public class ZoomControl extends View {
         final double alpha;
         if (beta >= 0 && beta <= Math.PI / 2) {
             alpha = beta;
-            mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
-            mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
+            mThumbX = (int)((mRadius * Math.cos(alpha)) + (getWidth() / 2));
+            mThumbY = (int)((getHeight() / 2) - (mRadius * Math.sin(alpha)));
         } else if (beta > Math.PI / 2 && beta < (Math.PI / 2) + MAX_ANGLE) {
             alpha = beta - Math.PI;
-            mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
-            mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
+            mThumbX = (int)((getWidth() / 2) - (mRadius * Math.cos(alpha)));
+            mThumbY = (int)((getHeight() / 2) + (mRadius * Math.sin(alpha)));
         } else if (beta <= 2 * Math.PI && beta > (3 * Math.PI) / 2) {
             alpha = beta - (2 * Math.PI);
-            mThumbX = (int)((RADIUS * Math.cos(alpha)) + (getWidth() / 2));
-            mThumbY = (int)((getHeight() / 2) - (RADIUS * Math.sin(alpha)));
+            mThumbX = (int)((mRadius * Math.cos(alpha)) + (getWidth() / 2));
+            mThumbY = (int)((getHeight() / 2) - (mRadius * Math.sin(alpha)));
         } else {
             alpha = beta - Math.PI;
-            mThumbX = (int)((getWidth() / 2) - (RADIUS * Math.cos(alpha)));
-            mThumbY = (int)((getHeight() / 2) + (RADIUS * Math.sin(alpha)));
+            mThumbX = (int)((getWidth() / 2) - (mRadius * Math.cos(alpha)));
+            mThumbY = (int)((getHeight() / 2) + (mRadius * Math.sin(alpha)));
         }
     }
 
