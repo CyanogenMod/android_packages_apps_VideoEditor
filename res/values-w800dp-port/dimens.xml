@@ -28,6 +28,8 @@
     <dimen name="timeline_separator_height">3dip</dimen>
 
     <dimen name="playhead_margin_top">22dip</dimen>
+    <dimen name="playhead_margin_top_ok">22dip</dimen>
+    <dimen name="playhead_margin_top_not_ok">22dip</dimen>
     <dimen name="playhead_margin_bottom">22dip</dimen>
     <dimen name="playhead_tick_height">5dip</dimen>
 
