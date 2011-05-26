@@ -45,7 +45,10 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
     // Instance variables
     private final List<ScrollViewListener> mScrollListenerList;
     private final Handler mHandler;
-    private final int mPlayheadMarginTop, mPlayheadMarginBottom;
+    private final int mPlayheadMarginTop;
+    private final int mPlayheadMarginTopOk;
+    private final int mPlayheadMarginTopNotOk;
+    private final int mPlayheadMarginBottom;
     private final Drawable mNormalPlayheadDrawable;
     private final Drawable mMoveOkPlayheadDrawable;
     private final Drawable mMoveNotOkPlayheadDrawable;
@@ -61,6 +64,7 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         /*
          * {@inheritDoc}
          */
+        @Override
         public void run() {
             mIsScrolling = false;
 
@@ -98,6 +102,8 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         // Get the playhead margins
         mPlayheadMarginTop = (int)resources.getDimension(R.dimen.playhead_margin_top);
         mPlayheadMarginBottom = (int)resources.getDimension(R.dimen.playhead_margin_bottom);
+        mPlayheadMarginTopOk = (int)resources.getDimension(R.dimen.playhead_margin_top_ok);
+        mPlayheadMarginTopNotOk = (int)resources.getDimension(R.dimen.playhead_margin_top_not_ok);
 
         // Prepare the playhead drawable
         mNormalPlayheadDrawable = resources.getDrawable(R.drawable.playhead);
@@ -227,6 +233,7 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
     /*
      * {@inheritDoc}
      */
+    @Override
     public void computeScroll() {
         super.computeScroll();
 
@@ -273,32 +280,37 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         }
 
         final int playheadType = (Integer)getTag(R.id.playhead_type);
+        final int halfPlayheadWidth = mNormalPlayheadDrawable.getIntrinsicWidth() / 2;
         switch (playheadType) {
             case PLAYHEAD_NORMAL: {
                 // Draw the normal playhead
-                final int halfPlayheadWidth = mNormalPlayheadDrawable.getIntrinsicWidth() / 2;
-                mNormalPlayheadDrawable.setBounds(startX - halfPlayheadWidth, mPlayheadMarginTop,
-                        startX + halfPlayheadWidth, getHeight() - mPlayheadMarginBottom);
+                mNormalPlayheadDrawable.setBounds(
+                        startX - halfPlayheadWidth,
+                        mPlayheadMarginTop,
+                        startX + halfPlayheadWidth,
+                        getHeight() - mPlayheadMarginBottom);
                 mNormalPlayheadDrawable.draw(canvas);
                 break;
             }
 
             case PLAYHEAD_MOVE_OK: {
                 // Draw the move playhead
-                final int halfPlayheadWidth = mMoveOkPlayheadDrawable.getIntrinsicWidth() / 2;
-                mMoveOkPlayheadDrawable.setBounds(startX - halfPlayheadWidth, mPlayheadMarginTop,
-                        startX + halfPlayheadWidth, mPlayheadMarginTop +
-                        mMoveOkPlayheadDrawable.getIntrinsicHeight());
+                mMoveOkPlayheadDrawable.setBounds(
+                        startX - halfPlayheadWidth,
+                        mPlayheadMarginTopOk,
+                        startX + halfPlayheadWidth,
+                        mPlayheadMarginTopOk + mMoveOkPlayheadDrawable.getIntrinsicHeight());
                 mMoveOkPlayheadDrawable.draw(canvas);
                 break;
             }
 
             case PLAYHEAD_MOVE_NOT_OK: {
                 // Draw the move playhead
-                final int halfPlayheadWidth = mMoveNotOkPlayheadDrawable.getIntrinsicWidth() / 2;
-                mMoveNotOkPlayheadDrawable.setBounds(startX - halfPlayheadWidth, mPlayheadMarginTop,
-                        startX + halfPlayheadWidth, mPlayheadMarginTop +
-                        mMoveNotOkPlayheadDrawable.getIntrinsicHeight());
+                mMoveNotOkPlayheadDrawable.setBounds(
+                        startX - halfPlayheadWidth,
+                        mPlayheadMarginTopNotOk,
+                        startX + halfPlayheadWidth,
+                        mPlayheadMarginTopNotOk + mMoveNotOkPlayheadDrawable.getIntrinsicHeight());
                 mMoveNotOkPlayheadDrawable.draw(canvas);
                 break;
             }

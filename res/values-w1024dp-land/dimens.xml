@@ -27,8 +27,11 @@
 
     <dimen name="timeline_separator_height">2dip</dimen>
 
-    <dimen name="playhead_margin_top">15dip</dimen>
-    <dimen name="playhead_margin_bottom">15dip</dimen>
+    <dimen name="playhead_margin_top">4dip</dimen>
+    <dimen name="playhead_margin_top_ok">0dip</dimen>
+    <dimen name="playhead_margin_top_not_ok">-5dip</dimen>
+    <dimen name="playhead_margin_bottom">22dip</dimen>
+
     <dimen name="playhead_tick_height">3dip</dimen>
 
     <dimen name="carousel_pixel_border">4dip</dimen>

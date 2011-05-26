@@ -69,7 +69,10 @@ public class ZoomControl extends View {
         // Load the thumb selector
         mThumb = context.getResources().getDrawable(R.drawable.zoom_thumb_selector);
     }
-    
+
+    /*
+     * {@inheritDoc}
+     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
       super.onLayout(changed, left, top, right, bottom);
