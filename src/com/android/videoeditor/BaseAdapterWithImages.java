@@ -17,9 +17,9 @@
 package com.android.videoeditor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,17 +35,16 @@ import android.widget.TextView;
  * The base class for BaseAdapters which load images
  */
 public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
-    // Instance variables
     protected final Context mContext;
     private final List<ImageViewHolder<T>> mViewHolders;
-    private final Map<T, T> mLoadingImages;
+    // For recording keys of images that are being loaded
+    private final Set<T> mLoadingImages;
     private final AbsListView mListView;
 
     /**
      * View holder class
      */
     protected static class ImageViewHolder<T> {
-        // Instance variables
         private final ImageView mImageView;
         private T mKey;
 
@@ -70,7 +69,6 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
      * View holder class
      */
     protected static class ImageTextViewHolder<T> extends ImageViewHolder<T> {
-        // Instance variables
         protected final TextView mNameView;
 
         /**
@@ -88,7 +86,6 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
      * Image loader class
      */
     protected class ImageLoaderAsyncTask extends AsyncTask<Void, Void, Bitmap> {
-        // Instance variables
         private final T mKey;
         private final Object mData;
 
@@ -141,7 +138,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
     public BaseAdapterWithImages(Context context, AbsListView listView) {
         mContext = context;
         mListView = listView;
-        mLoadingImages = new HashMap<T, T>();
+        mLoadingImages = new HashSet<T>();
         mViewHolders = new ArrayList<ImageViewHolder<T>>();
 
         listView.setRecyclerListener(new AbsListView.RecyclerListener() {
@@ -165,21 +162,12 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
         });
     }
 
-    /**
-     * The activity is resumed
-     */
-    public void onResume() {
-    }
-
-    /**
-     * The activity is paused
-     */
     public void onPause() {
         mViewHolders.clear();
     }
 
     /**
-     * The activity is destroyed
+     * Upon destroy, recycle all images and then remove all child views in the list view.
      */
     public void onDestroy() {
         final int count = mListView.getChildCount();
@@ -192,7 +180,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
             }
         }
 
-        mListView.removeViews(0, count);
+        mListView.removeAllViews();
         System.gc();
     }
 
@@ -210,8 +198,8 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
         }
         viewHolder.setKey(key);
 
-        if (!mLoadingImages.containsKey(key)) {
-            mLoadingImages.put(key, key);
+        if (!mLoadingImages.contains(key)) {
+            mLoadingImages.add(key);
             new ImageLoaderAsyncTask(key, data).execute();
         }
     }
@@ -233,7 +221,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
      *
      * @param data The data required to load the image
      *
-     * @return The bitmap
+     * @return The loaded bitmap
      */
     protected abstract Bitmap loadImage(Object data);
 }

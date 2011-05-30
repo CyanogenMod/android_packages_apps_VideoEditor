@@ -102,16 +102,6 @@ public class TransitionsActivity extends ListActivity {
      * {@inheritDoc}
      */
     @Override
-    public void onResume() {
-        super.onResume();
-
-        mAdapter.onResume();
-    }
-
-    /*
-     * {@inheritDoc}
-     */
-    @Override
     public void onPause() {
         super.onPause();
 
