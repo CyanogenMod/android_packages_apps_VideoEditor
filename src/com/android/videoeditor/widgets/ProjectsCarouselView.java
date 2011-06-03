@@ -21,32 +21,22 @@ import android.util.AttributeSet;
 
 import com.android.ex.carousel.CarouselController;
 import com.android.ex.carousel.CarouselView;
-import com.android.ex.carousel.CarouselView.Info;
 import com.android.videoeditor.R;
 
 public class ProjectsCarouselView extends CarouselView {
-    /*
-     * {@inheritDoc}
-     */
     public ProjectsCarouselView(Context context, CarouselController controller) {
         this(context, null, controller);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public ProjectsCarouselView(Context context, AttributeSet attrs) {
         this(context, attrs, new CarouselController());
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public ProjectsCarouselView(Context context, AttributeSet attrs, CarouselController controller) {
         super(context, attrs, controller);
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -54,11 +44,11 @@ public class ProjectsCarouselView extends CarouselView {
         return true;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
-    public Info getRenderScriptInfo() {
-        return new Info(R.raw.carousel);
+    public CarouselView.Info getRenderScriptInfo() {
+        return new CarouselView.Info(R.raw.carousel);
     }
 }

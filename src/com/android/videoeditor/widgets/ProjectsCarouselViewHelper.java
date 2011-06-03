@@ -48,7 +48,7 @@ import com.android.videoeditor.util.StringUtils;
 import com.android.videoeditor.R;
 
 /**
- * The carousel helper
+ * Helper class for manipulating projects carousel view
  */
 public class ProjectsCarouselViewHelper extends com.android.ex.carousel.CarouselViewHelper {
     // Logging
@@ -69,7 +69,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
     private final int mCarouselTextureHeight;
     private final int mCarouselDetailTextureWidth;
     private final int mCarouselDetailTextureHeight;
-    private final ProjectsCarouselView mView;
+    private final ProjectsCarouselView mProjectsCarouselView;
     private final Paint mPaint;
     private final Handler mSyncHandler;
     private final DetailTextureParameters mDetailTextureParameters;
@@ -103,12 +103,12 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
      * Constructor
      *
      * @param context The context
-     * @param view The carousel view
-     * @param listener The listener
+     * @param projectsCarouselView The carousel view manipulated by this helper
+     * @param listener The listener that responds to user actions on the carousel view
      */
-    public ProjectsCarouselViewHelper(Context context, ProjectsCarouselView view,
+    public ProjectsCarouselViewHelper(Context context, ProjectsCarouselView projectsCarouselView,
             CarouselItemListener listener) {
-        super(context, view);
+        super(context, projectsCarouselView);
 
         mContext = context;
         mCarouselItemListener = listener;
@@ -119,8 +119,8 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         mCarouselDetailTextureHeight = (int)resources.getDimension(
                 R.dimen.carousel_detail_texture_height);
 
-        mView = view;
-        mView.setCallback(this);
+        mProjectsCarouselView = projectsCarouselView;
+        mProjectsCarouselView.setCallback(this);
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -140,21 +140,21 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
                 0.0f, 0.75f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f};
-        mView.setDefaultCardMatrix(matrix);
+        mProjectsCarouselView.setDefaultCardMatrix(matrix);
 
         final Bitmap border = BitmapFactory.decodeResource(resources, R.drawable.border);
-        mView.setDefaultBitmap(border);
-        mView.setLoadingBitmap(border);
+        mProjectsCarouselView.setDefaultBitmap(border);
+        mProjectsCarouselView.setLoadingBitmap(border);
 
-        mView.createCards(0);
-        mView.setBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
-        mView.setRezInCardCount(0.0f);
-        mView.setFadeInDuration(250);
-        mView.setCardRotation(-(float) Math.PI / 2.0f);
-        mView.setDragModel(CarouselView.DRAG_MODEL_CYLINDER_INSIDE);
-        mView.setCardsFaceTangent(true);
-        mView.setDrawRuler(false);
-        mView.setDetailTextureAlignment(DetailAlignment.CENTER_HORIZONTAL | DetailAlignment.BELOW);
+        mProjectsCarouselView.createCards(0);
+        mProjectsCarouselView.setBackgroundColor(0.0f, 0.0f, 0.0f, 0.0f);
+        mProjectsCarouselView.setRezInCardCount(0.0f);
+        mProjectsCarouselView.setFadeInDuration(250);
+        mProjectsCarouselView.setCardRotation(-(float) Math.PI / 2.0f);
+        mProjectsCarouselView.setDragModel(CarouselView.DRAG_MODEL_CYLINDER_INSIDE);
+        mProjectsCarouselView.setCardsFaceTangent(true);
+        mProjectsCarouselView.setDrawRuler(false);
+        mProjectsCarouselView.setDetailTextureAlignment(DetailAlignment.CENTER_HORIZONTAL | DetailAlignment.BELOW);
 
         final float[] eye;
         final float[] at;
@@ -162,12 +162,12 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         if (landscape) {
             mCarouselDetailTextureWidth = (int)resources.getDimension(
                     R.dimen.carousel_detail_texture_width_landscape);
-            mView.setVisibleSlots(SLOTS_VISIBLE_LANDSCAPE);
-            mView.setVisibleDetails(SLOTS_VISIBLE_LANDSCAPE);
+            mProjectsCarouselView.setVisibleSlots(SLOTS_VISIBLE_LANDSCAPE);
+            mProjectsCarouselView.setVisibleDetails(SLOTS_VISIBLE_LANDSCAPE);
 
-            mView.setStartAngle((float) (2.0f * Math.PI * 4 / CARD_SLOTS_LANDSCAPE));
-            mView.setSlotCount(CARD_SLOTS_LANDSCAPE);
-            mView.setRadius(4.0f);
+            mProjectsCarouselView.setStartAngle((float) (2.0f * Math.PI * 4 / CARD_SLOTS_LANDSCAPE));
+            mProjectsCarouselView.setSlotCount(CARD_SLOTS_LANDSCAPE);
+            mProjectsCarouselView.setRadius(4.0f);
 
             eye = new float[] {0.0f, 0.0f, 4.0f};
             at = new float[] {0.0f, 0.0f, -15.0f};
@@ -175,21 +175,20 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         } else { // Portrait
             mCarouselDetailTextureWidth = (int)resources.getDimension(
                     R.dimen.carousel_detail_texture_width_portrait);
-            mView.setVisibleSlots(SLOTS_VISIBLE_PORTRAIT);
-            mView.setVisibleDetails(SLOTS_VISIBLE_PORTRAIT);
+            mProjectsCarouselView.setVisibleSlots(SLOTS_VISIBLE_PORTRAIT);
+            mProjectsCarouselView.setVisibleDetails(SLOTS_VISIBLE_PORTRAIT);
 
-            mView.setStartAngle((float) (2.0f * Math.PI * 7 / CARD_SLOTS_PORTRAIT));
-            mView.setSlotCount(CARD_SLOTS_PORTRAIT);
-            mView.setRadius(8.0f);
+            mProjectsCarouselView.setStartAngle((float) (2.0f * Math.PI * 7 / CARD_SLOTS_PORTRAIT));
+            mProjectsCarouselView.setSlotCount(CARD_SLOTS_PORTRAIT);
+            mProjectsCarouselView.setRadius(8.0f);
 
             eye = new float[] {0.0f, 0.0f, 8.0f};
             at = new float[] {0.0f, 0.0f, -30.0f};
             up = new float[] {0.0f, 1.0f, 0.0f};
         }
 
-        mView.setLookAt(eye, at, up);
-
-        mView.getController().setFillDirection(CarouselView.FILL_DIRECTION_CW);
+        mProjectsCarouselView.setLookAt(eye, at, up);
+        mProjectsCarouselView.getController().setFillDirection(CarouselView.FILL_DIRECTION_CW);
 
         mSyncHandler = new Handler();
     }
@@ -198,9 +197,9 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
      * @param projects The projects
      */
     public void setProjects(List<VideoEditorProject> projects) {
-        mView.createCards(0);
+        mProjectsCarouselView.createCards(0);
         // Add one item for the "New project" item
-        mView.createCards(projects.size() + 1);
+        mProjectsCarouselView.createCards(projects.size() + 1);
         mProjects = projects;
     }
 
@@ -214,8 +213,8 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         for (VideoEditorProject project : mProjects) {
             if (project.getPath().equals(projectPath)) {
                 mProjects.remove(project);
-                mView.createCards(id);
-                mView.createCards(mProjects.size() + 1);
+                mProjectsCarouselView.createCards(id);
+                mProjectsCarouselView.createCards(mProjects.size() + 1);
                 break;
             } else {
                 id++;
@@ -223,7 +222,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -231,7 +230,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         return mDetailTextureParameters;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -301,7 +300,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         return bitmap;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -343,30 +342,26 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         return bitmap;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
     public void onCardSelected(final int id) {
         mSyncHandler.post(new Runnable(){
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void run() {
                 handleTapAction(id);
             }
         });
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
     public void onCardLongPress(final int id, final int touchPosition[], Rect detailCoordinates) {
         mSyncHandler.post(new Runnable(){
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void run() {
                 handleLongPressAction(id, touchPosition);
             }
@@ -397,7 +392,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         }
 
         // Move the anchor view at the touch position
-        final View anchorView = ((View)mView.getParent()).findViewById(R.id.menu_anchor_view);
+        final View anchorView = ((View)mProjectsCarouselView.getParent()).findViewById(R.id.menu_anchor_view);
         final FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)anchorView.getLayoutParams();
         lp.leftMargin = touchPosition[0];
         lp.topMargin = touchPosition[1];

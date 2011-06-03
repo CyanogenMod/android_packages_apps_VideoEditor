@@ -67,24 +67,24 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     // Instance variables
     private final ServiceListener mServiceListener = new ServiceListener();
     private ProjectsCarouselView mCarouselView;
-    private ProjectsCarouselViewHelper mHelper;
+    private ProjectsCarouselViewHelper mProjectsCarouselViewHelper;
 
     /**
      * The service listener
      */
     private class ServiceListener extends ApiServiceListener {
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
         public void onProjectsLoaded(List<VideoEditorProject> projects, Exception exception) {
             if (exception == null) {
-                mHelper.setProjects(projects);
+                mProjectsCarouselViewHelper.setProjects(projects);
             }
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -102,10 +102,10 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         mCarouselView.getHolder().setFormat(PixelFormat.TRANSPARENT);
         mCarouselView.setZOrderOnTop(true);
 
-        mHelper = new ProjectsCarouselViewHelper(this, mCarouselView, this);
+        mProjectsCarouselViewHelper = new ProjectsCarouselViewHelper(this, mCarouselView, this);
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -113,12 +113,12 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         super.onResume();
         ApiService.registerListener(mServiceListener);
 
-        mHelper.onResume();
+        mProjectsCarouselViewHelper.onResume();
 
         ApiService.loadProjects(this);
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -126,10 +126,10 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         super.onPause();
         ApiService.unregisterListener(mServiceListener);
 
-        mHelper.onPause();
+        mProjectsCarouselViewHelper.onPause();
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -141,7 +141,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         return true;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -158,7 +158,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -169,9 +169,10 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
                         getString(R.string.projects_project_name),
                         getString(R.string.untitled), getString(android.R.string.ok),
                         new DialogInterface.OnClickListener() {
-                            /*
+                            /**
                              * {@inheritDoc}
                              */
+                            @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 final TextView tv =
                                     (TextView)((AlertDialog)dialog).findViewById(R.id.text_1);
@@ -182,16 +183,18 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
                             }
                         }, getString(android.R.string.cancel),
                         new DialogInterface.OnClickListener() {
-                            /*
+                            /**
                              * {@inheritDoc}
                              */
+                            @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 removeDialog(DIALOG_NEW_PROJECT_ID);
                             }
                         }, new DialogInterface.OnCancelListener() {
-                            /*
+                            /**
                              * {@inheritDoc}
                              */
+                            @Override
                             public void onCancel(DialogInterface dialog) {
                                 removeDialog(DIALOG_NEW_PROJECT_ID);
                             }
@@ -205,26 +208,29 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
                         0, getString(R.string.editor_delete_project_question),
                         getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
+                    /**
                      * {@inheritDoc}
                      */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         removeDialog(DIALOG_REMOVE_PROJECT_ID);
 
-                        mHelper.removeProject(projectPath);
+                        mProjectsCarouselViewHelper.removeProject(projectPath);
                         ApiService.deleteProject(ProjectsActivity.this, projectPath);
                     }
                 }, getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
+                    /**
                      * {@inheritDoc}
                      */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         removeDialog(DIALOG_REMOVE_PROJECT_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
+                    /**
                      * {@inheritDoc}
                      */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         removeDialog(DIALOG_REMOVE_PROJECT_ID);
                     }
@@ -237,7 +243,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -245,9 +251,10 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         return false;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
+    @Override
     public void onCarouselItemTap(String projectPath) {
         if (projectPath != null) {
             openProject(projectPath);
@@ -256,18 +263,20 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
+    @Override
     public void onCarouselItemLongPress(final String projectPath, View anchorView) {
         // Create the popup menu
         final PopupMenu popupMenu = new PopupMenu(this, anchorView);
         popupMenu.getMenuInflater().inflate(R.menu.project_menu, popupMenu.getMenu());
         popupMenu.show();
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            /*
+            /**
              * {@inheritDoc}
              */
+            @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_remove_project: {
@@ -290,7 +299,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     /**
      * Create a new project
      *
-     * @param projectPath The project path
+     * @param projectName The project path
      */
     private void createProject(String projectName) {
         try {

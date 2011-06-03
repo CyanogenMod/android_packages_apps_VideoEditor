@@ -94,7 +94,7 @@ public class MovieOverlay {
     }
 
     /**
-     * @return The of the overlay
+     * @return The id of this overlay
      */
     public String getId() {
         return mUniqueId;
