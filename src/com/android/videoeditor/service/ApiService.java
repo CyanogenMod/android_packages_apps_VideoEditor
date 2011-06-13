@@ -205,9 +205,10 @@ public class ApiService extends Service {
     private Handler mHandler;
 
     private final Runnable mStopRunnable = new Runnable() {
-        /*
+        /**
          * {@inheritDoc}
          */
+        @Override
         public void run() {
             if (mPendingIntents.size() == 0) {
                 if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -235,9 +236,10 @@ public class ApiService extends Service {
             mProjectPath = projectPath;
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
+        @Override
         public void onProgress(Object item, int action, int progress) {
             final Intent intent = mIntentPool.get();
             intent.putExtra(PARAM_OP, OP_VIDEO_EDITOR_GENERATE_PREVIEW_PROGRESS);
@@ -261,488 +263,6 @@ public class ApiService extends Service {
             }
 
             completeRequest(intent, null, null, null, null, true);
-        }
-    }
-
-    /**
-     * The API service listener
-     */
-    public static class ApiServiceListener {
-        /**
-         * The list of projects was loaded
-         *
-         * @param projects The array of projects
-         * @param exception The exception
-         */
-        public void onProjectsLoaded(List<VideoEditorProject> projects, Exception exception) {
-        }
-
-        /**
-         * The project edit state
-         *
-         * @param projectPath The project path
-         * @param projectEdited true if the project is edited
-         */
-        public void onProjectEditState(String projectPath, boolean projectEdited) {
-        }
-
-        /**
-         * A new project was created
-         *
-         * @param projectPath The project path
-         * @param project The VideoEditor project
-         * @param mediaItems The list of media items
-         * @param audioTracks The list of audio tracks
-         * @param exception The exception that occurred
-         */
-        public void onVideoEditorCreated(String projectPath, VideoEditorProject project,
-                List<MediaItem> mediaItems, List<AudioTrack> audioTracks, Exception exception) {
-        }
-
-        /**
-         * The project was loaded
-         *
-         * @param projectPath The project path
-         * @param project The VideoEditor project
-         * @param mediaItems The list of media items
-         * @param audioTracks The list of audio tracks
-         * @param exception The exception that occurred
-         */
-        public void onVideoEditorLoaded(String projectPath, VideoEditorProject project,
-                List<MediaItem> mediaItems, List<AudioTrack> audioTracks, Exception exception) {
-        }
-
-        /**
-         * The aspect ratio was set
-         *
-         * @param projectPath The project path
-         * @param aspectRatio The aspect ratio
-         * @param exception The exception that occurred
-         */
-        public void onVideoEditorAspectRatioSet(String projectPath, int aspectRatio,
-                Exception exception) {
-        }
-
-        /**
-         * The specified theme was applied
-         *
-         * @param projectPath The project path
-         * @param theme The theme
-         * @param exception The exception that occurred
-         */
-        public void onVideoEditorThemeApplied(String projectPath, String theme,
-                Exception exception) {
-        }
-
-        /**
-         * Generate preview progress status
-         *
-         * @param projectPath The project path
-         * @param className The class name
-         * @param itemId The storyboard item id
-         * @param action The action taken on the item
-         * @param progress The export progress (0, 100)
-         */
-        public void onVideoEditorGeneratePreviewProgress(String projectPath, String className,
-                String itemId, int action, int progress) {
-        }
-
-        /**
-         * Export progress status
-         *
-         * @param projectPath The project path
-         * @param filename The name of the file to export
-         * @param progress The export progress (0, 100)
-         */
-        public void onVideoEditorExportProgress(String projectPath, String filename,
-                int progress) {
-        }
-
-        /**
-         * Export completed callback
-         *
-         * @param projectPath The project path
-         * @param filename The name of the file to export
-         * @param exception null if no exception has occurred (export succeeded)
-         */
-        public void onVideoEditorExportComplete(String projectPath, String filename,
-                Exception exception) {
-        }
-
-        /**
-         * Export canceled callback
-         *
-         * @param projectPath The project path
-         * @param filename The name of the file to export
-         */
-        public void onVideoEditorExportCanceled(String projectPath, String filename) {
-        }
-
-        /**
-         * The VideoEditor state was saved
-         *
-         * @param projectPath The project path
-         * @param exception The exception which occurred (if any)
-         */
-        public void onVideoEditorSaved(String projectPath, Exception exception) {
-        }
-
-        /**
-         * The VideoEditor stated was released
-         *
-         * @param projectPath The project path
-         * @param exception The exception which occurred (if any)
-         */
-        public void onVideoEditorReleased(String projectPath, Exception exception) {
-        }
-
-        /**
-         * The VideoEditor stated was deleted.
-         *
-         * @param projectPath The project path
-         * @param exception The exception which occurred (if any)
-         */
-        public void onVideoEditorDeleted(String projectPath, Exception exception) {
-        }
-
-        /**
-         * A new media item was added
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param mediaItem The newly added media item (null if an error occurred)
-         * @param afterMediaId The media item id preceding the media item
-         * @param mediaItemClass The media item class
-         * @param aspectRatio The aspectRatio
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemAdded(String projectPath, String mediaItemId,
-                MovieMediaItem mediaItem, String afterMediaId, Class<?> mediaItemClass,
-                Integer aspectRatio, Exception exception) {
-        }
-
-        /**
-         * Media load complete
-         *
-         * @param projectPath The project path
-         * @param mediaUri The media URI
-         * @param mimeType The mime type
-         * @param filename The filename of the downloaded media item
-         * @param exception The exception which occurred
-         */
-        public void onMediaLoaded(String projectPath, Uri mediaIUri, String mimeType,
-                String filename, Exception exception) {
-        }
-
-        /**
-         * A media item was moved
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item which moved
-         * @param afterMediaItemId The id of the relative media item id
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemMoved(String projectPath, String mediaItemId,
-                String afterMediaItemId, Exception exception) {
-        }
-
-        /**
-         * A media item was removed
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item which was removed
-         * @param transition The transition inserted at the removal position
-         *          if a theme is in use.
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemRemoved(String projectPath, String mediaItemId,
-                MovieTransition transition, Exception exception) {
-        }
-
-        /**
-         * A media item rendering mode was set
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param renderingMode The rendering mode
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemRenderingModeSet(String projectPath, String mediaItemId,
-                int renderingMode, Exception exception) {
-        }
-
-        /**
-         * A media item duration was set
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param durationMs The duration of the image media item
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemDurationSet(String projectPath, String mediaItemId,
-                long durationMs, Exception exception) {
-        }
-
-        /**
-         * A media item boundaries was set
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param beginBoundaryMs The begin boundary
-         * @param endBoundaryMs The end boundary
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemBoundariesSet(String projectPath, String mediaItemId,
-                long beginBoundaryMs, long endBoundaryMs, Exception exception) {
-        }
-
-        /**
-         * A media item thumbnail was extracted
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param thumbnail The bitmap thumbnail
-         * @param timeMs The time position
-         * @param exception The exception which occurred
-         *
-         * @return true if the bitmap is used
-         */
-        public boolean onMediaItemThumbnail(String projectPath, String mediaItemId,
-                Bitmap thumbnail, long timeMs, Exception exception) {
-            return false;
-        }
-
-        /**
-         * A set of media item thumbnails were extracted
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param thumbnaisl The thumbnails array
-         * @param startMs The start time position
-         * @param endMs The end time position
-         * @param exception The exception which occurred
-         *
-         * @return true if the bitmap is used
-         */
-        public boolean onMediaItemThumbnails(String projectPath, String mediaItemId,
-                Bitmap[] thumbnails, long startMs, long endMs, Exception exception) {
-            return false;
-        }
-
-        /**
-         * Extract media item audio waveform progress callback
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the media item
-         * @param progress The progress (0, 100)
-         */
-        public void onMediaItemExtractAudioWaveformProgress(String projectPath,
-                String mediaItemId, int progress) {
-        }
-
-        /**
-         * The audio waveform of the specified media item completed
-         *
-         * @param projectPath The project path
-         * @param mediaItemId The id of the MediaItem
-         * @param exception The exception which occurred
-         */
-        public void onMediaItemExtractAudioWaveformComplete(String projectPath,
-                String mediaItemId, Exception exception) {
-        }
-
-        /**
-         * A new transition was inserted
-         *
-         * @param projectPath The project path
-         * @param transition The newly added transition
-         * @param afterMediaId After the media id
-         * @param exception The exception which occurred
-         */
-        public void onTransitionInserted(String projectPath, MovieTransition transition,
-                String afterMediaId, Exception exception) {
-        }
-
-        /**
-         * A transition was removed
-         *
-         * @param projectPath The project path
-         * @param transitionId The id of the transition which was removed
-         * @param exception The exception which occurred
-         */
-        public void onTransitionRemoved(String projectPath, String transitionId,
-                Exception exception) {
-        }
-
-        /**
-         * A transition duration was changed
-         *
-         * @param projectPath The project path
-         * @param transitionId The id of the transition which was modified
-         * @param durationMs The duration in milliseconds
-         * @param exception The exception which occurred
-         */
-        public void onTransitionDurationSet(String projectPath, String transitionId,
-                long durationMs, Exception exception) {
-        }
-
-        /**
-         * Two transition thumbnails were extracted
-         *
-         * @param projectPath The project path
-         * @param transitionId The id of the transition
-         * @param thumbnails The thumbnails array
-         * @param exception The exception which occurred
-         *
-         * @return true if the bitmap is used
-         */
-        public boolean onTransitionThumbnails(String projectPath, String transitionId,
-                Bitmap[] thumbnails, Exception exception) {
-            return false;
-        }
-
-        /**
-         * A new overlay was added
-         *
-         * @param projectPath The project path
-         * @param overlay The newly added overlay
-         * @param mediaItemId The media item id
-         * @param exception The exception which occurred
-         */
-        public void onOverlayAdded(String projectPath, MovieOverlay overlay,
-                String mediaItemId, Exception exception) {
-        }
-
-        /**
-         * A overlay was removed
-         *
-         * @param projectPath The project path
-         * @param overlayId The id of the overlay
-         * @param mediaItemId The media item id
-         * @param exception The exception which occurred
-         */
-        public void onOverlayRemoved(String projectPath, String overlayId,
-                String mediaItemId, Exception exception) {
-        }
-
-        /**
-         * The overlay start time was set
-         *
-         * @param projectPath The project path
-         * @param overlayId The id of the overlay
-         * @param mediaItemId The media item id
-         * @param startTimeMs The start time in milliseconds
-         * @param exception The exception which occurred
-         */
-        public void onOverlayStartTimeSet(String projectPath, String overlayId,
-                String mediaItemId, long startTimeMs, Exception exception) {
-        }
-
-        /**
-         * The overlay duration was set
-         *
-         * @param projectPath The project path
-         * @param overlayId The id of the overlay
-         * @param mediaItemId The media item id
-         * @param durationMs The duration in milliseconds
-         * @param exception The exception which occurred
-         */
-        public void onOverlayDurationSet(String projectPath, String overlayId,
-                String mediaItemId, long durationMs, Exception exception) {
-        }
-
-        /**
-         * The overlay user attributes were set
-         *
-         * @param projectPath The project path
-         * @param overlayId The id of the overlay
-         * @param mediaItemId The media item id
-         * @param userAttributes The user attributes
-         * @param exception The exception which occurred
-         */
-        public void onOverlayUserAttributesSet(String projectPath, String overlayId,
-                String mediaItemId, Bundle userAttributes, Exception exception) {
-        }
-
-        /**
-         * A new effect was added
-         *
-         * @param projectPath The project path
-         * @param effect The newly added effect
-         * @param mediaItemId The media item id
-         * @param exception The exception which occurred
-         */
-        public void onEffectAdded(String projectPath, MovieEffect effect,
-                String mediaItemId, Exception exception) {
-        }
-
-        /**
-         * An effect was removed
-         *
-         * @param projectPath The project path
-         * @param effectId The id of the effect which was removed
-         * @param mediaItemId The media item id
-         * @param exception The exception which occurred
-         */
-        public void onEffectRemoved(String projectPath, String effectId,
-                String mediaItemId, Exception exception) {
-        }
-
-        /**
-         * A new audio track was added
-         *
-         * @param projectPath The project path
-         * @param audioTrack The newly added audioTrack
-         * @param exception The exception which occurred
-         */
-        public void onAudioTrackAdded(String projectPath, MovieAudioTrack audioTrack,
-                Exception exception) {
-        }
-
-        /**
-         * An audio track was removed
-         *
-         * @param projectPath The project path
-         * @param audioTrackId The id of the audio track
-         * @param exception The exception which occurred
-         */
-        public void onAudioTrackRemoved(String projectPath, String audioTrackId,
-                Exception exception) {
-        }
-
-        /**
-         * An audio track boundaries was set
-         *
-         * @param projectPath The project path
-         * @param audioTrackId The id of the audio track
-         * @param beginBoundaryMs The begin boundary
-         * @param endBoundaryMs The end boundary
-         * @param exception The exception which occurred
-         */
-        public void onAudioTrackBoundariesSet(String projectPath, String audioTrackId,
-                long beginBoundaryMs, long endBoundaryMs, Exception exception) {
-        }
-
-        /**
-         * Extract audio waveform progress callback
-         *
-         * @param projectPath The project path
-         * @param audioTrackId The id of the audio track
-         * @param progress The progress (0, 100)
-         */
-        public void onAudioTrackExtractAudioWaveformProgress(String projectPath,
-                String audioTrackId, int progress) {
-        }
-
-        /**
-         * The audio track audio waveform of the specified audio track completed
-         *
-         * @param projectPath The project path
-         * @param audioTrackId The id of the audio track
-         * @param exception The exception which occurred
-         */
-        public void onAudioTrackExtractAudioWaveformComplete(String projectPath,
-                String audioTrackId, Exception exception) {
         }
     }
 
@@ -1873,7 +1393,7 @@ public class ApiService extends Service {
         return requestId;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -1891,7 +1411,7 @@ public class ApiService extends Service {
         mThumbnailThread.start();
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -2005,7 +1525,7 @@ public class ApiService extends Service {
         return START_NOT_STICKY;
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -2028,7 +1548,7 @@ public class ApiService extends Service {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -2093,9 +1613,10 @@ public class ApiService extends Service {
                         if (projects.size() > 0) {
                             // Sort the projects in order of "last saved"
                             Collections.sort(projects, new Comparator<VideoEditorProject>() {
-                                /*
+                                /**
                                  * {@inheritDoc}
                                  */
+                                @Override
                                 public int compare(VideoEditorProject object1,
                                         VideoEditorProject object2) {
                                     if (object1.getLastSaved() > object2.getLastSaved()) {
@@ -2465,7 +1986,7 @@ public class ApiService extends Service {
 
                     final Intent requestIntent = intent;
                     new Thread() {
-                        /*
+                        /**
                          * {@inheritDoc}
                          */
                         @Override
@@ -3528,9 +3049,10 @@ public class ApiService extends Service {
             final Exception exception, final Object result, final Object extraResult,
             final boolean finalize) {
         mHandler.post (new Runnable() {
-            /*
+            /**
              * {@inheritDoc}
              */
+            @Override
             public void run() {
                 onIntentProcessed(intent, videoEditor, result, extraResult, exception, finalize);
             }
@@ -3544,9 +3066,10 @@ public class ApiService extends Service {
      */
     private void completeRequest(final Intent intent) {
         mHandler.post (new Runnable() {
-            /*
+            /**
              * {@inheritDoc}
              */
+            @Override
             public void run() {
                 finalizeRequest(intent);
                 mIntentPool.put(intent);
@@ -4829,7 +4352,7 @@ public class ApiService extends Service {
      */
     private void exportMovie(final VideoEditor videoEditor, final Intent intent) {
         new Thread() {
-            /*
+            /**
              * {@inheritDoc}
              */
             @Override
@@ -4849,9 +4372,10 @@ public class ApiService extends Service {
                 try {
                     // Export is always executed in a distinct worker thread.
                     videoEditor.export(filename, height, bitrate, new ExportProgressListener() {
-                        /*
+                        /**
                          * {@inheritDoc}
                          */
+                        @Override
                         public void onProgress(VideoEditor videoEditor, String filename,
                                 int progress) {
                             final Intent progressIntent = mIntentPool.get();
@@ -4903,9 +4427,10 @@ public class ApiService extends Service {
             final MediaVideoItem mediaItem) throws IOException {
         mediaItem.extractAudioWaveform(
             new ExtractAudioWaveformProgressListener() {
-            /*
+            /**
              * {@inheritDoc}
              */
+            @Override
             public void onProgress(int progress) {
                 final Intent progressIntent = mIntentPool.get();
                 progressIntent.putExtra(PARAM_OP, OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS);
@@ -4931,9 +4456,10 @@ public class ApiService extends Service {
             final AudioTrack audioTrack) throws IOException {
         audioTrack.extractAudioWaveform(
             new ExtractAudioWaveformProgressListener() {
-            /*
+            /**
              * {@inheritDoc}
              */
+            @Override
             public void onProgress(int progress) {
                 final Intent progressIntent = mIntentPool.get();
                 progressIntent.putExtra(PARAM_OP,
@@ -5391,9 +4917,10 @@ public class ApiService extends Service {
         private final Queue<Intent> mQueue;
         private Handler mThreadHandler;
         private final Runnable mProcessQueueRunnable = new Runnable() {
-            /*
+            /**
              * {@inheritDoc}
              */
+            @Override
             public void run() {
                 // Process whatever accumulated in the queue
                 Intent intent;
@@ -5440,7 +4967,7 @@ public class ApiService extends Service {
             return mQueue.remove(intent);
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -5451,9 +4978,10 @@ public class ApiService extends Service {
 
             // Ensure that the queued items are processed
             mHandler.post(new Runnable() {
-                /*
+                /**
                  * {@inheritDoc}
                  */
+                @Override
                 public void run() {
                     mThreadHandler.post(mProcessQueueRunnable);
                 }

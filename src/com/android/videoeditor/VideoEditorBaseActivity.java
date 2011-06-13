@@ -33,13 +33,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.videoeditor.service.ApiService;
+import com.android.videoeditor.service.ApiServiceListener;
 import com.android.videoeditor.service.MovieAudioTrack;
 import com.android.videoeditor.service.MovieEffect;
 import com.android.videoeditor.service.MovieMediaItem;
 import com.android.videoeditor.service.MovieOverlay;
 import com.android.videoeditor.service.MovieTransition;
 import com.android.videoeditor.service.VideoEditorProject;
-import com.android.videoeditor.service.ApiService.ApiServiceListener;
 import com.android.videoeditor.widgets.AudioTrackLinearLayout;
 import com.android.videoeditor.widgets.MediaLinearLayout;
 import com.android.videoeditor.widgets.OverlayLinearLayout;
@@ -71,7 +71,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
      * The service listener
      */
     private class ServiceListener extends ApiServiceListener {
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -87,7 +87,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -115,7 +115,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -144,7 +144,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -168,7 +168,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -195,7 +195,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -229,7 +229,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -252,7 +252,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             onExportProgress(progress);
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -281,7 +281,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -297,7 +297,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -308,7 +308,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -319,7 +319,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -357,7 +357,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -379,7 +379,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -406,7 +406,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -433,7 +433,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -454,7 +454,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -482,7 +482,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -511,7 +511,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -534,7 +534,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -559,7 +559,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -584,7 +584,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -610,7 +610,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -632,7 +632,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -656,7 +656,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -679,7 +679,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -700,7 +700,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -721,7 +721,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -745,7 +745,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -768,7 +768,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -792,7 +792,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -815,7 +815,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -838,7 +838,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -862,7 +862,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -880,7 +880,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
             getAudioTrackLayout().setWaveformExtractionProgress(audioTrackId, progress);
         }
 
-        /*
+        /**
          * {@inheritDoc}
          */
         @Override
@@ -901,7 +901,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -923,7 +923,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -954,7 +954,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
                 AudioManager.AUDIOFOCUS_GAIN);
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -976,7 +976,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
         audioManager.abandonAudioFocus(null);
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -993,7 +993,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
     }
 
-    /*
+    /**
      * {@inheritDoc}
      */
     @Override

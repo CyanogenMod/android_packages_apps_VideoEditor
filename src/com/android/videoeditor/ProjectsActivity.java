@@ -35,18 +35,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.videoeditor.service.ApiService;
+import com.android.videoeditor.service.ApiServiceListener;
 import com.android.videoeditor.service.VideoEditorProject;
-import com.android.videoeditor.service.ApiService.ApiServiceListener;
 import com.android.videoeditor.util.FileUtils;
 import com.android.videoeditor.widgets.ProjectsCarouselView;
 import com.android.videoeditor.widgets.ProjectsCarouselViewHelper;
 import com.android.videoeditor.widgets.ProjectsCarouselViewHelper.CarouselItemListener;
 
 /**
- * This activity is used to manage projects
+ * This activity manages projects on a CarouselView.
+ * It responds to user clicks on the carousel to load or create projects.
  */
 public class ProjectsActivity extends Activity implements CarouselItemListener {
-    // Request codes
+    // Request codes defining user actions in this activity.
+    // Users can create new or load existing projects.
     private static final int REQUEST_CODE_OPEN_PROJECT = 1;
     private static final int REQUEST_CODE_CREATE_PROJECT = 2;
 
@@ -70,7 +72,8 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     private ProjectsCarouselViewHelper mProjectsCarouselViewHelper;
 
     /**
-     * The service listener
+     * Listener that responds to video editor's state change when the list of projects
+     * is loaded. It updates the project carousel view with the carousel view helper.
      */
     private class ServiceListener extends ApiServiceListener {
         /**
