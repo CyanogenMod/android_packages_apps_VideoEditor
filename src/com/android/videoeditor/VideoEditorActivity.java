@@ -51,6 +51,7 @@ import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -2170,6 +2171,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mAudioTrackLayout.setPlaybackInProgress(true);
 
             mPreviewState = PREVIEW_STATE_STARTING;
+
+            // Keep the screen on during the preview.
+            VideoEditorActivity.this.getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
         /**
@@ -2321,6 +2326,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mMediaLayout.setPlaybackInProgress(false);
             mAudioTrackLayout.setPlaybackInProgress(false);
             mOverlayLayout.setPlaybackInProgress(false);
+
+            // Do not keep the screen on if there is no preview in progress.
+            VideoEditorActivity.this.getWindow().clearFlags(
+                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
         /**
