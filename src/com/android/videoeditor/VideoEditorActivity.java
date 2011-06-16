@@ -75,7 +75,7 @@ import com.android.videoeditor.widgets.TimelineRelativeLayout;
 import com.android.videoeditor.widgets.ZoomControl;
 
 /**
- * This is the main activity of the video editor. It handles video editing of
+ * Main activity of the video editor. It handles video editing of
  * a project.
  */
 public class VideoEditorActivity extends VideoEditorBaseActivity
@@ -138,9 +138,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     private final TimelineRelativeLayout.LayoutCallback mLayoutCallback =
         new TimelineRelativeLayout.LayoutCallback() {
-        /*
-         * {@inheritDoc}
-         */
+
+        @Override
         public void onLayoutComplete() {
             // Scroll the timeline such that the specified position
             // is in the center of the screen
@@ -196,9 +195,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private boolean mRestartPreview;
     private Uri mCaptureMediaUri;
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,7 +206,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         actionBar.setTitle(R.string.full_app_name);
 
         // Prepare the surface holder
-        mSurfaceView = (PreviewSurfaceView)findViewById(R.id.video_view);
+        mSurfaceView = (PreviewSurfaceView) findViewById(R.id.video_view);
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -236,23 +232,17 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mMediaLayout.setListener(new MediaLinearLayout.MediaLayoutListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onRequestScrollBy(int scrollBy, boolean smooth) {
                 mTimelineScroller.appScrollBy(scrollBy, smooth);
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onRequestMovePlayhead(long scrollToTime, boolean smooth) {
                 movePlayhead(scrollToTime);
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onAddMediaItem(String afterMediaItemId) {
                 mInsertMediaItemAfterMediaItemId = afterMediaItemId;
 
@@ -262,16 +252,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onTrimMediaItemBegin(MovieMediaItem mediaItem) {
                 onProjectEditStateChange(true);
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onTrimMediaItem(MovieMediaItem mediaItem, long timeMs) {
                 updateTimelineDuration();
                 if (mProject != null && mPreviewThread != null && !mPreviewThread.isPlaying()) {
@@ -287,9 +273,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onTrimMediaItemEnd(MovieMediaItem mediaItem, long timeMs) {
                 onProjectEditStateChange(false);
                 // We need to repaint the timeline layout to clear the old
@@ -300,9 +284,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         });
 
         mAudioTrackLayout.setListener(new AudioTrackLinearLayout.AudioTracksLayoutListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onAddAudioTrack() {
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("audio/*");
@@ -316,9 +298,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             private long mDurationMs;
             private int mLastScrollX;
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
                 if (!appScroll && mProject != null) {
                     mActiveWidth = mMediaLayout.getWidth() - mActivityWidth;
@@ -330,9 +310,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 mLastScrollX = scrollX;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
                 // We check if the project is valid since the project may
                 // close while scrolling
@@ -351,9 +329,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 // We check if the project is valid since the project may
                 // close while scrolling
@@ -373,18 +349,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             private int mLastScaleFactorSign;
             private float mLastScaleFactor;
 
-            /*
-             * {@inheritDoc}
-             */
             @Override
             public boolean onScaleBegin(ScaleGestureDetector detector) {
                 mLastScaleFactorSign = 0;
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 if (mProject == null) {
@@ -417,9 +387,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
             @Override
             public void onScaleEnd(ScaleGestureDetector detector) {
             }
@@ -440,9 +407,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         mSurfaceView.setGestureListener(new GestureDetector(this,
                 new GestureDetector.SimpleOnGestureListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                             float velocityY) {
@@ -454,9 +418,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         return true;
                     }
 
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                             float distanceY) {
@@ -472,9 +433,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mZoomControl = ((ZoomControl)findViewById(R.id.editor_zoom));
         mZoomControl.setMax(MAX_ZOOM_LEVEL);
         mZoomControl.setOnZoomChangeListener(new ZoomControl.OnZoomChangeListener() {
-            /*
-             * {@inheritDoc}
-             */
+
+            @Override
             public void onProgressChanged(int progress, boolean fromUser) {
                 if (mProject != null) {
                     zoomTimeline(progress, false);
@@ -483,9 +443,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         });
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onPause() {
         super.onPause();
@@ -498,9 +455,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onResume() {
         super.onResume();
@@ -511,9 +465,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -524,9 +475,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         outState.putParcelable(STATE_CAPTURE_URI, mCaptureMediaUri);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, MENU_CAPTURE_VIDEO_ID, Menu.NONE,
@@ -559,9 +507,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         final boolean haveProject = mProject != null;
@@ -595,9 +540,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -751,9 +693,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public Dialog onCreateDialog(int id, final Bundle bundle) {
         switch (id) {
@@ -801,9 +740,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 builder.setSingleChoiceItems(aspectRatioStrings,
                         bundle.getInt(PARAM_CURRENT_ASPECT_RATIO_INDEX),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final int aspectRatio = aspectRatios.get(which);
                         ApiService.setAspectRatio(VideoEditorActivity.this, mProjectPath,
@@ -814,9 +751,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 });
                 builder.setCancelable(true);
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         removeDialog(DIALOG_CHOOSE_ASPECT_RATIO_ID);
                     }
@@ -829,9 +764,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                 getString(R.string.editor_delete_project_question),
                                     getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ApiService.deleteProject(VideoEditorActivity.this, mProjectPath);
                         mProjectPath = null;
@@ -842,16 +775,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         finish();
                     }
                 }, getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         removeDialog(DIALOG_DELETE_PROJECT_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         removeDialog(DIALOG_DELETE_PROJECT_ID);
                     }
@@ -863,9 +792,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                 getString(R.string.editor_load_error),
                                     getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ApiService.deleteProject(VideoEditorActivity.this,
                                 bundle.getString(PARAM_PROJECT_PATH));
@@ -874,16 +801,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         finish();
                     }
                 }, getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         removeDialog(DIALOG_DELETE_BAD_PROJECT_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         removeDialog(DIALOG_DELETE_BAD_PROJECT_ID);
                     }
@@ -899,9 +822,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     getString(R.string.editor_edit_project_name),
                     mProject.getName(), getString(android.R.string.ok),
                     new DialogInterface.OnClickListener() {
-                        /*
-                         * {@inheritDoc}
-                         */
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
                             final TextView tv =
                                 (TextView)((AlertDialog)dialog).findViewById(R.id.text_1);
@@ -911,16 +832,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         }
                     }, getString(android.R.string.cancel),
                     new DialogInterface.OnClickListener() {
-                        /*
-                         * {@inheritDoc}
-                         */
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
                             removeDialog(DIALOG_EDIT_PROJECT_NAME_ID);
                         }
                     }, new DialogInterface.OnCancelListener() {
-                        /*
-                         * {@inheritDoc}
-                         */
+                        @Override
                         public void onCancel(DialogInterface dialog) {
                             removeDialog(DIALOG_EDIT_PROJECT_NAME_ID);
                         }
@@ -934,9 +851,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
                 return ExportOptionsDialog.create(this,
                         new ExportOptionsDialog.ExportOptionsListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onExportOptions(int movieHeight, int movieBitrate) {
                         mPendingExportFilename = FileUtils.createMovieName(
                                 MediaProperties.FILE_MP4);
@@ -948,16 +863,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         showExportProgress();
                     }
                 }, new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         removeDialog(DIALOG_EXPORT_OPTIONS_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         removeDialog(DIALOG_EXPORT_OPTIONS_ID);
                     }
@@ -1085,9 +996,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent extras) {
         super.onActivityResult(requestCode, resultCode, extras);
@@ -1322,9 +1230,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
+    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "surfaceCreated");
@@ -1335,9 +1241,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         restartPreview();
     }
 
-    /*
-     * {@inheritDoc}
-     */
+    @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "surfaceChanged: " + width + "x" + height);
@@ -1348,9 +1252,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
+    @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "surfaceDestroyed");
@@ -1364,9 +1266,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void enterTransitionalState(int statusStringId) {
         mEditorProjectView.setVisibility(View.GONE);
@@ -1376,9 +1275,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         findViewById(R.id.empty_project_progress).setVisibility(View.VISIBLE);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void enterDisabledState(int statusStringId) {
         mEditorProjectView.setVisibility(View.GONE);
@@ -1390,18 +1286,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         findViewById(R.id.empty_project_progress).setVisibility(View.GONE);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void enterReadyState() {
         mEditorProjectView.setVisibility(View.VISIBLE);
         mEditorEmptyView.setVisibility(View.GONE);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected boolean showPreviewFrame() {
         if (mPreviewThread == null) { // The surface is not ready
@@ -1418,9 +1308,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void updateTimelineDuration() {
         if (mProject == null) {
@@ -1492,9 +1379,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         return level;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void movePlayhead(long timeMs) {
         if (mProject == null) {
@@ -1536,9 +1420,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void setAspectRatio(final int aspectRatio) {
         final FrameLayout.LayoutParams lp =
@@ -1582,33 +1463,21 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mOverlayView.setLayoutParams(lp);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected MediaLinearLayout getMediaLayout() {
         return mMediaLayout;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected OverlayLinearLayout getOverlayLayout() {
         return mOverlayLayout;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected AudioTrackLinearLayout getAudioTrackLayout() {
         return mAudioTrackLayout;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onExportProgress(int progress) {
         if (mExportProgressDialog != null) {
@@ -1616,9 +1485,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onExportComplete() {
         if (mExportProgressDialog != null) {
@@ -1627,9 +1493,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onProjectEditStateChange(boolean projectEdited) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -1646,9 +1509,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mOverlayLayout.invalidateCAB();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void initializeFromProject(boolean updateUI) {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -1688,9 +1548,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             private final int ATTEMPTS = 20;
             private int mAttempts = ATTEMPTS;
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void run() {
                 if (mAttempts == ATTEMPTS) { // Only scroll once
                     movePlayhead(mProject.getPlayheadPos());
@@ -1822,21 +1680,18 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mExportProgressDialog.setCanceledOnTouchOutside(false);
         mExportProgressDialog.setButton(getString(android.R.string.cancel),
                 new DialogInterface.OnClickListener() {
-                /*
-                 * {@inheritDoc}
-                 */
-                public void onClick(DialogInterface dialog, int which) {
-                    ApiService.cancelExportVideoEditor(VideoEditorActivity.this,
-                            mProjectPath, mPendingExportFilename);
-                    mPendingExportFilename = null;
-                    mExportProgressDialog = null;
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ApiService.cancelExportVideoEditor(VideoEditorActivity.this,
+                                    mProjectPath, mPendingExportFilename);
+                            mPendingExportFilename = null;
+                            mExportProgressDialog = null;
+                        }
                 }
-            });
+        );
         mExportProgressDialog.setCanceledOnTouchOutside(true);
         mExportProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onCancel(DialogInterface dialog) {
                 ApiService.cancelExportVideoEditor(VideoEditorActivity.this,
                         mProjectPath, mPendingExportFilename);
@@ -1869,9 +1724,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         private Bitmap mOverlayBitmap;
 
         private final Runnable mProcessQueueRunnable = new Runnable() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void run() {
                 // Process whatever accumulated in the queue
                 Runnable runnable;
@@ -1921,9 +1774,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mQueue.clear();
 
             mQueue.add(new Runnable() {
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public void run() {
                     if (clear) {
                         try {
@@ -1933,9 +1784,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         }
 
                         mMainHandler.post(new Runnable() {
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void run() {
                                 if (mOverlayBitmap != null) {
                                     mOverlayBitmap.eraseColor(Color.TRANSPARENT);
@@ -1967,6 +1816,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                         /*
                                          * {@inheritDoc}
                                          */
+                                        @Override
                                         public void run() {
                                             if (mOverlayBitmap != null) {
                                                 overlayData.renderOverlay(mOverlayBitmap);
@@ -2016,9 +1866,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mQueue.clear();
 
             mQueue.add(new Runnable() {
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public void run() {
                     try {
                         if (mProject.renderMediaItemFrame(mSurfaceHolder, mediaItem.getId(),
@@ -2063,28 +1911,20 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             // Clear any pending preview frames
             mQueue.clear();
             mQueue.add(new Runnable() {
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public void run() {
                     try {
                         project.startPreview(mSurfaceHolder, fromMs, -1, false, 3,
                                 new VideoEditor.PreviewProgressListener() {
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void onStart(VideoEditor videoEditor) {
                             }
 
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void onProgress(VideoEditor videoEditor, final long timeMs,
                                     final VideoEditor.OverlayData overlayData) {
                                 mMainHandler.post(new Runnable() {
-                                    /*
-                                     * {@inheritDoc}
-                                     */
+                                    @Override
                                     public void run() {
                                         if (overlayData != null && overlayData.needsRendering()) {
                                             if (mOverlayBitmap != null) {
@@ -2103,14 +1943,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                 });
                             }
 
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void onStop(VideoEditor videoEditor) {
                                 mMainHandler.post(new Runnable() {
-                                    /*
-                                     * {@inheritDoc}
-                                     */
+                                    @Override
                                     public void run() {
                                         if (mPreviewState == PREVIEW_STATE_STARTED ||
                                                 mPreviewState == PREVIEW_STATE_STOPPING) {
@@ -2122,9 +1958,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         });
 
                         mMainHandler.post(new Runnable() {
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void run() {
                                 mPreviewState = PREVIEW_STATE_STARTED;
                             }
@@ -2138,9 +1972,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         }
 
                         mMainHandler.post(new Runnable() {
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void run() {
                                 mPreviewState = PREVIEW_STATE_STARTED;
                                 previewStopped(true);
@@ -2206,9 +2038,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
                     // We need to wait until the preview starts
                     mMainHandler.postDelayed(new Runnable() {
-                        /*
-                         * {@inheritDoc}
-                         */
+                        @Override
                         public void run() {
                             if (isFinishing() || isChangingConfigurations()) {
                                 // The activity is shutting down. Force stopping now.
@@ -2263,7 +2093,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * The surface size has changed
          *
          * @param width The new surface width
-         * @param heightThe new surface height
+         * @param height The new surface height
          */
         private void onSurfaceChanged(int width, int height) {
             if (mOverlayBitmap != null) {
@@ -2290,8 +2120,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * Preview stopped. This method is always invoked from the UI thread.
          *
          * @param error true if the preview stopped due to an error
-         *
-         * @return The stop position
          */
         private void previewStopped(boolean error) {
             if (mProject == null) {
@@ -2347,9 +2175,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             return mPreviewState == PREVIEW_STATE_STOPPED;
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             setPriority(MAX_PRIORITY);
@@ -2358,9 +2183,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             // Ensure that the queued items are processed
             mMainHandler.post(new Runnable() {
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public void run() {
                     // Start processing the queue of runnables
                     mThreadHandler.post(mProcessQueueRunnable);

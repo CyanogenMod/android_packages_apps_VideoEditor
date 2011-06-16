@@ -71,9 +71,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
      * The service listener
      */
     private class ServiceListener extends ApiServiceListener {
-        /**
-         * {@inheritDoc}
-         */
+
         @Override
         public void onProjectEditState(String projectPath, boolean projectEdited) {
             // Check if the VideoEditor is the one we are expecting
@@ -87,9 +85,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorCreated(String projectPath, VideoEditorProject project,
                 List<MediaItem> mediaItems, List<AudioTrack> audioTracks, Exception exception) {
@@ -115,9 +110,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorLoaded(String projectPath, VideoEditorProject project,
                 List<MediaItem> mediaItems, List<AudioTrack> audioTracks, Exception exception) {
@@ -144,9 +136,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorAspectRatioSet(String projectPath, int aspectRatio,
                 Exception exception) {
@@ -168,9 +157,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorThemeApplied(String projectPath, String theme,
                 Exception exception) {
@@ -195,9 +181,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorGeneratePreviewProgress(String projectPath, String className,
                 String itemId, int action, int progress) {
@@ -229,9 +212,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorExportProgress(String projectPath, String filename,
                 int progress) {
@@ -252,9 +232,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             onExportProgress(progress);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorExportComplete(String projectPath, String filename,
                 Exception exception) {
@@ -281,9 +258,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorSaved(String projectPath, Exception exception) {
             // Check if the VideoEditor is the one we are expecting
@@ -297,9 +271,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorReleased(String projectPath, Exception exception) {
             if (exception != null) {
@@ -308,9 +279,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onVideoEditorDeleted(String projectPath, Exception exception) {
             if (exception != null) {
@@ -319,9 +287,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaItemAdded(String projectPath, String mediaItemId,
                 MovieMediaItem mediaItem, String afterMediaItemId, Class<?> mediaItemClass,
@@ -357,9 +322,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaLoaded(String projectPath, Uri mediaIUri, String mimeType,
                 String filename, Exception exception) {
@@ -379,9 +341,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaItemMoved(String projectPath, String mediaItemId,
                 String afterMediaItemId, Exception exception) {
@@ -406,9 +365,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaItemRemoved(String projectPath, String mediaItemId,
                 MovieTransition transition, Exception exception) {
@@ -433,9 +389,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaItemRenderingModeSet(String projectPath, String mediaItemId,
                 int renderingMode, Exception exception) {
@@ -454,9 +407,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaItemDurationSet(String projectPath, String mediaItemId,
                 long durationMs, Exception exception) {
@@ -482,9 +432,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onMediaItemBoundariesSet(String projectPath, String mediaItemId,
                 long beginBoundaryMs, long endBoundaryMs, Exception exception) {
@@ -511,9 +458,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean onMediaItemThumbnails(String projectPath, String mediaItemId,
                 Bitmap[] thumbnails, long startMs, long endMs, Exception exception) {
@@ -534,9 +478,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onTransitionInserted(String projectPath, MovieTransition transition,
                 String afterMediaId, Exception exception) {
@@ -559,9 +500,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onTransitionRemoved(String projectPath, String transitionId,
                 Exception exception) {
@@ -584,9 +522,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onTransitionDurationSet(String projectPath, String transitionId,
                 long durationMs, Exception exception) {
@@ -610,9 +545,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean onTransitionThumbnails(String projectPath, String transitionId,
                 Bitmap[] thumbnails, Exception exception) {
@@ -632,9 +564,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onOverlayAdded(String projectPath, MovieOverlay overlay,
                 String mediaItemId, Exception exception) {
@@ -656,9 +585,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onOverlayRemoved(String projectPath, String overlayId,
                 String mediaItemId, Exception exception) {
@@ -679,9 +605,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onOverlayStartTimeSet(String projectPath, String overlayId,
                 String mediaItemId, long startTimeMs, Exception exception) {
@@ -700,9 +623,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onOverlayDurationSet(String projectPath, String overlayId,
                 String mediaItemId, long durationMs, Exception exception) {
@@ -721,9 +641,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onOverlayUserAttributesSet(String projectPath, String overlayId,
                 String mediaItemId, Bundle userAttributes, Exception exception) {
@@ -745,9 +662,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onEffectAdded(String projectPath, MovieEffect effect, String mediaItemId,
                 Exception exception) {
@@ -768,9 +682,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onEffectRemoved(String projectPath, String effectId, String mediaItemId,
                 Exception exception) {
@@ -792,9 +703,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onAudioTrackAdded(String projectPath, MovieAudioTrack audioTrack,
                 Exception exception) {
@@ -815,9 +723,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onAudioTrackRemoved(String projectPath, String audioTrackId,
                 Exception exception) {
@@ -838,9 +743,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onAudioTrackBoundariesSet(String projectPath, String audioTrackId,
                 long beginBoundaryMs, long endBoundaryMs, Exception exception) {
@@ -862,9 +764,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onAudioTrackExtractAudioWaveformProgress(String projectPath,
                 String audioTrackId, int progress) {
@@ -880,9 +779,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
             getAudioTrackLayout().setWaveformExtractionProgress(audioTrackId, progress);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onAudioTrackExtractAudioWaveformComplete(String projectPath,
                 String audioTrackId, Exception exception) {
@@ -901,9 +797,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -923,9 +816,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onResume() {
         super.onResume();
@@ -954,9 +844,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
                 AudioManager.AUDIOFOCUS_GAIN);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onPause() {
         super.onPause();
@@ -976,9 +863,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
         audioManager.abandonAudioFocus(null);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -993,9 +877,6 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
