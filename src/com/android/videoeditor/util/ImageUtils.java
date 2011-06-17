@@ -20,18 +20,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.Math;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.util.Log;
 
@@ -142,71 +143,79 @@ public class ImageUtils {
     public static boolean transformJpeg(String inputFilename, File outputFile)
             throws IOException {
         final ExifInterface exif = new ExifInterface(inputFilename);
-        final int orientation = exif.getAttributeInt( ExifInterface.TAG_ORIENTATION,
+        final int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED);
 
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "Exif orientation: " + orientation);
         }
 
+        // Degrees by which we rotate the image.
+        int degrees = 0;
         switch (orientation) {
             case ExifInterface.ORIENTATION_ROTATE_90: {
-                rotateImage(inputFilename, 90, outputFile);
-                return true;
+                degrees = 90;
             }
 
             case ExifInterface.ORIENTATION_ROTATE_180: {
-                rotateImage(inputFilename, 180, outputFile);
-                return true;
+                degrees = 180;
             }
 
             case ExifInterface.ORIENTATION_ROTATE_270: {
-                rotateImage(inputFilename, 270, outputFile);
-                return true;
-            }
-
-            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL: {
-                return false; // Not supported
-            }
-
-            case ExifInterface.ORIENTATION_FLIP_VERTICAL: {
-                return false; // Not supported
-            }
-
-            case ExifInterface.ORIENTATION_TRANSPOSE: {
-                return false; // Not supported
-            }
-
-            case ExifInterface.ORIENTATION_TRANSVERSE: {
-                return false; // Not supported
-            }
-
-            case ExifInterface.ORIENTATION_UNDEFINED:
-            case ExifInterface.ORIENTATION_NORMAL:
-            default: {
-                return false;
+                degrees = 270;
             }
         }
+        rotateAndScaleImage(inputFilename, degrees, outputFile);
+        return degrees != 0;
     }
 
     /**
-     * Rotate an image
+     * Rotates an image according to the specified {@code orientation}.
+     * We limit the number of pixels of the scaled image. Thus the image
+     * will typically be downsampled.
      *
      * @param inputFilename The input filename
      * @param orientation The rotation angle
      * @param outputFile The output file
      */
-    private static void rotateImage(String inputFilename, int orientation, File outputFile)
+    private static void rotateAndScaleImage(String inputFilename, int orientation, File outputFile)
             throws FileNotFoundException, IOException {
-        final Bitmap originalBmp = BitmapFactory.decodeFile(inputFilename, null);
+        // In order to avoid OutOfMemoryError when rotating the image, we scale down the size of the
+        // input image. We set the maxmimum number of allowed pixels to 2M and scale down the image
+        // accordingly.
 
-        // Create the rotation Matrix
+        // Determine width and height of the original bitmap without allocating memory for it,
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(inputFilename, opt);
+
+        // Determine the scale factor based on the ratio of pixel count over max allowed pixels.
+        final int width = opt.outWidth;
+        final int height = opt.outHeight;
+        final int pixelCount = width * height;
+        final int MAX_PIXELS_FOR_SCALED_IMAGE = 2000000;
+        int scale = (int) Math.sqrt( (double) pixelCount / MAX_PIXELS_FOR_SCALED_IMAGE);
+        if (scale <= 1) {
+          scale = 1;
+        } else {
+          // Make the scale factor a power of 2 for faster processing. Also the resulting bitmap may
+          // have different dimensions than what has been requested if the scale factor is not a
+          // power of 2.
+          scale = nextPowerOf2(scale);
+        }
+
+        // Load the scaled image.
+        BitmapFactory.Options opt2 = new BitmapFactory.Options();
+        opt2.inSampleSize = scale;
+        final Bitmap scaledBmp = BitmapFactory.decodeFile(inputFilename, opt2);
+
+        // Rotation matrix used to rotate the image.
         final Matrix mtx = new Matrix();
         mtx.postRotate(orientation);
 
-        final Bitmap rotatedBmp = Bitmap.createBitmap(originalBmp, 0, 0,
-                originalBmp.getWidth(), originalBmp.getHeight(), mtx, true);
-        originalBmp.recycle();
+        final Bitmap rotatedBmp = Bitmap.createBitmap(scaledBmp, 0, 0,
+                scaledBmp.getWidth(), scaledBmp.getHeight(), mtx, true);
+        scaledBmp.recycle();
 
         // Save the rotated image to a file in the current project folder
         final FileOutputStream fos = new FileOutputStream(outputFile);
@@ -214,6 +223,22 @@ public class ImageUtils {
         fos.close();
 
         rotatedBmp.recycle();
+    }
+
+    /**
+     * Returns the next power of two.
+     * Returns the input if it is already power of 2.
+     * Throws IllegalArgumentException if the input is <= 0 or the answer overflows.
+     */
+    private static int nextPowerOf2(int n) {
+        if (n <= 0 || n > (1 << 30)) throw new IllegalArgumentException();
+        n -= 1;
+        n |= n >> 16;
+        n |= n >> 8;
+        n |= n >> 4;
+        n |= n >> 2;
+        n |= n >> 1;
+        return n + 1;
     }
 
     /**
