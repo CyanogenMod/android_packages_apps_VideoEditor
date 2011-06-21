@@ -155,14 +155,17 @@ public class ImageUtils {
         switch (orientation) {
             case ExifInterface.ORIENTATION_ROTATE_90: {
                 degrees = 90;
+                break;
             }
 
             case ExifInterface.ORIENTATION_ROTATE_180: {
                 degrees = 180;
+                break;
             }
 
             case ExifInterface.ORIENTATION_ROTATE_270: {
                 degrees = 270;
+                break;
             }
         }
         rotateAndScaleImage(inputFilename, degrees, outputFile);
