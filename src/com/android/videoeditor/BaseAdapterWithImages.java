@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * The base class for BaseAdapters which load images
+ * The base class for BaseAdapters which load images.
  */
 public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
     protected final Context mContext;
@@ -100,17 +100,11 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
             mData = data;
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         protected Bitmap doInBackground(Void... zzz) {
             return loadImage(mData);
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             mLoadingImages.remove(mKey);
@@ -180,7 +174,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
             }
         }
 
-        mListView.removeAllViews();
+        mListView.removeViews(0, count);
         System.gc();
     }
 
@@ -204,16 +198,12 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
-    /*
-     * {@inheritDoc}
-     */
+    @Override
     public abstract int getCount();
 
     /**
