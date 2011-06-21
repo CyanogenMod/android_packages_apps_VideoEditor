@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -48,7 +49,7 @@ import com.android.videoeditor.util.StringUtils;
 import com.android.videoeditor.R;
 
 /**
- * Helper class for manipulating projects carousel view
+ * Helper class for manipulating projects carousel view.
  */
 public class ProjectsCarouselViewHelper extends com.android.ex.carousel.CarouselViewHelper {
     // Logging
@@ -172,8 +173,8 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
             eye = new float[] {0.0f, 0.0f, 4.0f};
             at = new float[] {0.0f, 0.0f, -15.0f};
             up = new float[] {0.0f, 1.0f, 0.0f};
-        } else { // Portrait
-            mCarouselDetailTextureWidth = (int)resources.getDimension(
+        } else {  // Portrait
+            mCarouselDetailTextureWidth = (int) resources.getDimension(
                     R.dimen.carousel_detail_texture_width_portrait);
             mProjectsCarouselView.setVisibleSlots(SLOTS_VISIBLE_PORTRAIT);
             mProjectsCarouselView.setVisibleDetails(SLOTS_VISIBLE_PORTRAIT);
@@ -222,22 +223,16 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public DetailTextureParameters getDetailTextureParameters(int id) {
         return mDetailTextureParameters;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Bitmap getTexture(int id) {
+        final int OPAQUE_BLACK = 0xff000000;
         final Bitmap bitmap = Bitmap.createBitmap(mCarouselTextureWidth, mCarouselTextureHeight,
                 Bitmap.Config.ARGB_8888);
-
         final Canvas canvas = new Canvas(bitmap);
         canvas.drawARGB(0, 0, 0, 0);
 
@@ -256,27 +251,29 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
                             ImageUtils.MATCH_LARGER_DIMENSION);
                     if (previewBitmap != null) {
                         mPaint.setAlpha(255);
+                        // Draw the thumbnail at the center of the texture in case scaled preview
+                        // bitmap is smaller than the texture.
                         canvas.drawBitmap(previewBitmap,
                                 (mCarouselTextureWidth - previewBitmap.getWidth()) / 2,
-                                (mCarouselTextureHeight - previewBitmap.getHeight()) / 2, mPaint);
+                                (mCarouselTextureHeight - previewBitmap.getHeight()) / 2,
+                                mPaint);
                         previewBitmap.recycle();
                     } else {
-                        canvas.drawColor(0xff000000);
+                        canvas.drawColor(OPAQUE_BLACK);
                     }
                 } catch (IOException ex) {
                     Log.w(TAG, "Cannot load: " + thumbnail.getAbsolutePath());
                 }
             } else {
-                canvas.drawColor(0xff000000);
+                canvas.drawColor(OPAQUE_BLACK);
             }
-        } else {
+        } else {  // Draw new project card.
             final int halfBorderWidth = mCarouselPixelBorder / 2;
             // Clip the canvas so that anti-aliasing will occur
             canvas.clipRect(halfBorderWidth, halfBorderWidth,
                     mCarouselTextureWidth - halfBorderWidth,
                     mCarouselTextureHeight - halfBorderWidth);
-
-            mPaint.setColor(0xffffffff);
+            mPaint.setColor(Color.WHITE);
             mPaint.setStyle(Style.STROKE);
 
             canvas.drawRect(mCarouselPixelBorder, mCarouselPixelBorder,
@@ -300,11 +297,9 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         return bitmap;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Bitmap getDetailTexture(int id) {
+        // Draw project name and duration under the card as the detail texture.
         final Bitmap bitmap = Bitmap.createBitmap(mCarouselDetailTextureWidth,
                 mCarouselDetailTextureHeight, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
@@ -315,7 +310,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
                 projectName = mContext.getString(R.string.untitled);
             }
 
-            mPaint.setColor(0xffffffff);
+            mPaint.setColor(Color.WHITE);
             mPaint.setTextSize(22.0f);
             mPaint.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -342,9 +337,6 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         return bitmap;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onCardSelected(final int id) {
         mSyncHandler.post(new Runnable(){
@@ -355,9 +347,6 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onCardLongPress(final int id, final int touchPosition[], Rect detailCoordinates) {
         mSyncHandler.post(new Runnable(){
@@ -369,7 +358,7 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
     }
 
     /**
-     * Handle the tap action
+     * Handles the tap action.
      *
      * @param id The item id
      */
@@ -382,17 +371,18 @@ public class ProjectsCarouselViewHelper extends com.android.ex.carousel.Carousel
     }
 
     /**
-     * Handle the long press action
+     * Handles the long press action.
      *
      * @param id The item id
      */
     private void handleLongPressAction(final int id, int touchPosition[]) {
         if (id >= mProjects.size()) {
+            // no-op if user long presses on the new project card.
             return;
         }
 
-        // Move the anchor view at the touch position
-        final View anchorView = ((View)mProjectsCarouselView.getParent()).findViewById(R.id.menu_anchor_view);
+        // Move the anchor view to the touched position.
+        final View anchorView = ((View) mProjectsCarouselView.getParent()).findViewById(R.id.menu_anchor_view);
         final FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)anchorView.getLayoutParams();
         lp.leftMargin = touchPosition[0];
         lp.topMargin = touchPosition[1];

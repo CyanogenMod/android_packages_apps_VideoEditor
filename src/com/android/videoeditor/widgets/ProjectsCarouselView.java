@@ -23,30 +23,22 @@ import com.android.ex.carousel.CarouselController;
 import com.android.ex.carousel.CarouselView;
 import com.android.videoeditor.R;
 
+/**
+ * Carousel view that interprets long press gestures.
+ */
 public class ProjectsCarouselView extends CarouselView {
-    public ProjectsCarouselView(Context context, CarouselController controller) {
-        this(context, null, controller);
-    }
-
-    public ProjectsCarouselView(Context context, AttributeSet attrs) {
-        this(context, attrs, new CarouselController());
-    }
-
-    public ProjectsCarouselView(Context context, AttributeSet attrs, CarouselController controller) {
-        super(context, attrs, controller);
-    }
-
     /**
-     * {@inheritDoc}
+     * Constructor used when this widget is created from a layout file.
      */
+    public ProjectsCarouselView(Context context, AttributeSet attrs) {
+        super(context, attrs, new CarouselController());
+    }
+
     @Override
     public boolean interpretLongPressEvents() {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public CarouselView.Info getRenderScriptInfo() {
         return new CarouselView.Info(R.raw.carousel);

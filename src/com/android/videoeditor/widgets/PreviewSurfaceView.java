@@ -23,28 +23,19 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 /**
- * The preview surface view
+ * Surface view for video preview.
  */
 public class PreviewSurfaceView extends SurfaceView {
     private GestureDetector mSimpleGestureDetector;
 
-    /*
-     * {@inheritDoc}
-     */
     public PreviewSurfaceView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public PreviewSurfaceView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public PreviewSurfaceView(Context context) {
         this(context, null, 0);
     }
@@ -56,9 +47,6 @@ public class PreviewSurfaceView extends SurfaceView {
         mSimpleGestureDetector = detector;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         // Let the gesture detector inspect all events.

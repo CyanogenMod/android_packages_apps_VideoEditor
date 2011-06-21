@@ -43,8 +43,10 @@ import com.android.videoeditor.widgets.ProjectsCarouselViewHelper;
 import com.android.videoeditor.widgets.ProjectsCarouselViewHelper.CarouselItemListener;
 
 /**
- * This activity manages projects on a CarouselView.
- * It responds to user clicks on the carousel to load or create projects.
+ * This activity manages projects on a {@link ProjectsCarouselView}.
+ * It responds to user clicks on the carousel to load or create projects via
+ * {@link CarouselItemListener}. It also responds to video editor's state
+ * change via {@link ApiServiceListener}.
  */
 public class ProjectsActivity extends Activity implements CarouselItemListener {
     // Request codes defining user actions in this activity.
@@ -52,21 +54,21 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     private static final int REQUEST_CODE_OPEN_PROJECT = 1;
     private static final int REQUEST_CODE_CREATE_PROJECT = 2;
 
-    // The project path returned by the picker
+    // The project path returned by the picker.
     public static final String PARAM_OPEN_PROJECT_PATH = "path";
     public static final String PARAM_CREATE_PROJECT_NAME = "name";
 
-    // Menu ids
+    // Menu ids.
     private static final int MENU_NEW_PROJECT_ID = 1;
 
-    // Dialog ids
+    // Dialog ids.
     private static final int DIALOG_NEW_PROJECT_ID = 1;
     private static final int DIALOG_REMOVE_PROJECT_ID = 2;
 
-    // Dialog parameters
+    // Dialog parameters.
     private static final String PARAM_DIALOG_PATH_ID = "path";
 
-    // Instance variables
+    // Instance variables.
     private final ServiceListener mServiceListener = new ServiceListener();
     private ProjectsCarouselView mCarouselView;
     private ProjectsCarouselViewHelper mProjectsCarouselViewHelper;
@@ -95,7 +97,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         actionBar.setDisplayOptions(actionBar.getDisplayOptions() | ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setTitle(R.string.full_app_name);
 
-        mCarouselView = (ProjectsCarouselView)findViewById(R.id.carousel);
+        mCarouselView = (ProjectsCarouselView) findViewById(R.id.carousel);
         mCarouselView.getHolder().setFormat(PixelFormat.TRANSPARENT);
         mCarouselView.setZOrderOnTop(true);
 
@@ -147,9 +149,11 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     public Dialog onCreateDialog(int id, final Bundle bundle) {
         switch (id) {
             case DIALOG_NEW_PROJECT_ID: {
-                return AlertDialogs.createEditDialog(this,
+                return AlertDialogs.createEditDialog(
+                        this,
                         getString(R.string.projects_project_name),
-                        getString(R.string.untitled), getString(android.R.string.ok),
+                        getString(R.string.untitled),
+                        getString(android.R.string.ok),
                         new DialogInterface.OnClickListener() {
 
                             @Override
@@ -161,50 +165,60 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
 
                                 createProject(projectName);
                             }
-                        }, getString(android.R.string.cancel),
+                        },
+                        getString(android.R.string.cancel),
                         new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 removeDialog(DIALOG_NEW_PROJECT_ID);
                             }
-                        }, new DialogInterface.OnCancelListener() {
+                        },
+                        new DialogInterface.OnCancelListener() {
 
                             @Override
                             public void onCancel(DialogInterface dialog) {
                                 removeDialog(DIALOG_NEW_PROJECT_ID);
                             }
-                        }, InputType.TYPE_NULL, 32);
+                        },
+                        InputType.TYPE_NULL,
+                        32);
             }
 
             case DIALOG_REMOVE_PROJECT_ID: {
                 final String projectPath = bundle.getString(PARAM_DIALOG_PATH_ID);
-                return AlertDialogs.createAlert(this,
+                return AlertDialogs.createAlert(
+                        this,
                         getString(R.string.editor_delete_project),
-                        0, getString(R.string.editor_delete_project_question),
+                        0,  // no icons for this dialog.
+                        getString(R.string.editor_delete_project_question),
                         getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeDialog(DIALOG_REMOVE_PROJECT_ID);
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                removeDialog(DIALOG_REMOVE_PROJECT_ID);
 
-                        mProjectsCarouselViewHelper.removeProject(projectPath);
-                        ApiService.deleteProject(ProjectsActivity.this, projectPath);
-                    }
-                }, getString(R.string.no), new DialogInterface.OnClickListener() {
+                                mProjectsCarouselViewHelper.removeProject(projectPath);
+                                ApiService.deleteProject(ProjectsActivity.this, projectPath);
+                            }
+                        },
+                        getString(R.string.no),
+                        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        removeDialog(DIALOG_REMOVE_PROJECT_ID);
-                    }
-                }, new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                removeDialog(DIALOG_REMOVE_PROJECT_ID);
+                            }
+                        },
+                        new DialogInterface.OnCancelListener() {
 
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        removeDialog(DIALOG_REMOVE_PROJECT_ID);
-                    }
-                }, true);
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                removeDialog(DIALOG_REMOVE_PROJECT_ID);
+                            }
+                        },
+                        true);
             }
 
             default: {
@@ -215,6 +229,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
 
     @Override
     public boolean onSearchRequested() {
+        // Disable search function in this activity.
         return false;
     }
 
@@ -255,7 +270,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     }
 
     /**
-     * Create a new project
+     * Creates a new project.
      *
      * @param projectName The project path
      */
@@ -274,7 +289,7 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     }
 
     /**
-     * Open the specified project
+     * Open the specified project.
      *
      * @param projectPath The project path
      */

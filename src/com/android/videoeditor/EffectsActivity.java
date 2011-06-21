@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.ListView;
 
 /**
- * The effects activity
+ * Displays a list of effects that can be applied to an image.
  */
 public class EffectsActivity extends ListActivity {
     // Input effect category
@@ -43,9 +43,6 @@ public class EffectsActivity extends ListActivity {
     // Instance variables
     private EffectsAdapter mAdapter;
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +67,6 @@ public class EffectsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onPause() {
         super.onPause();
@@ -82,9 +76,6 @@ public class EffectsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -94,9 +85,6 @@ public class EffectsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         final int effectType = ((EffectType)mAdapter.getItem(position)).getType();
@@ -129,9 +117,6 @@ public class EffectsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent extras) {
         super.onActivityResult(requestCode, resultCode, extras);
@@ -139,7 +124,7 @@ public class EffectsActivity extends ListActivity {
             return;
         }
 
-        switch( requestCode) {
+        switch(requestCode) {
             case REQUEST_CODE_KEN_BURNS: {
                 final Intent intent = new Intent();
                 intent.putExtra(PARAM_EFFECT_TYPE, EffectType.EFFECT_KEN_BURNS);
@@ -162,9 +147,6 @@ public class EffectsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onSearchRequested() {
         return false;
