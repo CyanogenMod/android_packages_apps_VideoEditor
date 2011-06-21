@@ -194,19 +194,19 @@ public class ImageUtils {
         final int height = opt.outHeight;
         final int pixelCount = width * height;
         final int MAX_PIXELS_FOR_SCALED_IMAGE = 2000000;
-        int scale = (int) Math.sqrt( (double) pixelCount / MAX_PIXELS_FOR_SCALED_IMAGE);
+        double scale = Math.sqrt( (double) pixelCount / MAX_PIXELS_FOR_SCALED_IMAGE);
         if (scale <= 1) {
           scale = 1;
         } else {
           // Make the scale factor a power of 2 for faster processing. Also the resulting bitmap may
           // have different dimensions than what has been requested if the scale factor is not a
           // power of 2.
-          scale = nextPowerOf2(scale);
+          scale = nextPowerOf2((int) Math.ceil(scale));
         }
 
         // Load the scaled image.
         BitmapFactory.Options opt2 = new BitmapFactory.Options();
-        opt2.inSampleSize = scale;
+        opt2.inSampleSize = (int) scale;
         final Bitmap scaledBmp = BitmapFactory.decodeFile(inputFilename, opt2);
 
         // Rotation matrix used to rotate the image.
