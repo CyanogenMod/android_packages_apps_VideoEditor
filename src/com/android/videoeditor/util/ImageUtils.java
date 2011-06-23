@@ -81,55 +81,40 @@ public class ImageUtils {
         final int nativeHeight = dbo.outHeight;
 
         final Bitmap srcBitmap;
-        float bitmapWidth, bitmapHeight;
+        float scaledWidth, scaledHeight;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         if (nativeWidth > width || nativeHeight > height) {
-            float dx = ((float)nativeWidth) / ((float)width);
-            float dy = ((float)nativeHeight) / ((float)height);
-            if (match == MATCH_SMALLER_DIMENSION) { // Match smaller dimension
-                if (dx > dy) {
-                    bitmapWidth = width;
-                    bitmapHeight = nativeHeight / dx;
-                } else {
-                    bitmapWidth = nativeWidth / dy;
-                    bitmapHeight = height;
-                }
-            } else { // Match larger dimension
-                if (dx > dy) {
-                    bitmapWidth = nativeWidth / dy;
-                    bitmapHeight = height;
-                } else {
-                    bitmapWidth = width;
-                    bitmapHeight = nativeHeight / dx;
-                }
-            }
+            float dx = ((float) nativeWidth) / ((float) width);
+            float dy = ((float) nativeHeight) / ((float) height);
+            float scale = (match == MATCH_SMALLER_DIMENSION) ? Math.max(dx,dy) : Math.min(dx,dy);
+            scaledWidth = nativeWidth / scale;
+            scaledHeight = nativeHeight / scale;
+            // Create the bitmap from file.
+            options.inSampleSize = (scale > 1.0f) ? ((int) scale) : 1;
+       } else {
+            scaledWidth = width;
+            scaledHeight = height;
+            options.inSampleSize = 1;
+       }
 
-            // Create the bitmap from file
-            if (nativeWidth / bitmapWidth > 1) {
-                final BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = nativeWidth / (int)bitmapWidth;
-                srcBitmap = BitmapFactory.decodeFile(filename, options);
-            } else {
-                srcBitmap = BitmapFactory.decodeFile(filename);
-            }
-        } else {
-            bitmapWidth = width;
-            bitmapHeight = height;
-            srcBitmap = BitmapFactory.decodeFile(filename);
-        }
+       srcBitmap = BitmapFactory.decodeFile(filename, options);
+       if (srcBitmap == null) {
+         throw new IOException("Cannot decode file: " + filename);
+       }
 
-        if (srcBitmap == null) {
-            throw new IOException("Cannot decode file: " + filename);
-        }
+       // Create the canvas bitmap.
+       final Bitmap bitmap = Bitmap.createBitmap(Math.round(scaledWidth),
+               Math.round(scaledHeight),
+               Bitmap.Config.ARGB_8888);
+       final Canvas canvas = new Canvas(bitmap);
+       canvas.drawBitmap(srcBitmap,
+               new Rect(0, 0, srcBitmap.getWidth(), srcBitmap.getHeight()),
+               new Rect(0, 0, Math.round(scaledWidth), Math.round(scaledHeight)),
+               sResizePaint);
 
-        // Create the canvas bitmap
-        final Bitmap bitmap = Bitmap.createBitmap((int)bitmapWidth, (int)bitmapHeight,
-                Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(srcBitmap, new Rect(0, 0, srcBitmap.getWidth(), srcBitmap.getHeight()),
-                new Rect(0, 0, (int)bitmapWidth, (int)bitmapHeight), sResizePaint);
-        // Release the source bitmap
-        srcBitmap.recycle();
-        return bitmap;
+       // Release the source bitmap
+       srcBitmap.recycle();
+       return bitmap;
     }
 
     /**
