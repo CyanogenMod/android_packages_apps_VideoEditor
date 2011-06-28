@@ -16,29 +16,28 @@
 -->
 
 <resources>
-    <dimen name="media_layout_height">40dip</dimen>
-    <dimen name="overlay_layout_height">27dip</dimen>
-    <dimen name="audio_layout_height">27dip</dimen>
-    <dimen name="playhead_layout_height">25dip</dimen>
+    <dimen name="media_layout_height">80dip</dimen>
+    <dimen name="overlay_layout_height">50dip</dimen>
+    <dimen name="audio_layout_height">50dip</dimen>
+    <dimen name="playhead_layout_height">30dip</dimen>
     <dimen name="playhead_layout_text_size">12sp</dimen>
 
-    <dimen name="media_layout_padding">5dip</dimen>
-    <dimen name="add_audio_track_button_width">19dip</dimen>
-    <dimen name="handle_width">12dip</dimen>
+    <dimen name="media_layout_padding">20dip</dimen>
+    <dimen name="add_audio_track_button_width">56dip</dimen>
+    <dimen name="handle_width">25dip</dimen>
 
-    <dimen name="timeline_separator_height">2dip</dimen>
+    <dimen name="timeline_separator_height">3dip</dimen>
 
-    <dimen name="playhead_margin_top">4dip</dimen>
-    <dimen name="playhead_margin_top_ok">0dip</dimen>
-    <dimen name="playhead_margin_top_not_ok">-5dip</dimen>
-    <dimen name="playhead_margin_bottom">22dip</dimen>
-
+    <dimen name="playhead_margin_top">8dip</dimen>
+    <dimen name="playhead_margin_top_ok">19dip</dimen>
+    <dimen name="playhead_margin_top_not_ok">14dip</dimen>
+    <dimen name="playhead_margin_bottom">20dip</dimen>
     <dimen name="playhead_tick_height">3dip</dimen>
 
     <dimen name="carousel_pixel_border">4dip</dimen>
     <dimen name="carousel_texture_height">170dip</dimen>
     <dimen name="carousel_detail_texture_width_landscape">240dip</dimen>
-    <dimen name="carousel_detail_texture_width_portrait">147dip</dimen>
+    <dimen name="carousel_detail_texture_width_portrait">170dip</dimen>
     <dimen name="carousel_detail_texture_height">53dip</dimen>
 
     <dimen name="timelime_item_vertical_padding">1dip</dimen>

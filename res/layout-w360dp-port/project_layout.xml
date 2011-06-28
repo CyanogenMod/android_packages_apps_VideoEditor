@@ -25,25 +25,26 @@
     <FrameLayout android:id="@+id/video_frame_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dip"
+        android:layout_margin="5dip"
         android:layout_centerHorizontal="true"
-        android:padding="5dip"
+        android:padding="4dip"
         android:background="@drawable/surface_background">
         <com.android.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
-            android:layout_height="392dip"/>
+            android:layout_height="200dip"/>
         <ImageView android:id="@+id/overlay_layer"
             android:layout_width="0dip"
-            android:layout_height="392dip"/>
+            android:layout_height="200dip"/>
     </FrameLayout>
 
     <RelativeLayout
-        android:layout_width="300dip"
-        android:layout_height="300dip"
+        android:visibility="gone"
+        android:layout_width="250dip"
+        android:layout_height="250dip"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/video_frame_view"
-        android:layout_marginTop="30dip"
-        android:layout_marginLeft="-60dip"
+        android:layout_marginTop="21dip"
+        android:layout_marginLeft="-42dip"
         android:background="@drawable/buttons_background_zoom">
         <com.android.videoeditor.widgets.ZoomControl android:id="@+id/editor_zoom"
             android:layout_width="match_parent"
@@ -51,62 +52,50 @@
             android:clickable="true"/>
     </RelativeLayout>
 
-    <RelativeLayout android:id="@+id/playback_buttons"
-        android:layout_width="300dip"
-        android:layout_height="300dip"
-        android:layout_below="@id/video_frame_view"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="30dip"
-        android:layout_marginRight="-60dip"
-        android:background="@drawable/buttons_background">
-         <ImageButton android:id="@+id/editor_prev"
+    <LinearLayout android:id="@+id/playback_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/video_frame_view">
+        <ImageButton android:id="@+id/editor_prev"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="18dip"
-            android:layout_marginLeft="115dip"
             android:src="@drawable/btn_playback_prev_selector"
-            android:background="@null"/>
-        <ImageButton android:id="@+id/editor_rewind"
-            android:onClick="onClickHandler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="120dip"
-            android:layout_marginLeft="20dip"
-            android:src="@drawable/btn_playback_rew_selector"
             android:background="@null"/>
         <ImageButton android:id="@+id/editor_play"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="17dip"
-            android:layout_below="@id/editor_prev"
+            android:layout_marginTop="-10dip"
             android:src="@drawable/btn_playback_play_selector"
             android:background="@null"/>
         <ImageButton android:id="@+id/editor_next"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="115dip"
-            android:layout_marginBottom="18dip"
             android:src="@drawable/btn_playback_next_selector"
             android:background="@null"/>
-    </RelativeLayout>
+        <ImageButton android:id="@+id/editor_rewind"
+            android:visibility="gone"
+            android:onClick="onClickHandler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_playback_rew_selector"
+            android:background="@null"/>
+    </LinearLayout>
 
     <TextView android:id="@+id/editor_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="40dip"
-        android:layout_marginTop="10dip"
-        android:layout_below="@id/playback_buttons"
+        android:layout_marginRight="28dip"
+        android:layout_marginTop="7dip"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/video_frame_view"
         android:singleLine="true"
         android:text="@string/editor_zero_time_stamp"
-        android:textSize="24sp"
+        android:textSize="19sp"
         android:textStyle="bold"
         android:textColor="#ffcf8104"/>
 
 </com.android.videoeditor.widgets.EditorRelativeLayout>
+

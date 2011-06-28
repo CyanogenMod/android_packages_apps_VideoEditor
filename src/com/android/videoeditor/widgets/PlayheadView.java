@@ -38,14 +38,13 @@ public class PlayheadView extends View {
     private final Paint mLinePaint;
     private final Paint mTextPaint;
     private final int mTicksHeight;
+    // Timeline text size.
+    private final float mTimeTextSize;
     private final int mScreenWidth;
     private final ScrollViewListener mScrollListener;
     private int mScrollX;
     private VideoEditorProject mProject;
 
-    /*
-     * {@inheritDoc}
-     */
     public PlayheadView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -61,7 +60,8 @@ public class PlayheadView extends View {
         mTextPaint = new Paint();
         mTextPaint.setAntiAlias(true);
         mTextPaint.setColor(resources.getColor(R.color.playhead_tick_color));
-        mTextPaint.setTextSize(18);
+        mTimeTextSize = resources.getDimension(R.dimen.playhead_layout_text_size);
+        mTextPaint.setTextSize(mTimeTextSize);
 
         // The ticks height
         mTicksHeight = (int)resources.getDimension(R.dimen.playhead_tick_height);
@@ -75,23 +75,18 @@ public class PlayheadView extends View {
 
         // Listen to scroll events and repaint this view as needed
         mScrollListener = new ScrollViewListener() {
-            /*
-             * {@inheritDoc}
-             */
+
+            @Override
             public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
                 mScrollX = scrollX;
                 invalidate();
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 mScrollX = scrollX;
                 invalidate();
@@ -99,23 +94,14 @@ public class PlayheadView extends View {
         };
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public PlayheadView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public PlayheadView(Context context) {
         this(context, null, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onAttachedToWindow() {
         final TimelineHorizontalScrollView scrollView =
@@ -124,9 +110,6 @@ public class PlayheadView extends View {
         scrollView.addScrollListener(mScrollListener);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDetachedFromWindow() {
         final TimelineHorizontalScrollView scrollView =
@@ -141,9 +124,6 @@ public class PlayheadView extends View {
         mProject = project;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -154,15 +134,18 @@ public class PlayheadView extends View {
 
         final long durationMs = mProject.computeDuration();
         final long durationSec = durationMs / 1000;
+        final int y = (int) -mTextPaint.getFontMetrics().top;
+        // We only draw the origin when there is nothing on the timeline.
         if (durationMs == 0 || durationSec == 0) {
             final String timeText = StringUtils.getSimpleTimestampAsString(getContext(), 0);
-            canvas.drawText(timeText, (getWidth() / 2) - 35, 28, mTextPaint);
+            int x = (int) ((getWidth() - mTextPaint.measureText(timeText)) / 2);
+            canvas.drawText(timeText, x, y, mTextPaint);
             return;
         }
 
         final int width = getWidth() - mScreenWidth;
         // Compute the number of pixels per second
-        final int pixelsPerSec = (int)(width / durationSec);
+        final int pixelsPerSec = (int) (width / durationSec);
 
         // Compute the distance between ticks
         final long tickMs;
@@ -180,18 +163,19 @@ public class PlayheadView extends View {
             tickMs = 1000;
         }
 
-        final float spacing = ((float)(width * tickMs) / (float)durationMs);
+        final float spacing = ((float) (width * tickMs) / (float) durationMs);
         final float startX = Math.max(mScrollX - (((mScrollX - (mScreenWidth / 2)) % spacing)),
                 mScreenWidth / 2);
         float startMs = ((tickMs * (startX - (mScreenWidth / 2))) / spacing);
         startMs = Math.round(startMs);
         startMs -= (startMs % tickMs);
 
-        final float endX = mScrollX + mScreenWidth;
         final Context context = getContext();
+        final float endX = mScrollX + mScreenWidth;
         for (float i = startX; i <= endX; i += spacing, startMs += tickMs) {
-            final String timeText = StringUtils.getSimpleTimestampAsString(context, (long)startMs);
-            canvas.drawText(timeText, i - 35, 28, mTextPaint);
+            final String timeText = StringUtils.getSimpleTimestampAsString(context, (long) startMs);
+            final int x = (int) (i - mTextPaint.measureText(timeText) / 2);
+            canvas.drawText(timeText, x, y, mTextPaint);
             canvas.drawLine(i, 0, i, mTicksHeight, mLinePaint);
         }
     }

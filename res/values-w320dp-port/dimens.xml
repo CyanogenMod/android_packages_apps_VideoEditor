@@ -20,6 +20,7 @@
     <dimen name="overlay_layout_height">40dip</dimen>
     <dimen name="audio_layout_height">40dip</dimen>
     <dimen name="playhead_layout_height">20dip</dimen>
+    <dimen name="playhead_layout_text_size">12sp</dimen>
 
     <dimen name="media_layout_padding">20dip</dimen>
     <dimen name="add_audio_track_button_width">56dip</dimen>
