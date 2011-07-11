@@ -74,9 +74,7 @@ public class ExportOptionsDialog {
         // Setup the positive listener
         builder.setPositiveButton(context.getString(R.string.export_dialog_export),
                 new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         final Spinner sizeSpinner = (Spinner)myView.findViewById(
                                 R.id.export_option_size);
@@ -97,7 +95,7 @@ public class ExportOptionsDialog {
         builder.setOnCancelListener(cancelListener);
 
         final AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(true);
+
         return dialog;
     }
 
