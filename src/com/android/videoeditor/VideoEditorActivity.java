@@ -1689,7 +1689,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         }
                 }
         );
-        mExportProgressDialog.setCanceledOnTouchOutside(true);
+        mExportProgressDialog.setCanceledOnTouchOutside(false);
         mExportProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
