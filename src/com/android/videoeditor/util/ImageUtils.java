@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.lang.Math;
 
 import android.content.Context;
@@ -31,7 +32,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class ImageUtils {
      * @param height The thumbnail height
      * @param match MATCH_SMALLER_DIMENSION or MATCH_LARGER_DIMMENSION
      *
-     * @return The resized bitmap
+     * @return The resized bitmap, the caller function should NOT recycle this bitmap.
      */
     public static Bitmap scaleImage(String filename, int width, int height, int match)
             throws IOException {
@@ -81,42 +82,42 @@ public class ImageUtils {
         final int nativeHeight = dbo.outHeight;
 
         final Bitmap srcBitmap;
-        float scaledWidth, scaledHeight;
         final BitmapFactory.Options options = new BitmapFactory.Options();
         if (nativeWidth > width || nativeHeight > height) {
             float dx = ((float) nativeWidth) / ((float) width);
             float dy = ((float) nativeHeight) / ((float) height);
-            float scale = (match == MATCH_SMALLER_DIMENSION) ? Math.max(dx,dy) : Math.min(dx,dy);
-            scaledWidth = nativeWidth / scale;
-            scaledHeight = nativeHeight / scale;
+            float scale = (match == MATCH_SMALLER_DIMENSION) ? Math.max(dx, dy) : Math.min(dx, dy);
             // Create the bitmap from file.
             options.inSampleSize = (scale > 1.0f) ? ((int) scale) : 1;
-       } else {
-            scaledWidth = width;
-            scaledHeight = height;
+        } else {
             options.inSampleSize = 1;
-       }
+        }
 
-       srcBitmap = BitmapFactory.decodeFile(filename, options);
-       if (srcBitmap == null) {
-         throw new IOException("Cannot decode file: " + filename);
-       }
-
-       // Create the canvas bitmap.
-       final Bitmap bitmap = Bitmap.createBitmap(Math.round(scaledWidth),
-               Math.round(scaledHeight),
-               Bitmap.Config.ARGB_8888);
-       final Canvas canvas = new Canvas(bitmap);
-       canvas.drawBitmap(srcBitmap,
-               new Rect(0, 0, srcBitmap.getWidth(), srcBitmap.getHeight()),
-               new Rect(0, 0, Math.round(scaledWidth), Math.round(scaledHeight)),
-               sResizePaint);
-
-       // Release the source bitmap
-       srcBitmap.recycle();
-       return bitmap;
+        // Create the bitmap from file
+        // Use inBitmap to avoid allocating memory for new Bitmap object.
+        // This will be the actual dimension of the srcBitmap after sampling.
+        options.inBitmap = getBitmap(nativeWidth / options.inSampleSize, nativeHeight
+                / options.inSampleSize);
+        srcBitmap = BitmapFactory.decodeFile(filename, options);
+        if (srcBitmap == null) {
+            throw new IOException("Cannot decode file: " + filename);
+        }
+        return srcBitmap;
     }
 
+    // We only create one Bitmap for each (Width, Height) combination.
+    private static HashMap<Point, Bitmap> sMapWidthHeightToBitmap = new HashMap<Point, Bitmap>(5);
+
+    private static Bitmap getBitmap(final int width, final int height) {
+        Point dimension = new Point(width, height);
+        if (sMapWidthHeightToBitmap.containsKey(dimension)) {
+            return sMapWidthHeightToBitmap.get(dimension);
+        } else {
+            Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            sMapWidthHeightToBitmap.put(dimension, b);
+            return b;
+        }
+    }
     /**
      * Rotate a JPEG according to the EXIF data
      *

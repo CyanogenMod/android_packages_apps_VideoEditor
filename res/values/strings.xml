@@ -171,7 +171,7 @@
     <string name="export_dialog_movie_quality_medium">Medium</string>
     <!-- The high quality option. -->
     <string name="export_dialog_movie_quality_high">High</string>
- 
+
     <!-- Pan and zoom activity-->
     <!-- The title of the Pan & zoom activity. -->
     <string name="pan_zoom_title">Pan &amp; zoom effect</string>
