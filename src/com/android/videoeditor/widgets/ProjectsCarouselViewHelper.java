@@ -23,14 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.Paint.Style;
@@ -43,9 +41,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.google.android.opengl.carousel.CarouselView;
-import com.google.android.opengl.carousel.CarouselView.DetailAlignment;
-import com.google.android.opengl.carousel.CarouselViewHelper;
+import com.android.ex.carousel.CarouselView;
+import com.android.ex.carousel.CarouselView.DetailAlignment;
 import com.android.videoeditor.service.VideoEditorProject;
 import com.android.videoeditor.util.ImageUtils;
 import com.android.videoeditor.util.StringUtils;
@@ -54,7 +51,7 @@ import com.android.videoeditor.R;
 /**
  * Helper class for manipulating projects carousel view.
  */
-public class ProjectsCarouselViewHelper extends CarouselViewHelper {
+public class ProjectsCarouselViewHelper extends com.android.ex.carousel.CarouselViewHelper {
     // Logging
     private static final String TAG = "ProjectsCarouselView";
 
@@ -126,19 +123,16 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
         mProjectsCarouselView = projectsCarouselView;
         mProjectsCarouselView.setCallback(this);
 
-        // Set carousel transparent, so we can use background from other activity.
-        mProjectsCarouselView.setFormat(PixelFormat.TRANSPARENT);
-        mProjectsCarouselView.setZOrderOnTop(true);
-
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
 
         mDetailTextureParameters = new DetailTextureParameters(0.0f, 5.0f, 0.0f, 0.0f);
 
-        // Get the correct measure of whether the device is on landscape mode, irrelevant whether
-        // it's a phone of tablet.
-        final boolean landscape = mContext.getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_LANDSCAPE;
+        final Display display =
+            ((WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        final int orientation = display.getRotation();
+        final boolean landscape = (orientation == Surface.ROTATION_0 ||
+                orientation == Surface.ROTATION_180);
 
         // Set the aspect ration of the item to 4/3 (0.75f)
         mCarouselTextureWidth = (mCarouselTextureHeight * 4) / 3;
@@ -162,10 +156,6 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
         mProjectsCarouselView.setCardsFaceTangent(true);
         mProjectsCarouselView.setDrawRuler(false);
         mProjectsCarouselView.setDetailTextureAlignment(DetailAlignment.CENTER_HORIZONTAL | DetailAlignment.BELOW);
-        // TO have smoother dragging, increase the prefetch card count.
-        mProjectsCarouselView.setPrefetchCardCount(4);
-        mProjectsCarouselView.setVelocityUpLimit(4 * (float) Math.PI);
-
 
         final float[] eye;
         final float[] at;
@@ -175,6 +165,7 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
                     R.dimen.carousel_detail_texture_width_landscape);
             mProjectsCarouselView.setVisibleSlots(SLOTS_VISIBLE_LANDSCAPE);
             mProjectsCarouselView.setVisibleDetails(SLOTS_VISIBLE_LANDSCAPE);
+
             mProjectsCarouselView.setStartAngle((float) (2.0f * Math.PI * 4 / CARD_SLOTS_LANDSCAPE));
             mProjectsCarouselView.setSlotCount(CARD_SLOTS_LANDSCAPE);
             mProjectsCarouselView.setRadius(4.0f);
@@ -192,29 +183,22 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
             mProjectsCarouselView.setSlotCount(CARD_SLOTS_PORTRAIT);
             mProjectsCarouselView.setRadius(8.0f);
 
-            // For better look, use 2 rows in portrait mode.
-            mProjectsCarouselView.setRowCount(2);
-            mProjectsCarouselView.setRowSpacing(2.0f);
-
             eye = new float[] {0.0f, 0.0f, 8.0f};
             at = new float[] {0.0f, 0.0f, -30.0f};
             up = new float[] {0.0f, 1.0f, 0.0f};
         }
 
         mProjectsCarouselView.setLookAt(eye, at, up);
-        mProjectsCarouselView.setFillDirection(CarouselView.FILL_DIRECTION_CW);
+        mProjectsCarouselView.getController().setFillDirection(CarouselView.FILL_DIRECTION_CW);
 
         mSyncHandler = new Handler();
-        createBitmapPool(CarouselView.TYPE_CARD_TEXTURE, mCarouselTextureWidth,
-                mCarouselTextureHeight, Bitmap.Config.ARGB_8888);
-        createBitmapPool(CarouselView.TYPE_DETAIL_TEXTURE, mCarouselDetailTextureWidth,
-                mCarouselDetailTextureHeight, Bitmap.Config.ARGB_4444);
     }
 
     /**
      * @param projects The projects
      */
     public void setProjects(List<VideoEditorProject> projects) {
+        mProjectsCarouselView.createCards(0);
         // Add one item for the "New project" item
         mProjectsCarouselView.createCards(projects.size() + 1);
         mProjects = projects;
@@ -230,6 +214,7 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
         for (VideoEditorProject project : mProjects) {
             if (project.getPath().equals(projectPath)) {
                 mProjects.remove(project);
+                mProjectsCarouselView.createCards(id);
                 mProjectsCarouselView.createCards(mProjects.size() + 1);
                 break;
             } else {
@@ -246,8 +231,8 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
     @Override
     public Bitmap getTexture(int id) {
         final int OPAQUE_BLACK = 0xff000000;
-
-        final Bitmap bitmap = getBitmap(CarouselView.TYPE_CARD_TEXTURE);
+        final Bitmap bitmap = Bitmap.createBitmap(mCarouselTextureWidth, mCarouselTextureHeight,
+                Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         canvas.drawARGB(0, 0, 0, 0);
 
@@ -270,7 +255,9 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
                         // bitmap is smaller than the texture.
                         canvas.drawBitmap(previewBitmap,
                                 (mCarouselTextureWidth - previewBitmap.getWidth()) / 2,
-                                (mCarouselTextureHeight - previewBitmap.getHeight()) / 2, mPaint);
+                                (mCarouselTextureHeight - previewBitmap.getHeight()) / 2,
+                                mPaint);
+                        previewBitmap.recycle();
                     } else {
                         canvas.drawColor(OPAQUE_BLACK);
                     }
@@ -312,7 +299,9 @@ public class ProjectsCarouselViewHelper extends CarouselViewHelper {
 
     @Override
     public Bitmap getDetailTexture(int id) {
-        final Bitmap bitmap = getBitmap(CarouselView.TYPE_DETAIL_TEXTURE);
+        // Draw project name and duration under the card as the detail texture.
+        final Bitmap bitmap = Bitmap.createBitmap(mCarouselDetailTextureWidth,
+                mCarouselDetailTextureHeight, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         if (id < mProjects.size()) {
             final VideoEditorProject project = mProjects.get(id);
