@@ -26,6 +26,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,6 +40,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
@@ -168,6 +170,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private long mCurrentPlayheadPosMs;
     private ProgressDialog mExportProgressDialog;
     private ZoomControl mZoomControl;
+    private PowerManager.WakeLock mCpuWakeLock;
 
     // Variables used in onActivityResult
     private Uri mAddMediaItemVideoUri;
@@ -441,6 +444,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 }
             }
         });
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mCpuWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Video Editor Activity CPU Wake Lock");
     }
 
     @Override
@@ -1667,10 +1673,22 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     }
 
     /**
-     * Show progress during export operation
+     * Shows progress dialog during export operation.
      */
     private void showExportProgress() {
-        mExportProgressDialog = new ProgressDialog(this);
+        // Keep the CPU on throughout the export operation.
+        mExportProgressDialog = new ProgressDialog(this) {
+            @Override
+            public void onStart() {
+                super.onStart();
+                mCpuWakeLock.acquire();
+            }
+            @Override
+            public void onStop() {
+                super.onStop();
+                mCpuWakeLock.release();
+            }
+        };
         mExportProgressDialog.setTitle(getString(R.string.export_dialog_export));
         mExportProgressDialog.setMessage(null);
         mExportProgressDialog.setIndeterminate(false);

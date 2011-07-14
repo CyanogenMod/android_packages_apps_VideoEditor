@@ -5,6 +5,8 @@
       android:versionName="1.1">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application android:icon="@mipmap/ic_launcher_moviestudio"
         android:label="@string/short_app_name" android:hardwareAccelerated="true">
         <service android:name=".service.ApiService"/>
@@ -64,4 +66,4 @@
     </application>
     <uses-sdk android:minSdkVersion="11" />
 
-</manifest> 
+</manifest>
