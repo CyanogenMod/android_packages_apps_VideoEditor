@@ -1674,7 +1674,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mExportProgressDialog.setTitle(getString(R.string.export_dialog_export));
         mExportProgressDialog.setMessage(null);
         mExportProgressDialog.setIndeterminate(false);
+        // Allow cancellation with BACK button.
         mExportProgressDialog.setCancelable(true);
+        mExportProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                cancelExport();
+            }
+        });
         mExportProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mExportProgressDialog.setMax(100);
         mExportProgressDialog.setCanceledOnTouchOutside(false);
@@ -1682,25 +1689,20 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ApiService.cancelExportVideoEditor(VideoEditorActivity.this,
-                                    mProjectPath, mPendingExportFilename);
-                            mPendingExportFilename = null;
-                            mExportProgressDialog = null;
+                            cancelExport();
                         }
                 }
         );
         mExportProgressDialog.setCanceledOnTouchOutside(false);
-        mExportProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                ApiService.cancelExportVideoEditor(VideoEditorActivity.this,
-                        mProjectPath, mPendingExportFilename);
-                mPendingExportFilename = null;
-                mExportProgressDialog = null;
-            }
-        });
         mExportProgressDialog.show();
         mExportProgressDialog.setProgressNumberFormat("");
+    }
+
+    private void cancelExport() {
+        ApiService.cancelExportVideoEditor(VideoEditorActivity.this, mProjectPath,
+                mPendingExportFilename);
+        mPendingExportFilename = null;
+        mExportProgressDialog = null;
     }
 
     /**

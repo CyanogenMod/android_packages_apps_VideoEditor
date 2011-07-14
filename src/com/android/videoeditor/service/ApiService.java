@@ -198,6 +198,7 @@ public class ApiService extends Service {
     private static VideoEditorProject mVideoProject;
     private static VideoEditor mVideoEditor;
     private static ServiceMediaProcessingProgressListener mGeneratePreviewListener;
+    private static volatile boolean mExportCancelled;
 
     private ServiceThread mVideoThread;
     private ServiceThread mAudioThread;
@@ -205,9 +206,6 @@ public class ApiService extends Service {
     private Handler mHandler;
 
     private final Runnable mStopRunnable = new Runnable() {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             if (mPendingIntents.size() == 0) {
@@ -236,9 +234,6 @@ public class ApiService extends Service {
             mProjectPath = projectPath;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void onProgress(Object item, int action, int progress) {
             final Intent intent = mIntentPool.get();
@@ -397,6 +392,7 @@ public class ApiService extends Service {
      */
     public static void cancelExportVideoEditor(Context context, String projectPath,
             String filename) {
+        mExportCancelled = true;
         final Intent intent = mIntentPool.get(context, ApiService.class);
         intent.putExtra(PARAM_OP, OP_VIDEO_EDITOR_CANCEL_EXPORT);
         intent.putExtra(PARAM_PROJECT_PATH, projectPath);
@@ -4345,16 +4341,14 @@ public class ApiService extends Service {
     }
 
     /**
-     * Export a movie
+     * Exports a movie in a distinct worker thread.
      *
      * @param videoEditor The video editor
      * @param intent The intent
      */
     private void exportMovie(final VideoEditor videoEditor, final Intent intent) {
+        mExportCancelled = false;
         new Thread() {
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void run() {
                 final String filename = intent.getStringExtra(PARAM_FILENAME);
@@ -4370,11 +4364,7 @@ public class ApiService extends Service {
                 statusIntent.putExtra(PARAM_INTENT, intent);
 
                 try {
-                    // Export is always executed in a distinct worker thread.
                     videoEditor.export(filename, height, bitrate, new ExportProgressListener() {
-                        /**
-                         * {@inheritDoc}
-                         */
                         @Override
                         public void onProgress(VideoEditor videoEditor, String filename,
                                 int progress) {
@@ -4392,16 +4382,27 @@ public class ApiService extends Service {
                         }
                     });
 
-                    // Complete the request
-                    statusIntent.putExtra(PARAM_EXCEPTION, (Exception)null);
-                    if (new File(filename).exists()) {
-                        statusIntent.putExtra(PARAM_MOVIE_URI, exportToGallery(filename));
-                    } else {
-                        throw new IllegalStateException("Export file does not exist: " + filename);
-                    }
+                    // TODO: this is a quick fix to the problem that when export operation is
+                    // cancelled by user, no further operations such as adding the video to the
+                    // media provider should proceed. The above export method should return a
+                    // boolean value to indicate whether the export op is successful so that we
+                    // can remove this flag.
+                    if (!mExportCancelled) {
+                        // Complete the request
+                        statusIntent.putExtra(PARAM_EXCEPTION, (Exception)null);
+                        if (new File(filename).exists()) {
+                            statusIntent.putExtra(PARAM_MOVIE_URI, exportToGallery(filename));
+                        } else {
+                            throw new IllegalStateException("Export file does not exist: " + filename);
+                        }
 
-                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                        Log.v(TAG, "Export complete for: " + filename);
+                        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                            Log.v(TAG, "Export complete for: " + filename);
+                        }
+                    } else {
+                        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                            Log.v(TAG, "Export cancelled by user, file name: " + filename);
+                        }
                     }
                 } catch (Exception ex) {
                     statusIntent.putExtra(PARAM_EXCEPTION, ex);
@@ -4917,9 +4918,6 @@ public class ApiService extends Service {
         private final Queue<Intent> mQueue;
         private Handler mThreadHandler;
         private final Runnable mProcessQueueRunnable = new Runnable() {
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void run() {
                 // Process whatever accumulated in the queue
@@ -4967,9 +4965,6 @@ public class ApiService extends Service {
             return mQueue.remove(intent);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             Looper.prepare();
