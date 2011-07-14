@@ -1389,9 +1389,6 @@ public class ApiService extends Service {
         return requestId;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -1544,9 +1541,6 @@ public class ApiService extends Service {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public IBinder onBind(Intent intent) {
         return null;
