@@ -49,21 +49,7 @@ class IntentPool {
      *      a new Intent is allocated
      */
     public synchronized Intent get(Context context, Class<?> cls) {
-        final Intent intent;
-        if (mIntentPool.size() > 0) {
-            intent = mIntentPool.remove(0);
-            // Clear the content of the Intent
-            final Bundle extras = intent.getExtras();
-            for (String keys : extras.keySet()) {
-                intent.removeExtra(keys);
-            }
-        } else {
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Pool enlarged");
-            }
-            intent = new Intent();
-        }
-
+        final Intent intent = get();
         intent.setComponent(new ComponentName(context, cls));
         return intent;
     }

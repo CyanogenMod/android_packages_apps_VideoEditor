@@ -25,9 +25,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import android.app.Service;
@@ -200,18 +201,16 @@ public class ApiService extends Service {
     private static ServiceMediaProcessingProgressListener mGeneratePreviewListener;
     private static volatile boolean mExportCancelled;
 
-    private ServiceThread mVideoThread;
-    private ServiceThread mAudioThread;
-    private ServiceThread mThumbnailThread;
+    private IntentProcessor mVideoThread;
+    private IntentProcessor mAudioThread;
+    private IntentProcessor mThumbnailThread;
     private Handler mHandler;
 
     private final Runnable mStopRunnable = new Runnable() {
         @Override
         public void run() {
             if (mPendingIntents.size() == 0) {
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "Stop runnable: Stopping service");
-                }
+                logd("Stop runnable: Stopping service");
                 stopSelf();
             }
         }
@@ -1394,21 +1393,18 @@ public class ApiService extends Service {
         super.onCreate();
         mHandler = new Handler(Looper.getMainLooper());
 
-        mVideoThread = new ServiceThread(mHandler, "VideoServiceThread");
+        mVideoThread = new IntentProcessor("VideoServiceThread");
         mVideoThread.start();
 
-        mAudioThread = new ServiceThread(mHandler, "AudioServiceThread");
+        mAudioThread = new IntentProcessor("AudioServiceThread");
         mAudioThread.start();
 
-        mThumbnailThread = new ServiceThread(mHandler, "ThumbnailServiceThread");
+        mThumbnailThread = new IntentProcessor("ThumbnailServiceThread");
         mThumbnailThread.start();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public int onStartCommand (final Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         final int op = intent.getIntExtra(PARAM_OP, -1);
         switch(op) {
             case OP_VIDEO_EDITOR_LOAD_PROJECTS:
@@ -1457,12 +1453,12 @@ public class ApiService extends Service {
             case OP_AUDIO_TRACK_SET_BOUNDARIES:
             case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM:
             case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM_STATUS: {
-                mVideoThread.put(intent);
+                mVideoThread.submit(intent);
                 break;
             }
 
             case OP_TRANSITION_GET_THUMBNAIL: {
-                mThumbnailThread.put(intent);
+                mThumbnailThread.submit(intent);
                 break;
             }
 
@@ -1471,30 +1467,23 @@ public class ApiService extends Service {
                 final String projectPath = intent.getStringExtra(PARAM_PROJECT_PATH);
                 final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
                 // Cancel any pending thumbnail request for the same media item
-                for (Intent qIntent : mThumbnailThread.mQueue) {
+                Iterator<Intent> intentQueueIterator = mThumbnailThread.getIntentQueueIterator();
+                while (intentQueueIterator.hasNext()) {
+                    Intent qIntent = intentQueueIterator.next();
                     int opi = qIntent.getIntExtra(PARAM_OP, -1);
-                    if (opi == op) {
-                        String pp = qIntent.getStringExtra(PARAM_PROJECT_PATH);
-                        if (pp.equals(projectPath)) {
-                            String mid = qIntent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                            if (mid.equals(mediaItemId)) {
-                                if (mThumbnailThread.cancel(qIntent)) {
-                                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                        Log.d(TAG, "Canceled op: " + op +
-                                                " for media item: " + mediaItemId);
-                                    }
-                                    // Cancel the request
-                                    mPendingIntents.remove(
-                                            qIntent.getStringExtra(PARAM_REQUEST_ID));
-                                    mIntentPool.put(qIntent);
-                                }
-                                break;
-                            }
+                    String pp = qIntent.getStringExtra(PARAM_PROJECT_PATH);
+                    String mid = qIntent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
+                    if (opi == op && pp.equals(projectPath) && mid.equals(mediaItemId)) {
+                        boolean canceled = mThumbnailThread.cancel(qIntent);
+                        if (canceled) {
+                            logd("Canceled operation: " + op + " for media item" + mediaItemId);
+                            mPendingIntents.remove(qIntent.getStringExtra(PARAM_REQUEST_ID));
+                            mIntentPool.put(qIntent);
                         }
+                        break;
                     }
                 }
-
-                mThumbnailThread.put(intent);
+                mThumbnailThread.submit(intent);
                 break;
             }
 
@@ -1505,7 +1494,7 @@ public class ApiService extends Service {
             case OP_AUDIO_TRACK_SET_MUTE:
             case OP_AUDIO_TRACK_SET_LOOP:
             case OP_AUDIO_TRACK_SET_DUCK: {
-                mAudioThread.put(intent);
+                mAudioThread.submit(intent);
                 break;
             }
 
@@ -1518,9 +1507,6 @@ public class ApiService extends Service {
         return START_NOT_STICKY;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -1577,10 +1563,7 @@ public class ApiService extends Service {
 
             switch (op) {
                 case OP_VIDEO_EDITOR_LOAD_PROJECTS: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_LOAD_PROJECTS");
-                    }
-
+                    logd("OP_LOAD_PROJECTS");
                     final List<VideoEditorProject> projects = new ArrayList<VideoEditorProject>();
                     final File dir = FileUtils.getProjectsRootDir(getApplicationContext());
                     final File[] files = dir.listFiles();
@@ -1603,9 +1586,6 @@ public class ApiService extends Service {
                         if (projects.size() > 0) {
                             // Sort the projects in order of "last saved"
                             Collections.sort(projects, new Comparator<VideoEditorProject>() {
-                                /**
-                                 * {@inheritDoc}
-                                 */
                                 @Override
                                 public int compare(VideoEditorProject object1,
                                         VideoEditorProject object2) {
@@ -1626,9 +1606,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_VIDEO_EDITOR_CREATE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_CREATE: " + projectPath);
-                    }
+                    logd("OP_VIDEO_EDITOR_CREATE: " + projectPath);
 
                     try {
                         // Release the current video editor if any
@@ -1699,10 +1677,8 @@ public class ApiService extends Service {
                 case OP_VIDEO_EDITOR_LOAD: {
                     videoEditor = releaseEditorNot(projectPath);
 
-                    if (videoEditor == null) { // The old project was released
-                        if (Log.isLoggable(TAG, Log.DEBUG)) {
-                            Log.d(TAG, "OP_VIDEO_EDITOR_LOAD: Loading: " + projectPath);
-                        }
+                    if (videoEditor == null) {  // The old project was released.
+                        logd("OP_VIDEO_EDITOR_LOAD: Loading: " + projectPath);
                         try {
                             // Load the project
                             videoEditor = VideoEditorFactory.load(projectPath, false);
@@ -1729,10 +1705,8 @@ public class ApiService extends Service {
                             }
                             throw ex;
                         }
-                    } else { // The project is already loaded
-                        if (Log.isLoggable(TAG, Log.DEBUG)) {
-                            Log.d(TAG, "OP_VIDEO_EDITOR_LOAD: Was already loaded: " + projectPath);
-                        }
+                    } else {  // The project is already loaded.
+                        logd("OP_VIDEO_EDITOR_LOAD: Was already loaded: " + projectPath);
                         completeRequest(intent, videoEditor, null, null, null, true);
                     }
 
@@ -1740,9 +1714,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_VIDEO_EDITOR_SET_ASPECT_RATIO: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_SET_ASPECT_RATIO");
-                    }
+                    logd("OP_VIDEO_EDITOR_SET_ASPECT_RATIO");
 
                     videoEditor.setAspectRatio(intent.getIntExtra(PARAM_ASPECT_RATIO,
                             MediaProperties.ASPECT_RATIO_UNDEFINED));
@@ -1754,9 +1726,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_VIDEO_EDITOR_APPLY_THEME: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_APPLY_THEME");
-                    }
+                    logd("OP_VIDEO_EDITOR_APPLY_THEME");
 
                     // Apply the theme
                     applyThemeToMovie(videoEditor, intent.getStringExtra(PARAM_THEME));
@@ -1773,39 +1743,26 @@ public class ApiService extends Service {
                 }
 
                 case OP_VIDEO_EDITOR_EXPORT: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_EXPORT");
-                    }
-
+                    logd("OP_VIDEO_EDITOR_EXPORT");
                     exportMovie(videoEditor, intent);
                     break;
                 }
 
                 case OP_VIDEO_EDITOR_CANCEL_EXPORT: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_CANCEL_EXPORT");
-                    }
-
+                    logd("OP_VIDEO_EDITOR_CANCEL_EXPORT");
                     videoEditor.cancelExport(intent.getStringExtra(PARAM_FILENAME));
-
                     completeRequest(intent, videoEditor, null, null, null, true);
                     break;
                 }
 
                 case OP_VIDEO_EDITOR_EXPORT_STATUS: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_EXPORT_STATUS");
-                    }
-
+                    logd("OP_VIDEO_EDITOR_EXPORT_STATUS");
                     completeRequest(intent, videoEditor, null, null, null, true);
                     break;
                 }
 
                 case OP_VIDEO_EDITOR_SAVE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_SAVE: " + projectPath);
-                    }
-
+                    logd("OP_VIDEO_EDITOR_SAVE: " + projectPath);
                     videoEditor.save();
 
                     final VideoEditorProject videoProject = getProject(projectPath);
@@ -1818,35 +1775,24 @@ public class ApiService extends Service {
                 }
 
                 case OP_VIDEO_EDITOR_RELEASE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_RELEASE: " + projectPath);
-                    }
-
+                    logd("OP_VIDEO_EDITOR_RELEASE: " + projectPath);
                     releaseEditor(projectPath);
-
                     completeRequest(intent, videoEditor, null, null, null, true);
                     break;
                 }
 
                 case OP_VIDEO_EDITOR_DELETE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_VIDEO_EDITOR_DELETE: " + projectPath);
-                    }
-
+                    logd("OP_VIDEO_EDITOR_DELETE: " + projectPath);
                     releaseEditor(projectPath);
-                    // Delete all the files and the project folder
+                    // Delete all the files and the project folder.
                     FileUtils.deleteDir(new File(projectPath));
-
                     completeRequest(intent, videoEditor, null, null, null, true);
                     break;
                 }
 
                 case OP_MEDIA_ITEM_ADD_VIDEO_URI: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_ADD_VIDEO_URI: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
-
+                    logd("OP_MEDIA_ITEM_ADD_VIDEO_URI: " +
+                            intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
                     final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
                     String filename = null;
                     // Get the filename
@@ -1898,10 +1844,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_MEDIA_ITEM_ADD_IMAGE_URI: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_ADD_IMAGE_URI: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_MEDIA_ITEM_ADD_IMAGE_URI: "
+                        + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
                     String filename = null;
@@ -1970,15 +1914,9 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_LOAD: {
                     final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_LOAD: " + data);
-                    }
-
+                    logd("OP_MEDIA_ITEM_LOAD: " + data);
                     final Intent requestIntent = intent;
                     new Thread() {
-                        /**
-                         * {@inheritDoc}
-                         */
                         @Override
                         public void run() {
                             InputStream is = null;
@@ -2047,7 +1985,7 @@ public class ApiService extends Service {
                                 }
                             }
 
-                            mVideoThread.put(statusIntent);
+                            mVideoThread.submit(statusIntent);
                         }
                     }.start();
 
@@ -2070,9 +2008,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_MOVE: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_MOVE: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_MOVE: " + mediaItemId);
 
                     // Determine the position of the media item we are moving
                     final List<MediaItem> mediaItems = videoEditor.getAllMediaItems();
@@ -2117,9 +2053,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_REMOVE: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_REMOVE: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_REMOVE: " + mediaItemId);
 
                     // Determine the position of the media item we are removing
                     final List<MediaItem> mediaItems = videoEditor.getAllMediaItems();
@@ -2162,9 +2096,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_SET_RENDERING_MODE: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_SET_RENDERING_MODE: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_SET_RENDERING_MODE: " + mediaItemId);
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
                     if (mediaItem == null) {
@@ -2181,9 +2113,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_SET_DURATION: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_SET_DURATION: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_SET_DURATION: " + mediaItemId);
 
                     final MediaImageItem mediaItem =
                         (MediaImageItem)videoEditor.getMediaItem(mediaItemId);
@@ -2244,9 +2174,7 @@ public class ApiService extends Service {
                 case OP_MEDIA_ITEM_GET_THUMBNAIL: {
                     // Note that this command is executed in the thumbnail thread
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_GET_THUMBNAIL: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_GET_THUMBNAIL: " + mediaItemId);
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
                     if (mediaItem == null) {
@@ -2265,9 +2193,7 @@ public class ApiService extends Service {
                 case OP_MEDIA_ITEM_GET_THUMBNAILS: {
                     // Note that this command is executed in the thumbnail thread
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_GET_THUMBNAILS: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_GET_THUMBNAILS: " + mediaItemId);
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
                     if (mediaItem == null) {
@@ -2287,9 +2213,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_SET_VOLUME: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_SET_VOLUME: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_SET_VOLUME: " + mediaItemId);
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
                     if (mediaItem != null && mediaItem instanceof MediaVideoItem) {
@@ -2306,9 +2230,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_SET_MUTE: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_SET_MUTE: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_SET_MUTE: " + mediaItemId);
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
                     if (mediaItem != null && mediaItem instanceof MediaVideoItem) {
@@ -2326,9 +2248,7 @@ public class ApiService extends Service {
 
                 case OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM: {
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM: " + mediaItemId);
-                    }
+                    logd("OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM: " + mediaItemId);
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
                     if (mediaItem != null && mediaItem instanceof MediaVideoItem) {
@@ -2348,10 +2268,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_TRANSITION_INSERT_ALPHA: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_INSERT_ALPHA: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_TRANSITION_INSERT_ALPHA: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final String afterMediaItemId =
                         intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID);
@@ -2385,10 +2303,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_TRANSITION_INSERT_CROSSFADE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_INSERT_CROSSFADE: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_TRANSITION_INSERT_CROSSFADE: "
+                        + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final String afterMediaItemId =
                         intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID);
@@ -2415,10 +2331,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_TRANSITION_INSERT_FADE_BLACK: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_INSERT_FADE_TO_BLACK: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_TRANSITION_INSERT_FADE_TO_BLACK: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final String afterMediaItemId =
                         intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID);
@@ -2445,10 +2359,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_TRANSITION_INSERT_SLIDING: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_INSERT_SLIDING: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_TRANSITION_INSERT_SLIDING: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final String afterMediaItemId =
                         intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID);
@@ -2477,10 +2389,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_TRANSITION_REMOVE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_REMOVE: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_TRANSITION_REMOVE: "
+                        + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     videoEditor.removeTransition(intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
@@ -2492,9 +2402,7 @@ public class ApiService extends Service {
 
                 case OP_TRANSITION_SET_DURATION: {
                     final String transitionId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_SET_DURATION: " + transitionId);
-                    }
+                    logd("OP_TRANSITION_SET_DURATION: " + transitionId);
 
                     final Transition transition = videoEditor.getTransition(transitionId);
                     if (transition == null) {
@@ -2511,9 +2419,7 @@ public class ApiService extends Service {
 
                 case OP_TRANSITION_GET_THUMBNAIL: {
                     final String transitionId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_TRANSITION_GET_THUMBNAIL: " + transitionId);
-                    }
+                    logd("OP_TRANSITION_GET_THUMBNAIL: " + transitionId);
 
                     final Transition transition = videoEditor.getTransition(transitionId);
                     if (transition == null) {
@@ -2546,10 +2452,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_EFFECT_ADD_COLOR: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_EFFECT_ADD_COLOR: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_EFFECT_ADD_COLOR: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2580,10 +2484,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_EFFECT_ADD_IMAGE_KEN_BURNS: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_EFFECT_ADD_IMAGE_KEN_BURNS: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_EFFECT_ADD_IMAGE_KEN_BURNS: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2614,10 +2516,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_EFFECT_REMOVE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_EFFECT_REMOVE: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_EFFECT_REMOVE: " + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2635,10 +2534,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_OVERLAY_ADD: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_OVERLAY_ADD: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_OVERLAY_ADD: " + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2694,10 +2590,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_OVERLAY_REMOVE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_OVERLAY_REMOVE: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_OVERLAY_REMOVE: " + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2715,10 +2608,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_OVERLAY_SET_START_TIME: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_OVERLAY_SET_START_TIME: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_OVERLAY_SET_START_TIME: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2743,10 +2634,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_OVERLAY_SET_DURATION: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_OVERLAY_SET_DURATION: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_OVERLAY_SET_DURATION: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2771,10 +2660,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_OVERLAY_SET_ATTRIBUTES: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_OVERLAY_SET_ATTRIBUTES: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_OVERLAY_SET_ATTRIBUTES: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final MediaItem mediaItem = videoEditor.getMediaItem(
                             intent.getStringExtra(PARAM_RELATIVE_STORYBOARD_ITEM_ID));
@@ -2824,10 +2711,7 @@ public class ApiService extends Service {
                 }
 
                 case OP_AUDIO_TRACK_ADD: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_ADD: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_AUDIO_TRACK_ADD: " + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     final Uri data = intent.getParcelableExtra(PARAM_FILENAME);
                     String filename = null;
@@ -2870,10 +2754,8 @@ public class ApiService extends Service {
                 }
 
                 case OP_AUDIO_TRACK_REMOVE: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_REMOVE: "
-                                + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
-                    }
+                    logd("OP_AUDIO_TRACK_REMOVE: "
+                            + intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
                     videoEditor.removeAudioTrack(intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID));
 
@@ -2885,9 +2767,7 @@ public class ApiService extends Service {
 
                 case OP_AUDIO_TRACK_SET_BOUNDARIES: {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_SET_BOUNDARIES: " + audioTrackId);
-                    }
+                    logd("OP_AUDIO_TRACK_SET_BOUNDARIES: " + audioTrackId);
 
                     final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
                     if (audioTrack == null) {
@@ -2906,9 +2786,7 @@ public class ApiService extends Service {
 
                 case OP_AUDIO_TRACK_SET_LOOP: {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_SET_LOOP: " + audioTrackId);
-                    }
+                    logd("OP_AUDIO_TRACK_SET_LOOP: " + audioTrackId);
 
                     final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
                     if (audioTrack == null) {
@@ -2930,9 +2808,7 @@ public class ApiService extends Service {
 
                 case OP_AUDIO_TRACK_SET_DUCK: {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_SET_DUCK: " + audioTrackId);
-                    }
+                    logd("OP_AUDIO_TRACK_SET_DUCK: " + audioTrackId);
 
                     final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
                     if (audioTrack == null) {
@@ -2954,9 +2830,7 @@ public class ApiService extends Service {
 
                 case OP_AUDIO_TRACK_SET_VOLUME: {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_SET_VOLUME: " + audioTrackId);
-                    }
+                    logd("OP_AUDIO_TRACK_SET_VOLUME: " + audioTrackId);
 
                     final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
                     if (audioTrack == null) {
@@ -2974,9 +2848,7 @@ public class ApiService extends Service {
 
                 case OP_AUDIO_TRACK_SET_MUTE: {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_SET_MUTE: " + audioTrackId);
-                    }
+                    logd("OP_AUDIO_TRACK_SET_MUTE: " + audioTrackId);
 
                     final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
                     if (audioTrack == null) {
@@ -2994,9 +2866,7 @@ public class ApiService extends Service {
 
                 case OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM: {
                     final String audioTrackId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM: " + audioTrackId);
-                    }
+                    logd("OP_AUDIO_TRACK_EXTRACT_AUDIO_WAVEFORM: " + audioTrackId);
 
                     final AudioTrack audioTrack = videoEditor.getAudioTrack(audioTrackId);
                     if (audioTrack == null) {
@@ -3038,10 +2908,7 @@ public class ApiService extends Service {
     private void completeRequest(final Intent intent, final VideoEditor videoEditor,
             final Exception exception, final Object result, final Object extraResult,
             final boolean finalize) {
-        mHandler.post (new Runnable() {
-            /**
-             * {@inheritDoc}
-             */
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 onIntentProcessed(intent, videoEditor, result, extraResult, exception, finalize);
@@ -3056,9 +2923,6 @@ public class ApiService extends Service {
      */
     private void completeRequest(final Intent intent) {
         mHandler.post (new Runnable() {
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void run() {
                 finalizeRequest(intent);
@@ -3068,7 +2932,7 @@ public class ApiService extends Service {
     }
 
     /**
-     * Process the intent
+     * Callback called after the specified intent is processed.
      *
      * @param intent The intent
      * @param videoEditor The VideoEditor on which the operation was performed
@@ -4189,9 +4053,10 @@ public class ApiService extends Service {
     }
 
     /**
-     * Finalize a request
+     * Finalizes a request. Calls the listeners that are interested in project status
+     * change and stops this service if there are no more pending intents.
      *
-     * @param intent The intent which completed
+     * @param intent The intent that just completed
      */
     private void finalizeRequest(Intent intent) {
         mPendingIntents.remove(intent.getStringExtra(PARAM_REQUEST_ID));
@@ -4207,21 +4072,19 @@ public class ApiService extends Service {
         }
 
         if (mPendingIntents.size() == 0) {
-            // Cancel the current timer. Extend the timeout by 5000 ms
+            // Cancel the current timer if any. Extend the timeout by 5000 ms.
             mHandler.removeCallbacks(mStopRunnable);
 
             // Start a timer which will stop the service if the queue of
             // pending intent will be empty at that time.
             // This prevents the service from starting & stopping too often.
             mHandler.postDelayed(mStopRunnable, 5000);
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "completeRequest: Stopping service in 5000 ms");
-            }
+            logd("completeRequest: Stopping service in 5000 ms");
         }
     }
 
     /**
-     * Check if the current project is the project specified by the specified path
+     * Checks if the current project is the project specified by the specified path.
      *
      * @param projectPath The project path
      *
@@ -4259,9 +4122,7 @@ public class ApiService extends Service {
      */
     private synchronized void releaseEditor() {
         if (mVideoEditor != null) {
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "releaseEditor (current): " + mVideoEditor.getPath());
-            }
+            logd("releaseEditor (current): " + mVideoEditor.getPath());
             mVideoEditor.release();
             mVideoEditor = null;
             mGeneratePreviewListener = null;
@@ -4278,9 +4139,7 @@ public class ApiService extends Service {
     private synchronized void releaseEditor(String projectPath) {
         if (mVideoEditor != null) {
             if (mVideoEditor.getPath().equals(projectPath)) {
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "releaseEditor: " + projectPath);
-                }
+                logd("releaseEditor: " + projectPath);
                 mVideoEditor.release();
                 mVideoEditor = null;
                 mGeneratePreviewListener = null;
@@ -4300,9 +4159,7 @@ public class ApiService extends Service {
     private synchronized VideoEditor releaseEditorNot(String projectPath) {
         if (mVideoEditor != null) {
             if (!mVideoEditor.getPath().equals(projectPath)) {
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "releaseEditorNot: " + mVideoEditor.getPath());
-                }
+                logd("releaseEditorNot: " + mVideoEditor.getPath());
                 mVideoEditor.release();
                 mVideoEditor = null;
                 mGeneratePreviewListener = null;
@@ -4369,15 +4226,13 @@ public class ApiService extends Service {
                             progressIntent.putExtra(PARAM_FILENAME, filename);
                             progressIntent.putExtra(PARAM_INTENT, intent);
                             progressIntent.putExtra(PARAM_PROGRESS_VALUE, progress);
-                            mVideoThread.put(progressIntent);
-                            if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                                Log.v(TAG, "Export progress: " + progress + " for: " + filename);
-                            }
+                            mVideoThread.submit(progressIntent);
+                            logv("Export progress: " + progress + " for: " + filename);
                         }
                     });
 
                     // TODO: this is a quick fix to the problem that when export operation is
-                    // cancelled by user, no further operations such as adding the video to the
+                    // canceled by user, no further operations such as adding the video to the
                     // media provider should proceed. The above export method should return a
                     // boolean value to indicate whether the export op is successful so that we
                     // can remove this flag.
@@ -4389,24 +4244,16 @@ public class ApiService extends Service {
                         } else {
                             throw new IllegalStateException("Export file does not exist: " + filename);
                         }
-
-                        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                            Log.v(TAG, "Export complete for: " + filename);
-                        }
+                        logv("Export complete for: " + filename);
                     } else {
-                        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                            Log.v(TAG, "Export cancelled by user, file name: " + filename);
-                        }
+                        logv("Export cancelled by user, file name: " + filename);
                     }
                 } catch (Exception ex) {
                     statusIntent.putExtra(PARAM_EXCEPTION, ex);
-
-                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                        Log.v(TAG, "Export error for: " + filename);
-                        ex.printStackTrace();
-                    }
+                    logv("Export error for: " + filename);
+                    ex.printStackTrace();
                 }
-                mVideoThread.put(statusIntent);
+                mVideoThread.submit(statusIntent);
             }
         }.start();
     }
@@ -4422,9 +4269,6 @@ public class ApiService extends Service {
             final MediaVideoItem mediaItem) throws IOException {
         mediaItem.extractAudioWaveform(
             new ExtractAudioWaveformProgressListener() {
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void onProgress(int progress) {
                 final Intent progressIntent = mIntentPool.get();
@@ -4451,9 +4295,6 @@ public class ApiService extends Service {
             final AudioTrack audioTrack) throws IOException {
         audioTrack.extractAudioWaveform(
             new ExtractAudioWaveformProgressListener() {
-            /**
-             * {@inheritDoc}
-             */
             @Override
             public void onProgress(int progress) {
                 final Intent progressIntent = mIntentPool.get();
@@ -4904,96 +4745,76 @@ public class ApiService extends Service {
         return movieAudioTracks;
     }
 
+    private static void logd(String message) {
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, message);
+        }
+    }
+
+    private static void logv(String message) {
+        if (Log.isLoggable(TAG, Log.VERBOSE)) {
+            Log.v(TAG, message);
+        }
+    }
+
     /**
-     * The service worker thread
+     * Worker thread that processes intents and maintains its own intent queue.
      */
-    private class ServiceThread extends Thread {
-        private final Handler mHandler;
-        private final Queue<Intent> mQueue;
-        private Handler mThreadHandler;
-        private final Runnable mProcessQueueRunnable = new Runnable() {
-            @Override
-            public void run() {
-                // Process whatever accumulated in the queue
-                Intent intent;
-                while ((intent = mQueue.poll()) != null) {
-                    // Process the Intent
-                    processIntent(intent);
-                }
-            }
-        };
+    private class IntentProcessor extends Thread {
+        private final BlockingQueue<Intent> mIntentQueue;
 
-        /**
-         * Constructor
-         *
-         * @param handler The handler
-         * @param threadName The thread name
-         */
-        public ServiceThread(Handler handler, String threadName) {
-            mHandler = handler;
-            setName(threadName + this);
-            mQueue = new LinkedBlockingQueue<Intent>();
-        }
-
-        /**
-         * Add a new message to the thread queue
-         *
-         * @param intent The request intent
-         */
-        private void put(Intent intent) {
-            mQueue.add(intent);
-
-            if (mThreadHandler != null) {
-                mThreadHandler.post(mProcessQueueRunnable);
-            }
-        }
-
-        /**
-         * Remove an intent from the queue
-         *
-         * @param intent The intent
-         *
-         * @return true if the request was canceled
-         */
-        private boolean cancel(Intent intent) {
-            return mQueue.remove(intent);
+        public IntentProcessor(String threadName) {
+            super("IntentProcessor-" + threadName);
+            mIntentQueue = new LinkedBlockingQueue<Intent>();
         }
 
         @Override
         public void run() {
-            Looper.prepare();
-
-            mThreadHandler = new Handler();
-
-            // Ensure that the queued items are processed
-            mHandler.post(new Runnable() {
-                /**
-                 * {@inheritDoc}
-                 */
-                @Override
-                public void run() {
-                    mThreadHandler.post(mProcessQueueRunnable);
+            try {
+                while(true) {
+                    processIntent(mIntentQueue.take());
                 }
-            });
-
-            // Run the loop
-            Looper.loop();
+            } catch (InterruptedException e) {
+                Log.e(TAG, "Terminating " + getName());
+            }
         }
 
         /**
-         * Quit the thread
+         * Submits a new intent for processing.
+         *
+         * @param intent The intent to be processed
          */
-        public void quit() {
-            if (mThreadHandler != null) {
-                mThreadHandler.getLooper().quit();
+        public void submit(Intent intent) {
+            if (isAlive()) {
+                mIntentQueue.add(intent);
+            } else {
+                Log.e(TAG, getName() + " should be started before submitting tasks.");
             }
+        }
 
-            // Display an error if the queue is not empty
-            final int queueSize = mQueue.size();
+        /**
+         * Removes an intent from the queue.
+         *
+         * @param intent The intent to be removed
+         *
+         * @return true if the intent is removed
+         */
+        public boolean cancel(Intent intent) {
+            return mIntentQueue.remove(intent);
+        }
+
+        public Iterator<Intent> getIntentQueueIterator() {
+            return mIntentQueue.iterator();
+        }
+
+        public void quit() {
+            // Display an error if the queue is not empty and clear it.
+            final int queueSize = mIntentQueue.size();
             if (queueSize > 0) {
                 Log.e(TAG, "Thread queue is not empty. Size: " + queueSize);
-                mQueue.clear();
+                mIntentQueue.clear();
             }
+            interrupt();
         }
     }
 }
