@@ -27,21 +27,20 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 /**
- * Alert dialogs
+ * Utility class for creating various alert dialogs.
+ * It contains only static methods and cannot be instantiated.
  */
 public class AlertDialogs {
-    /**
-     * This class cannot be instantiated
-     */
-    private AlertDialogs() {
-    }
+
+    private AlertDialogs() {}
 
     /**
-     * Create an alert dialog box
+     * Creates an alert dialog box.
      *
      * @param context The context
      * @param title The title string
@@ -75,7 +74,7 @@ public class AlertDialogs {
     }
 
     /**
-     * Create a dialog with one edit text
+     * Creates a dialog with one edit text.
      *
      * @param context The context
      * @param title The title of the dialog
@@ -124,23 +123,27 @@ public class AlertDialogs {
         builder.setOnCancelListener(cancelListener);
         final AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(true);
+        textInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+            }
+        });
         textInput.addTextChangedListener(new TextWatcher() {
             Button mPositiveButton;
-            /*
-             * {@inheritDoc}
-             */
+
+            @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void afterTextChanged(Editable s) {
                 if (mPositiveButton == null) {
                     mPositiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);

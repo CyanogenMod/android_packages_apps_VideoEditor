@@ -46,9 +46,9 @@ public class FileUtils {
     }
 
     /**
-     * Get the root path for all projects
+     * Gets the root path for all projects
      *
-     * @param contex The context
+     * @param context The context
      *
      * @return The file representing the projects root directory
      */
