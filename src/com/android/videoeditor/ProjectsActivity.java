@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,6 +69,9 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
     // Dialog parameters.
     private static final String PARAM_DIALOG_PATH_ID = "path";
 
+    // Threshold in width dip for showing title in action bar.
+    private static final int SHOW_TITLE_THRESHOLD_WIDTH_DIP = 1000;
+
     // Instance variables.
     private final ServiceListener mServiceListener = new ServiceListener();
     private ProjectsCarouselView mCarouselView;
@@ -91,11 +95,16 @@ public class ProjectsActivity extends Activity implements CarouselItemListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.carousel_container);
 
-        // Turn on the title display
-        // It is turned off in the style used for the activity.
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int widthDip = (int) (displayMetrics.widthPixels / displayMetrics.scaledDensity);
         final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayOptions(actionBar.getDisplayOptions() | ActionBar.DISPLAY_SHOW_TITLE);
-        actionBar.setTitle(R.string.full_app_name);
+        // Only show title on large screens (width >= 1000 dip).
+        if (widthDip >= SHOW_TITLE_THRESHOLD_WIDTH_DIP) {
+            actionBar.setDisplayOptions(actionBar.getDisplayOptions() |
+                    ActionBar.DISPLAY_SHOW_TITLE);
+            actionBar.setTitle(R.string.full_app_name);
+        }
 
         mCarouselView = (ProjectsCarouselView) findViewById(R.id.carousel);
         mCarouselView.getHolder().setFormat(PixelFormat.TRANSPARENT);

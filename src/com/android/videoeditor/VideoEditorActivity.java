@@ -43,6 +43,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -138,6 +139,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private static final int MAX_ZOOM_LEVEL = 120;
     private static final int ZOOM_STEP = 2;
 
+    // Threshold in width dip for showing title in action bar.
+    private static final int SHOW_TITLE_THRESHOLD_WIDTH_DIP = 1000;
+
     private final TimelineRelativeLayout.LayoutCallback mLayoutCallback =
         new TimelineRelativeLayout.LayoutCallback() {
 
@@ -202,11 +206,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Turn on the title display.
-        // It is turned off in the style used for the activity.
         final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayOptions(actionBar.getDisplayOptions() | ActionBar.DISPLAY_SHOW_TITLE);
-        actionBar.setTitle(R.string.full_app_name);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // Only show title on large screens (width >= 1000 dip).
+        int widthDip = (int) (displayMetrics.widthPixels / displayMetrics.scaledDensity);
+        if (widthDip >= SHOW_TITLE_THRESHOLD_WIDTH_DIP) {
+            actionBar.setDisplayOptions(actionBar.getDisplayOptions() | ActionBar.DISPLAY_SHOW_TITLE);
+            actionBar.setTitle(R.string.full_app_name);
+        }
 
         // Prepare the surface holder
         mSurfaceView = (PreviewSurfaceView) findViewById(R.id.video_view);
