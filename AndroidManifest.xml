@@ -11,7 +11,7 @@
         android:label="@string/short_app_name" android:hardwareAccelerated="true">
         <service android:name=".service.ApiService"/>
 
-        <activity android:name=".ProjectsActivity"
+        <activity android:name=".ProjectPicker"
                   android:theme="@style/Theme.VideoEditorHolo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

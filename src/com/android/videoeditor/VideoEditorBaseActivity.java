@@ -807,10 +807,10 @@ public abstract class VideoEditorBaseActivity extends Activity {
             mPendingExportFilename = savedInstanceState.getString(STATE_EXPORT_FILENAME);
         } else {
             final Intent intent = getIntent();
-            mProjectPath = intent.getStringExtra(ProjectsActivity.PARAM_OPEN_PROJECT_PATH);
+            mProjectPath = intent.getStringExtra(ProjectPicker.PARAM_OPEN_PROJECT_PATH);
             if (Intent.ACTION_INSERT.equals(intent.getAction())) {
                 ApiService.createVideoEditor(this, mProjectPath,
-                        intent.getStringExtra(ProjectsActivity.PARAM_CREATE_PROJECT_NAME),
+                        intent.getStringExtra(ProjectPicker.PARAM_CREATE_PROJECT_NAME),
                         new String[0], new String[0], null);
             }
         }

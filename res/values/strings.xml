@@ -80,9 +80,9 @@
     <!-- Unmute the audio track. -->
     <string name="editor_unmute">Unmute</string>
 
-    <!-- Projects activity -->
-    <!-- Menu item and text displayed in the carousel new project item. [CHAR_LIMIT=16]-->
-    <string name="projects_new_project">New project</string>
+    <!-- Project picker -->
+    <!-- Text displayed in the project picker new project option [CHAR_LIMIT=18]-->
+    <string name="projects_new_project">Create New Project</string>
     <!-- Text displayed in the project name dialog title. -->
     <string name="projects_project_name">Project name</string>
 

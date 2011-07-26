@@ -16,6 +16,11 @@
 -->
 
 <resources>
+    <dimen name="project_picker_column_width">279dip</dimen>
+    <dimen name="project_picker_item_container_width">277dip</dimen>
+    <dimen name="project_picker_item_width">243dip</dimen>
+    <dimen name="project_picker_item_height">243dip</dimen>
+
     <dimen name="media_layout_height">128dip</dimen>
     <dimen name="overlay_layout_height">64dip</dimen>
     <dimen name="audio_layout_height">64dip</dimen>
@@ -33,12 +38,6 @@
     <dimen name="playhead_margin_top_not_ok">14dip</dimen>
     <dimen name="playhead_margin_bottom">20dip</dimen>
     <dimen name="playhead_tick_height">3dip</dimen>
-
-    <dimen name="carousel_pixel_border">4dip</dimen>
-    <dimen name="carousel_texture_height">170dip</dimen>
-    <dimen name="carousel_detail_texture_width_landscape">240dip</dimen>
-    <dimen name="carousel_detail_texture_width_portrait">147dip</dimen>
-    <dimen name="carousel_detail_texture_height">53dip</dimen>
 
     <dimen name="timelime_item_vertical_padding">1dip</dimen>
     <dimen name="timelime_item_horizontal_padding">3dip</dimen>

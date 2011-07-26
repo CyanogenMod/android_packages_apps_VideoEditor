@@ -39,7 +39,7 @@ import android.view.SurfaceHolder;
 
 
 /**
- * The  video editor project encapsulates the video editor and the project metadata
+ * The video editor project encapsulates the video editor and the project metadata.
  */
 public class VideoEditorProject {
     // The name of the metadata file

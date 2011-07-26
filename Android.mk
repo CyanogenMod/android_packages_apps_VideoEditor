@@ -2,16 +2,11 @@ LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
-    $(call all-java-files-under, src) \
-    $(call all-renderscript-files-under, src) \
-    ../../../frameworks/ex/carousel/java/com/android/ex/carousel/carousel.rs
+    $(call all-java-files-under, src)
 
 LOCAL_PACKAGE_NAME := VideoEditor
 
 LOCAL_JAVA_LIBRARIES :=
-
-LOCAL_STATIC_JAVA_LIBRARIES := \
-    android-common-carousel
 
 LOCAL_PROGUARD_FLAGS := -include $(LOCAL_PATH)/proguard.flags
 

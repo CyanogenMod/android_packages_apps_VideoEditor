@@ -558,7 +558,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                final Intent intent = new Intent(this, ProjectsActivity.class);
+                final Intent intent = new Intent(this, ProjectPicker.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
