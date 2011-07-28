@@ -50,12 +50,13 @@ public class FileUtils {
      *
      * @param context The context
      *
-     * @return The file representing the projects root directory
+     * @return The file representing the projects root directory, {@code null} if the external
+     * storage is not currnetly mounted
      */
     public static File getProjectsRootDir(Context context)
             throws FileNotFoundException, IOException {
         final File dir = context.getExternalFilesDir(null);
-        if (!dir.exists()) {
+        if (dir != null && !dir.exists()) {
             if (!dir.mkdirs()) {
                 throw new FileNotFoundException("Cannot create folder: " + dir.getAbsolutePath());
             } else {

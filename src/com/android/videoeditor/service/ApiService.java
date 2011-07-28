@@ -1566,38 +1566,40 @@ public class ApiService extends Service {
                     logd("OP_LOAD_PROJECTS");
                     final List<VideoEditorProject> projects = new ArrayList<VideoEditorProject>();
                     final File dir = FileUtils.getProjectsRootDir(getApplicationContext());
-                    final File[] files = dir.listFiles();
-                    if (files != null) {
-                        // Collect valid projects (project with valid metadata)
-                        for (int i = 0; i < files.length; i++) {
-                            if (files[i].isDirectory()) {
-                                final String pp = files[i].getAbsolutePath();
-                                try {
-                                    projects.add(VideoEditorProject.fromXml(null, pp));
-                                } catch (FileNotFoundException ex) {
-                                    Log.w(TAG, "processIntent: Project file not found: " + pp);
-                                    FileUtils.deleteDir(new File(pp));
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                        }
-
-                        if (projects.size() > 0) {
-                            // Sort the projects in order of "last saved"
-                            Collections.sort(projects, new Comparator<VideoEditorProject>() {
-                                @Override
-                                public int compare(VideoEditorProject object1,
-                                        VideoEditorProject object2) {
-                                    if (object1.getLastSaved() > object2.getLastSaved()) {
-                                        return -1;
-                                    } else if (object1.getLastSaved() == object2.getLastSaved()) {
-                                        return 0;
-                                    } else {
-                                        return 1;
+                    if (dir != null) {
+                        // Collect valid projects (project with valid metadata).
+                        final File[] files = dir.listFiles();
+                        if (files != null) {
+                            for (int i = 0; i < files.length; i++) {
+                                if (files[i].isDirectory()) {
+                                    final String pp = files[i].getAbsolutePath();
+                                    try {
+                                        projects.add(VideoEditorProject.fromXml(null, pp));
+                                    } catch (FileNotFoundException ex) {
+                                        Log.w(TAG, "processIntent: Project file not found: " + pp);
+                                        FileUtils.deleteDir(new File(pp));
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
                                     }
                                 }
-                            });
+                            }
+
+                            if (projects.size() > 0) {
+                                // Sort the projects in order of "last saved"
+                                Collections.sort(projects, new Comparator<VideoEditorProject>() {
+                                    @Override
+                                    public int compare(VideoEditorProject object1,
+                                            VideoEditorProject object2) {
+                                        if (object1.getLastSaved() > object2.getLastSaved()) {
+                                            return -1;
+                                        } else if (object1.getLastSaved() == object2.getLastSaved()) {
+                                            return 0;
+                                        } else {
+                                            return 1;
+                                        }
+                                    }
+                                });
+                            }
                         }
                     }
 

@@ -44,8 +44,8 @@ import java.util.List;
 /**
  * Activity that lets user pick a project or create a new one.
  */
-public class ProjectPicker extends NoSearchActivity {
-    private static final String LOG_TAG = "ProjectPicker";
+public class ProjectsActivity extends NoSearchActivity {
+    private static final String LOG_TAG = "ProjectsActivity";
 
     private static final int REQUEST_CODE_OPEN_PROJECT = 1;
     private static final int REQUEST_CODE_CREATE_PROJECT = 2;
@@ -76,10 +76,12 @@ public class ProjectPicker extends NoSearchActivity {
     private final ApiServiceListener mProjectsLoadedListener = new ApiServiceListener() {
         @Override
         public void onProjectsLoaded(List<VideoEditorProject> projects, Exception exception) {
-            mProjects = projects;
-            // Initialize adapter with project list and populate data in the grid view.
-            mAdapter = new ProjectPickerAdapter(ProjectPicker.this, getLayoutInflater(), projects);
-            mGridView.setAdapter(mAdapter);
+            if (projects != null && exception == null) {
+                mProjects = projects;
+                // Initialize adapter with project list and populate data in the grid view.
+                mAdapter = new ProjectPickerAdapter(ProjectsActivity.this, getLayoutInflater(), projects);
+                mGridView.setAdapter(mAdapter);
+            }
         }
     };
 
@@ -124,7 +126,7 @@ public class ProjectPicker extends NoSearchActivity {
                     return true;
                 }
                 // Otherwise, pop up a menu with a project removal option.
-                final PopupMenu popupMenu = new PopupMenu(ProjectPicker.this, view);
+                final PopupMenu popupMenu = new PopupMenu(ProjectsActivity.this, view);
                 popupMenu.getMenuInflater().inflate(R.menu.project_menu, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -257,7 +259,7 @@ public class ProjectPicker extends NoSearchActivity {
     }
 
     private void deleteProject(String projectPath) {
-        ApiService.deleteProject(ProjectPicker.this, projectPath);
+        ApiService.deleteProject(ProjectsActivity.this, projectPath);
         // Remove the project from the adapter and update display.
         mAdapter.remove(projectPath);
         mAdapter.notifyDataSetChanged();
