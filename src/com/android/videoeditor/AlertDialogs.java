@@ -78,7 +78,7 @@ public class AlertDialogs {
      *
      * @param context The context
      * @param title The title of the dialog
-     * @param text The text (if any)
+     * @param text The text shown in the edit box
      * @param positiveButtonText The positive button text
      * @param positiveListener The positive button listener
      * @param negativeButtonText The negative button text
@@ -86,26 +86,29 @@ public class AlertDialogs {
      * @param cancelListener The cancel listener
      * @param inputType Input type
      * @param maxChars The maximum number of characters
+     * @param hint hint text to be shown in the edit box
      *
      * @return The created dialog
      */
     public static AlertDialog createEditDialog(Context context, String title, String text,
             String positiveButtonText, DialogInterface.OnClickListener positiveListener,
             String negativeButtonText, DialogInterface.OnClickListener negativeListener,
-            DialogInterface.OnCancelListener cancelListener, int inputType, int maxChars) {
+            DialogInterface.OnCancelListener cancelListener, int inputType, int maxChars,
+            String hint) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final LayoutInflater vi = (LayoutInflater)context.getSystemService(
+        final LayoutInflater vi = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         final View myView = vi.inflate(R.layout.edit_one_dialog_view, null);
         builder.setView(myView);
-        builder.setTitle(title);
 
-        // Set the text if any
-        final EditText textInput = (EditText)myView.findViewById(R.id.text_1);
+        // Set the text or hint if they are available.
+        final EditText textInput = (EditText) myView.findViewById(R.id.text_1);
+        if (title != null) builder.setTitle(title);
         if (text != null) {
             textInput.setText(text);
             textInput.setSelection(0, text.length());
         }
+        if (hint != null) textInput.setHint(hint);
 
         if (maxChars > 0) {
             final InputFilter[] filters = new InputFilter[1];

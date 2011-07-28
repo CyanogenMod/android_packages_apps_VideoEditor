@@ -834,7 +834,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
                 return AlertDialogs.createEditDialog(this,
                     getString(R.string.editor_edit_project_name),
-                    mProject.getName(), getString(android.R.string.ok),
+                    mProject.getName(),
+                    getString(android.R.string.ok),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -844,18 +845,23 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                             getActionBar().setTitle(tv.getText());
                             removeDialog(DIALOG_EDIT_PROJECT_NAME_ID);
                         }
-                    }, getString(android.R.string.cancel),
+                    },
+                    getString(android.R.string.cancel),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             removeDialog(DIALOG_EDIT_PROJECT_NAME_ID);
                         }
-                    }, new DialogInterface.OnCancelListener() {
+                    },
+                    new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
                             removeDialog(DIALOG_EDIT_PROJECT_NAME_ID);
                         }
-                    }, InputType.TYPE_NULL, 32);
+                    },
+                    InputType.TYPE_NULL,
+                    32,
+                    null);
             }
 
             case DIALOG_EXPORT_OPTIONS_ID: {

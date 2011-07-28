@@ -191,8 +191,8 @@ public class ProjectsActivity extends NoSearchActivity {
             case DIALOG_NEW_PROJECT_ID: {
                 return AlertDialogs.createEditDialog(
                         this,
-                        getString(R.string.projects_project_name),
-                        getString(R.string.untitled),
+                        null,  // No title
+                        null,  // No text in the edit box
                         getString(android.R.string.ok),
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -218,7 +218,8 @@ public class ProjectsActivity extends NoSearchActivity {
                             }
                         },
                         InputType.TYPE_NULL,
-                        32);
+                        32,
+                        getString(R.string.projects_project_name));
             }
 
             case DIALOG_REMOVE_PROJECT_ID: {
