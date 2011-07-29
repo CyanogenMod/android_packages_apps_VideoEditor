@@ -150,17 +150,20 @@ public class ProjectsActivity extends NoSearchActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         ApiService.registerListener(mProjectsLoadedListener);
         ApiService.loadProjects(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         ApiService.unregisterListener(mProjectsLoadedListener);
-        mAdapter.clear();
+        if (mAdapter != null) {
+            mAdapter.clear();
+        }
+        mGridView.setAdapter(null);
     }
 
     @Override
@@ -259,11 +262,9 @@ public class ProjectsActivity extends NoSearchActivity {
         }
     }
 
-    private void deleteProject(String projectPath) {
+    private void deleteProject(final String projectPath) {
         ApiService.deleteProject(ProjectsActivity.this, projectPath);
-        // Remove the project from the adapter and update display.
         mAdapter.remove(projectPath);
-        mAdapter.notifyDataSetChanged();
     }
 
     private void createProject(String projectName) {

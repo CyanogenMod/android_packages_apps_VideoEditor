@@ -64,12 +64,17 @@ public class ProjectPickerAdapter extends BaseAdapter {
         mItemHeight = (int) mResources.getDimension(R.dimen.project_picker_item_height);
     }
 
+    /**
+     * Clears project list and update display.
+     */
     public void clear() {
         mProjects.clear();
+        notifyDataSetChanged();
     }
 
     /**
-     * Removes the project with specified {@code projectPath} from the project list.
+     * Removes the project with specified {@code projectPath} from the project list and updates the
+     * display.
      *
      * @param projectPath The project path of the to-be-removed project
      * @return {code true} if the project is successfully removed,
@@ -78,7 +83,12 @@ public class ProjectPickerAdapter extends BaseAdapter {
     public boolean remove(String projectPath) {
         for (VideoEditorProject project : mProjects) {
             if (project.getPath().equals(projectPath)) {
-                return mProjects.remove(project);
+                if (mProjects.remove(project)) {
+                    notifyDataSetChanged();
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         return false;
@@ -157,14 +167,10 @@ public class ProjectPickerAdapter extends BaseAdapter {
                             (mItemHeight - previewBitmap.getHeight()) / 2,
                             paint);
                     previewBitmap.recycle();
-                } else {
-                    canvas.drawColor(Color.BLACK);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            canvas.drawColor(Color.BLACK);
         }
 
         return new BitmapDrawable(bitmap);
