@@ -40,7 +40,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"تکرار نوار انجام نشود"</string>
     <string name="editor_mute" msgid="4901844675777155179">"بیصدا"</string>
     <string name="editor_unmute" msgid="905024676961016538">"صدادار"</string>
-    <string name="projects_new_project" msgid="3690441080533712908">"پروژه جدید"</string>
+    <!-- outdated translation 3690441080533712908 -->     <string name="projects_new_project" msgid="7515160975627001972">"پروژه جدید"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"نام پروژه"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"9 × 11"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"9 × 16"</string>

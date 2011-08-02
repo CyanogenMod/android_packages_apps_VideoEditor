@@ -40,7 +40,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Jangan kitari"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Bisukan"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Suarakan"</string>
-    <string name="projects_new_project" msgid="3690441080533712908">"Proyek baru"</string>
+    <!-- outdated translation 3690441080533712908 -->     <string name="projects_new_project" msgid="7515160975627001972">"Proyek baru"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Nama proyek"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">" 11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">" 16 x 9"</string>
