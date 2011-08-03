@@ -61,9 +61,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
 
     // The runnable which executes when the scrolling ends
     private Runnable mScrollEndedRunnable = new Runnable() {
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             mIsScrolling = false;
@@ -77,9 +74,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         }
     };
 
-    /*
-     * {@inheritDoc}
-     */
     public TimelineHorizontalScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -111,16 +105,10 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         mMoveNotOkPlayheadDrawable = resources.getDrawable(R.drawable.playhead_move_not_ok);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TimelineHorizontalScrollView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TimelineHorizontalScrollView(Context context) {
         this(context, null, 0);
     }
@@ -133,18 +121,12 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         mEnableUserScrolling = enable;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         mScaleDetector.onTouchEvent(ev);
         return mScaleDetector.isInProgress() || super.onInterceptTouchEvent(ev);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (mEnableUserScrolling) {
@@ -230,9 +212,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void computeScroll() {
         super.computeScroll();
@@ -262,9 +241,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);

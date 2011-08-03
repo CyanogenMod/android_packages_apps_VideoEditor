@@ -94,9 +94,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             mAudioTrack = audioTrack;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mAudioTrackActionMode = mode;
 
@@ -117,9 +115,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             final View view = mode.getCustomView();
 
@@ -133,16 +129,12 @@ public class AudioTrackLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.action_duck: {
@@ -170,9 +162,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             }
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
                 mAudioTrack.setAppVolume(progress);
@@ -181,21 +171,15 @@ public class AudioTrackLinearLayout extends LinearLayout {
             }
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onDestroyActionMode(ActionMode mode) {
             final View audioTrackView = getAudioTrackView(mAudioTrack.getId());
             if (audioTrackView != null) {
@@ -206,16 +190,11 @@ public class AudioTrackLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public AudioTrackLinearLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         mAudioTrackGestureListener = new ItemSimpleGestureListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onSingleTapConfirmed(View view, int area, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return false;
@@ -228,9 +207,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onLongPress(View view, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return;
@@ -250,9 +227,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
         // Add the beginning timeline item
         final View beginView = inflate(getContext(), R.layout.empty_timeline_item, null);
         beginView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 unselectAllViews();
             }
@@ -262,9 +237,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
         // Add the end timeline item
         final View endView = inflate(context, R.layout.empty_timeline_item, null);
         endView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 unselectAllViews();
             }
@@ -275,9 +248,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
         mAddAudioTrackButtonView = inflate(getContext(), R.layout.add_audio_track_button, null);
         addView(mAddAudioTrackButtonView, 1);
         mAddAudioTrackButtonView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 if (mListener != null) {
                     mListener.onAddAudioTrack();
@@ -297,16 +268,10 @@ public class AudioTrackLinearLayout extends LinearLayout {
         setMotionEventSplittingEnabled(false);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public AudioTrackLinearLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public AudioTrackLinearLayout(Context context) {
         this(context, null, 0);
     }
@@ -555,9 +520,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
         invalidate();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int childrenCount = getChildCount();
@@ -650,9 +612,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
                         activity.getString(R.string.editor_remove_audio_track_question),
                         activity.getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (mAudioTrackActionMode != null) {
                             mAudioTrackActionMode.finish();
@@ -664,16 +624,12 @@ public class AudioTrackLinearLayout extends LinearLayout {
                                 audioTrack.getId());
                     }
                 }, activity.getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_AUDIO_TRACK_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_AUDIO_TRACK_ID);
                     }
@@ -739,9 +695,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void setSelected(boolean selected) {
         if (selected == false) {

@@ -37,8 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.videoeditor.AlertDialogs;
-import com.android.videoeditor.OverlayTitleActivity;
-import com.android.videoeditor.OverlaysActivity;
+import com.android.videoeditor.OverlayTitleEditor;
 import com.android.videoeditor.VideoEditorActivity;
 import com.android.videoeditor.service.ApiService;
 import com.android.videoeditor.service.MovieMediaItem;
@@ -49,7 +48,7 @@ import com.android.videoeditor.util.MediaItemUtils;
 import com.android.videoeditor.R;
 
 /**
- * The LinearLayout which displays overlays
+ * LinearLayout which displays overlays.
  */
 public class OverlayLinearLayout extends LinearLayout {
     // Logging
@@ -84,38 +83,28 @@ public class OverlayLinearLayout extends LinearLayout {
     }
 
     /**
-     * The overlay action mode handler
+     * The overlay action mode handler.
      */
     private class OverlayActionModeCallback implements ActionMode.Callback {
         // Instance variables
         private final MovieMediaItem mMediaItem;
 
-        /**
-         * Constructor
-         *
-         * @param mediaItem The media item
-         */
         public OverlayActionModeCallback(MovieMediaItem mediaItem) {
             mMediaItem = mediaItem;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mOverlayActionMode = mode;
 
-            final Activity activity = (Activity)getContext();
+            final Activity activity = (Activity) getContext();
             activity.getMenuInflater().inflate(R.menu.overlay_mode_menu, menu);
-            mode.setTitle(FileUtils.getSimpleName(mMediaItem.getFilename()));
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            final boolean enable = !ApiService.isProjectEdited(mProject.getPath()) &&
+            final boolean enable = !ApiService.isProjectBeingEdited(mProject.getPath()) &&
                 !mPlaybackInProgress;
 
             final MenuItem eomi = menu.findItem(R.id.action_edit_overlay);
@@ -127,29 +116,27 @@ public class OverlayLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_edit_overlay: {
-                    final Activity activity = (Activity)getContext();
-                    final Intent intent = new Intent(activity, OverlaysActivity.class);
-                    intent.putExtra(OverlayTitleActivity.PARAM_MEDIA_ITEM_ID, mMediaItem.getId());
+                    final Activity activity = (Activity) getContext();
+                    final Intent intent = new Intent(activity, OverlayTitleEditor.class);
+                    intent.putExtra(OverlayTitleEditor.PARAM_MEDIA_ITEM_ID, mMediaItem.getId());
 
                     final MovieOverlay overlay = mMediaItem.getOverlay();
-                    intent.putExtra(OverlaysActivity.PARAM_OVERLAY_ID, overlay.getId());
-                    intent.putExtra(OverlaysActivity.PARAM_OVERLAY_ATTRIBUTES,
+                    intent.putExtra(OverlayTitleEditor.PARAM_OVERLAY_ID, overlay.getId());
+                    intent.putExtra(OverlayTitleEditor.PARAM_OVERLAY_ATTRIBUTES,
                             overlay.buildUserAttributes());
                     activity.startActivityForResult(intent,
-                            VideoEditorActivity.REQUEST_CODE_EDIT_OVERLAY);
+                            VideoEditorActivity.REQUEST_CODE_PICK_OVERLAY);
                     break;
                 }
 
                 case R.id.action_remove_overlay: {
                     final Bundle bundle = new Bundle();
                     bundle.putString(PARAM_DIALOG_MEDIA_ITEM_ID, mMediaItem.getId());
-                    ((Activity)getContext()).showDialog(
+                    ((Activity) getContext()).showDialog(
                             VideoEditorActivity.DIALOG_REMOVE_OVERLAY_ID, bundle);
                     break;
                 }
@@ -162,9 +149,7 @@ public class OverlayLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onDestroyActionMode(ActionMode mode) {
             final View overlayView = getOverlayView(mMediaItem.getId());
             if (overlayView != null) {
@@ -175,9 +160,6 @@ public class OverlayLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public OverlayLinearLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -187,9 +169,7 @@ public class OverlayLinearLayout extends LinearLayout {
             private long mScrollTotalDurationMs, mScrollMediaItemStartTime;
             private boolean mScrolled;
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onSingleTapConfirmed(View view, int area, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return false;
@@ -204,9 +184,9 @@ public class OverlayLinearLayout extends LinearLayout {
 
                     case OverlayView.STATE_ADD_BUTTON: {
                         final MovieMediaItem mediaItem = (MovieMediaItem)view.getTag();
-                        final Intent intent = new Intent(getContext(), OverlaysActivity.class);
-                        intent.putExtra(OverlaysActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
-                        ((Activity)getContext()).startActivityForResult(intent,
+                        final Intent intent = new Intent(getContext(), OverlayTitleEditor.class);
+                        intent.putExtra(OverlayTitleEditor.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
+                        ((Activity) getContext()).startActivityForResult(intent,
                                 VideoEditorActivity.REQUEST_CODE_PICK_OVERLAY);
                         break;
                     }
@@ -226,9 +206,7 @@ public class OverlayLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onLongPress(View view, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return;
@@ -261,9 +239,7 @@ public class OverlayLinearLayout extends LinearLayout {
                 }
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onMoveBegin(View view, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return false;
@@ -279,9 +255,7 @@ public class OverlayLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onMove(View view, MotionEvent e1, MotionEvent e2) {
                 final int beginPos = (int)(view.getLeft() - mHalfParentWidth - e1.getX() +
                         e2.getX());
@@ -302,9 +276,7 @@ public class OverlayLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onMoveEnd(View view) {
                 mRightHandle.setVisibility(View.VISIBLE);
                 if (mScrolled) {
@@ -325,9 +297,7 @@ public class OverlayLinearLayout extends LinearLayout {
         // Add the beginning timeline item
         final View beginView = inflate(getContext(), R.layout.empty_timeline_item, null);
         beginView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 unselectAllViews();
             }
@@ -337,9 +307,7 @@ public class OverlayLinearLayout extends LinearLayout {
         // Add the end timeline item
         final View endView = inflate(getContext(), R.layout.empty_timeline_item, null);
         endView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 unselectAllViews();
             }
@@ -363,16 +331,10 @@ public class OverlayLinearLayout extends LinearLayout {
         setMotionEventSplittingEnabled(false);
    }
 
-    /*
-     * {@inheritDoc}
-     */
     public OverlayLinearLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public OverlayLinearLayout(Context context) {
         this(context, null, 0);
     }
@@ -631,9 +593,6 @@ public class OverlayLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final long totalDurationMs = mProject.computeDuration();
@@ -740,15 +699,13 @@ public class OverlayLinearLayout extends LinearLayout {
                     return null;
                 }
 
-                final Activity activity = (Activity)getContext();
+                final Activity activity = (Activity) getContext();
                 return AlertDialogs.createAlert(activity, FileUtils.getSimpleName(
                         mediaItem.getFilename()), 0,
                         activity.getString(R.string.editor_remove_overlay_question),
                         activity.getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (mOverlayActionMode != null) {
                             mOverlayActionMode.finish();
@@ -760,16 +717,12 @@ public class OverlayLinearLayout extends LinearLayout {
                                 mediaItem.getOverlay().getId());
                     }
                 }, activity.getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_OVERLAY_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_OVERLAY_ID);
                     }
@@ -840,9 +793,6 @@ public class OverlayLinearLayout extends LinearLayout {
         requestLayout();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void setSelected(boolean selected) {
         if (selected == false) {
@@ -916,17 +866,13 @@ public class OverlayLinearLayout extends LinearLayout {
             private int mMovePosition;
             private long mMinimumDurationMs;
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onMoveBegin(HandleView view) {
                 mMediaItem = mediaItem;
                 mMinimumDurationMs = MediaItemUtils.getMinimumMediaItemDuration(mediaItem);
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onMove(HandleView view, int left, int delta) {
                 if (mMoveLayoutPending) {
                     return false;
@@ -960,16 +906,12 @@ public class OverlayLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onMoveEnd(final HandleView view, final int left, final int delta) {
                 final int position = left + delta;
                 if (mMoveLayoutPending || (position != mMovePosition)) {
                     mHandler.post(new Runnable() {
-                        /*
-                         * {@inheritDoc}
-                         */
+                        @Override
                         public void run() {
                             if (mMoveLayoutPending) {
                                 mHandler.post(this);

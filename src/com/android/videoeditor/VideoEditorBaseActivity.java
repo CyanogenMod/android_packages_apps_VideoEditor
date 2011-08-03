@@ -580,7 +580,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
                 Toast.makeText(VideoEditorBaseActivity.this, R.string.editor_add_overlay_error,
                             Toast.LENGTH_LONG).show();
             } else {
-                getMediaLayout().invalidateCAB();
+                getMediaLayout().invalidateActionBar();
                 getOverlayLayout().addOverlay(mediaItemId, overlay);
             }
         }
@@ -820,7 +820,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        mProjectEditState = ApiService.isProjectEdited(mProjectPath);
+        mProjectEditState = ApiService.isProjectBeingEdited(mProjectPath);
         onProjectEditStateChange(mProjectEditState);
 
         ApiService.registerListener(mServiceListener);

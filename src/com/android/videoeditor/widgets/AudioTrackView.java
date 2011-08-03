@@ -107,21 +107,15 @@ public class AudioTrackView extends View {
                 });
 
         mScrollListener = new ScrollViewListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 mScrollX = scrollX;
                 invalidate();
@@ -138,23 +132,14 @@ public class AudioTrackView extends View {
         mProgress = -1;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public AudioTrackView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public AudioTrackView(Context context) {
         this(context, null, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onAttachedToWindow() {
         final TimelineHorizontalScrollView scrollView =
@@ -163,9 +148,6 @@ public class AudioTrackView extends View {
         scrollView.addScrollListener(mScrollListener);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDetachedFromWindow() {
         final TimelineHorizontalScrollView scrollView =
@@ -303,9 +285,6 @@ public class AudioTrackView extends View {
         return mWaveformData;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -359,9 +338,6 @@ public class AudioTrackView extends View {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         // Let the gesture detector inspect all events.

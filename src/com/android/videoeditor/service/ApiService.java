@@ -433,19 +433,19 @@ public class ApiService extends Service {
      }
 
     /**
-     * Check if the service is busy modifying the timeline. While
+     * Checks if the service is busy modifying the timeline. While
      * the video editor is busy the application should not attempt
      * to preview the movie.
      *
      * @param projectPath The project path
      *
-     * @return true if the video editor is busy
+     * @return {@code true} if the video editor is modifying the timeline
      */
-    public static boolean isProjectEdited(String projectPath) {
+    public static boolean isProjectBeingEdited(String projectPath) {
         for (Intent intent : mPendingIntents.values()) {
             final int op = intent.getIntExtra(PARAM_OP, -1);
             switch (op) {
-                // When these operations are pending the video editor is not busy
+                // When these operations are pending the video editor is not busy.
                 case OP_VIDEO_EDITOR_LOAD_PROJECTS:
                 case OP_VIDEO_EDITOR_SAVE:
                 case OP_MEDIA_ITEM_SET_VOLUME:
@@ -1377,7 +1377,7 @@ public class ApiService extends Service {
 
         final String projectPath = intent.getStringExtra(PARAM_PROJECT_PATH);
         if (projectPath != null) {
-            final boolean projectEdited = isProjectEdited(projectPath);
+            final boolean projectEdited = isProjectBeingEdited(projectPath);
             if (projectEdited) {
                 for (ApiServiceListener listener : mListeners) {
                     listener.onProjectEditState(projectPath, projectEdited);
@@ -4065,7 +4065,7 @@ public class ApiService extends Service {
 
         final String projectPath = intent.getStringExtra(PARAM_PROJECT_PATH);
         if (projectPath != null) {
-            final boolean projectEdited = isProjectEdited(projectPath);
+            final boolean projectEdited = isProjectBeingEdited(projectPath);
             if (projectEdited == false) {
                 for (ApiServiceListener listener : mListeners) {
                     listener.onProjectEditState(projectPath, projectEdited);

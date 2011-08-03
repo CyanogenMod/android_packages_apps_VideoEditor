@@ -183,6 +183,7 @@ public class ImageViewTouchBase extends ImageView {
         final int viewWidth = getWidth();
         if (viewWidth <= 0) {
             mOnLayoutRunnable = new Runnable() {
+                @Override
                 public void run() {
                     setImageBitmapResetBase(bitmap, resetSupp);
                 }
@@ -248,8 +249,6 @@ public class ImageViewTouchBase extends ImageView {
 
     /**
      * @param rect The input/output rectangle
-     *
-     * @return The transform matrix
      */
     public void mapRect(RectF rect) {
         mSuppMatrix.mapRect(rect);

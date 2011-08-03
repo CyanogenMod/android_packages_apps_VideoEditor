@@ -26,41 +26,34 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * The base class for BaseAdapters which load images.
+ * Base class for BaseAdapters which load images.
  */
-public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
+public abstract class BaseAdapterWithImages<K> extends BaseAdapter {
     protected final Context mContext;
-    private final List<ImageViewHolder<T>> mViewHolders;
+    private final List<ImageViewHolder<K>> mViewHolders;
     // For recording keys of images that are being loaded
-    private final Set<T> mLoadingImages;
+    private final Set<K> mLoadingImages;
     private final AbsListView mListView;
 
     /**
      * View holder class
      */
-    protected static class ImageViewHolder<T> {
+    protected static class ImageViewHolder<K> {
         private final ImageView mImageView;
-        private T mKey;
+        private K mKey;
 
-        /**
-         * Constructor
-         *
-         * @param rowView The row view
-         */
         public ImageViewHolder(View rowView) {
-            mImageView = (ImageView)rowView.findViewById(R.id.item_preview);
+            mImageView = (ImageView) rowView.findViewById(R.id.item_preview);
         }
 
-        /**
-         * @param key The key
-         */
-        public void setKey(T key) {
+        public void setKey(K key) {
             mKey = key;
         }
     }
@@ -68,17 +61,12 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
     /**
      * View holder class
      */
-    protected static class ImageTextViewHolder<T> extends ImageViewHolder<T> {
+    protected static class ImageTextViewHolder<K> extends ImageViewHolder<K> {
         protected final TextView mNameView;
 
-        /**
-         * Constructor
-         *
-         * @param rowView The row view
-         */
         public ImageTextViewHolder(View rowView) {
             super(rowView);
-            mNameView = (TextView)rowView.findViewById(R.id.item_name);
+            mNameView = (TextView) rowView.findViewById(R.id.item_name);
         }
     }
 
@@ -86,7 +74,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
      * Image loader class
      */
     protected class ImageLoaderAsyncTask extends AsyncTask<Void, Void, Bitmap> {
-        private final T mKey;
+        private final K mKey;
         private final Object mData;
 
         /**
@@ -95,7 +83,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
          * @param key The bitmap key
          * @param data The data
          */
-        public ImageLoaderAsyncTask(T key, Object data) {
+        public ImageLoaderAsyncTask(K key, Object data) {
             mKey = key;
             mData = data;
         }
@@ -112,7 +100,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
                 return;
             }
 
-            for (ImageViewHolder<T> viewHolder : mViewHolders) {
+            for (ImageViewHolder<K> viewHolder : mViewHolders) {
                 if (mKey.equals(viewHolder.mKey)) {
                     viewHolder.mImageView.setImageBitmap(bitmap);
                     return;
@@ -121,7 +109,7 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
 
             bitmap.recycle();
         }
-    };
+    }
 
     /**
      * Constructor
@@ -132,16 +120,14 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
     public BaseAdapterWithImages(Context context, AbsListView listView) {
         mContext = context;
         mListView = listView;
-        mLoadingImages = new HashSet<T>();
-        mViewHolders = new ArrayList<ImageViewHolder<T>>();
+        mLoadingImages = new HashSet<K>();
+        mViewHolders = new ArrayList<ImageViewHolder<K>>();
 
-        listView.setRecyclerListener(new AbsListView.RecyclerListener() {
-            /*
-             * {@inheritDoc}
-             */
+        mListView.setRecyclerListener(new AbsListView.RecyclerListener() {
+            @Override
             @SuppressWarnings("unchecked")
             public void onMovedToScrapHeap(View view) {
-                final ImageViewHolder<T> viewHolder = (ImageViewHolder<T>)view.getTag();
+                final ImageViewHolder<K> viewHolder = (ImageViewHolder<K>)view.getTag();
 
                 mViewHolders.remove(viewHolder);
                 viewHolder.setKey(null);
@@ -179,14 +165,14 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
     }
 
     /**
-     * Start the AsyncTask which loads the bitmap
+     * Starts the AsyncTask which loads the bitmap.
      *
      * @param key The bitmap key
      * @param data The data
      * @param viewHolder The view holder
      */
-    protected void initiateLoad(T key, Object data, ImageViewHolder<T> viewHolder) {
-        // The adapter may recycle a view and then reuse it
+    protected void initiateLoad(K key, Object data, ImageViewHolder<K> viewHolder) {
+        // The adapter may recycle a view and then reuse it.
         if (!mViewHolders.contains(viewHolder)) {
             mViewHolders.add(viewHolder);
         }
@@ -206,8 +192,14 @@ public abstract class BaseAdapterWithImages<T> extends BaseAdapter {
     @Override
     public abstract int getCount();
 
+    @Override
+    public abstract Object getItem(int position);
+
+    @Override
+    public abstract View getView(int position, View convertView, ViewGroup parent);
+
     /**
-     * Load an image based on its key
+     * Loads an image based on its key.
      *
      * @param data The data required to load the image
      *

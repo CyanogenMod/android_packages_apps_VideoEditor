@@ -49,14 +49,15 @@ import android.widget.Toast;
 
 import com.android.videoeditor.AlertDialogs;
 import com.android.videoeditor.EffectType;
-import com.android.videoeditor.EffectsActivity;
-import com.android.videoeditor.OverlaysActivity;
+import com.android.videoeditor.KenBurnsActivity;
+import com.android.videoeditor.OverlayTitleEditor;
 import com.android.videoeditor.TransitionType;
 import com.android.videoeditor.TransitionsActivity;
 import com.android.videoeditor.VideoEditorActivity;
 import com.android.videoeditor.service.ApiService;
 import com.android.videoeditor.service.MovieEffect;
 import com.android.videoeditor.service.MovieMediaItem;
+import com.android.videoeditor.service.MovieOverlay;
 import com.android.videoeditor.service.MovieTransition;
 import com.android.videoeditor.service.VideoEditorProject;
 import com.android.videoeditor.util.FileUtils;
@@ -64,7 +65,7 @@ import com.android.videoeditor.util.MediaItemUtils;
 import com.android.videoeditor.R;
 
 /**
- * The LinearLayout which holds media items and transitions
+ * LinearLayout which holds media items and transitions.
  */
 public class MediaLinearLayout extends LinearLayout {
     // Logging
@@ -90,7 +91,7 @@ public class MediaLinearLayout extends LinearLayout {
     private final int mHandleWidth;
     private final int mTransitionVerticalInset;
     private final ImageButton mLeftAddClipButton, mRightAddClipButton;
-    private MediaLayoutListener mListener;
+    private MediaLinearLayoutListener mListener;
     private ActionMode mMediaItemActionMode;
     private ActionMode mTransitionActionMode;
     private VideoEditorProject mProject;
@@ -106,107 +107,76 @@ public class MediaLinearLayout extends LinearLayout {
     private boolean mFirstEntered;
 
     /**
-     * Activity listener
-     */
-    public interface MediaLayoutListener {
-        /**
-         * Request scrolling by an offset amount
-         *
-         * @param scrollBy The amount to scroll
-         * @param smooth true to scroll smoothly
-         */
-        public void onRequestScrollBy(int scrollBy, boolean smooth);
-
-        /**
-         * Request scrolling to a specified time position
-         *
-         * @param scrollToTime The scroll position
-         * @param smooth true to scroll smoothly
-         */
-        public void onRequestMovePlayhead(long scrollToTime, boolean smooth);
-
-        /**
-         * Add a new media item
-         *
-         * @param afterMediaItemId Add media item after this media item id
-         */
-        public void onAddMediaItem(String afterMediaItemId);
-
-        /**
-         * A media item enters trimming mode
-         *
-         * @param mediaItem The media item
-         */
-        public void onTrimMediaItemBegin(MovieMediaItem mediaItem);
-
-        /**
-         * A media item is being trimmed
-         *
-         * @param mediaItem The media item
-         * @param timeMs The time where the trim occurs
-         */
-        public void onTrimMediaItem(MovieMediaItem mediaItem, long timeMs);
-
-        /**
-         * A media has been trimmed
-         *
-         * @param mediaItem The media item
-         * @param timeMs The time where the trim occurs
-         */
-        public void onTrimMediaItemEnd(MovieMediaItem mediaItem, long timeMs);
-    };
-
-    /**
-     * The media item action mode handler
+     * The media item action mode handler.
      */
     private class MediaItemActionModeCallback implements ActionMode.Callback {
-        // Instance variables
+        // Media item associated with this callback.
         private final MovieMediaItem mMediaItem;
 
-        /**
-         * Constructor
-         *
-         * @param mediaItem The media item
-         */
         public MediaItemActionModeCallback(MovieMediaItem mediaItem) {
             mMediaItem = mediaItem;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mMediaItemActionMode = mode;
 
-            final Activity activity = (Activity)getContext();
+            final Activity activity = (Activity) getContext();
             activity.getMenuInflater().inflate(R.menu.media_item_mode_menu, menu);
-            mode.setTitle(FileUtils.getSimpleName(mMediaItem.getFilename()));
 
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            final boolean enable = !ApiService.isProjectEdited(mProject.getPath()) &&
+            final boolean enable = !ApiService.isProjectBeingEdited(mProject.getPath()) &&
                 !mPlaybackInProgress;
 
-            final MenuItem aemi = menu.findItem(R.id.action_add_effect);
-            aemi.setVisible(mMediaItem.getEffect() == null);
-            aemi.setEnabled(enable);
+            // Pan zoom effect is only for images. Hide it from video clips.
+            MenuItem item;
+            if (!mMediaItem.isImage()) {
+                item = menu.findItem(R.id.action_pan_zoom_effect);
+                item.setVisible(false);
+                item.setEnabled(false);
+            }
 
-            final MenuItem eemi = menu.findItem(R.id.action_change_effect);
-            eemi.setVisible(mMediaItem.getEffect() != null);
-            eemi.setEnabled(enable);
+            // If the selected media item already has an effect applied on it, check the
+            // corresponding effect menu item.
+            MovieEffect effect = mMediaItem.getEffect();
+            if (effect != null) {
+                switch (mMediaItem.getEffect().getType()) {
+                    case EffectType.EFFECT_KEN_BURNS:
+                        item = menu.findItem(R.id.action_pan_zoom_effect);
+                        break;
+                    case EffectType.EFFECT_COLOR_GRADIENT:
+                        item = menu.findItem(R.id.action_gradient_effect);
+                        break;
+                    case EffectType.EFFECT_COLOR_SEPIA:
+                        item = menu.findItem(R.id.action_sepia_effect);
+                        break;
+                    case EffectType.EFFECT_COLOR_NEGATIVE:
+                        item = menu.findItem(R.id.action_negative_effect);
+                        break;
+                    default:
+                        item = menu.findItem(R.id.action_no_effect);
+                        break;
+                }
+            } else {
+                item = menu.findItem(R.id.action_no_effect);
+            }
+            item.setChecked(true);
+            menu.findItem(R.id.media_item_effect_menu).setEnabled(enable);
 
-            final MenuItem remi = menu.findItem(R.id.action_remove_effect);
-            remi.setVisible(mMediaItem.getEffect() != null);
-            remi.setEnabled(enable);
-
+            // Menu item for adding a new overlay. It is also used to edit
+            // existing overlay. We change the displayed text accordingly.
             final MenuItem aomi = menu.findItem(R.id.action_add_overlay);
-            aomi.setVisible(mMediaItem.getOverlay() == null);
+            aomi.setTitle((mMediaItem.getOverlay() == null) ?
+                    R.string.editor_add_overlay : R.string.editor_edit_overlay);
             aomi.setEnabled(enable);
+
+            final MenuItem romi = menu.findItem(R.id.action_remove_overlay);
+            romi.setVisible(mMediaItem.getOverlay() != null);
+            romi.setEnabled(enable);
 
             final MenuItem btmi = menu.findItem(R.id.action_add_begin_transition);
             btmi.setVisible(mMediaItem.getBeginTransition() == null);
@@ -223,39 +193,16 @@ public class MediaLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.action_add_effect: {
-                    if (mMediaItem.isImage()) {
-                        pickEffect(EffectType.CATEGORY_IMAGE, mMediaItem);
-                    } else {
-                        pickEffect(EffectType.CATEGORY_VIDEO, mMediaItem);
-                    }
-                    break;
-                }
-
-                case R.id.action_change_effect: {
-                    if (mMediaItem.isImage()) {
-                        editEffect(EffectType.CATEGORY_IMAGE, mMediaItem, mMediaItem.getEffect());
-                    } else {
-                        editEffect(EffectType.CATEGORY_VIDEO, mMediaItem, mMediaItem.getEffect());
-                    }
-                    break;
-                }
-
-                case R.id.action_remove_effect: {
-                    final Bundle bundle = new Bundle();
-                    bundle.putString(PARAM_DIALOG_MEDIA_ITEM_ID, mMediaItem.getId());
-                    ((Activity)getContext()).showDialog(
-                            VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID, bundle);
-                    break;
-                }
-
                 case R.id.action_add_overlay: {
-                    pickOverlay(mMediaItem.getId());
+                    editOverlay(mMediaItem);
+                    break;
+                }
+
+                case R.id.action_remove_overlay: {
+                    removeOverlay(mMediaItem);
                     break;
                 }
 
@@ -271,12 +218,30 @@ public class MediaLinearLayout extends LinearLayout {
                     break;
                 }
 
+                case R.id.action_gradient_effect:
+                case R.id.action_sepia_effect:
+                case R.id.action_negative_effect:
+                case R.id.action_pan_zoom_effect: {
+                    applyEffect(item);
+                    break;
+                }
+
+                case R.id.action_no_effect: {
+                    if (!item.isChecked()) {
+                        final Bundle bundle = new Bundle();
+                        bundle.putString(PARAM_DIALOG_MEDIA_ITEM_ID, mMediaItem.getId());
+                        ((Activity) getContext()).showDialog(
+                                VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID, bundle);
+                    }
+                    break;
+                }
+
                 case R.id.action_rendering_mode: {
                     final Bundle bundle = new Bundle();
                     bundle.putString(PARAM_DIALOG_MEDIA_ITEM_ID, mMediaItem.getId());
                     bundle.putInt(PARAM_DIALOG_CURRENT_RENDERING_MODE,
                             mMediaItem.getAppRenderingMode());
-                    ((Activity)getContext()).showDialog(
+                    ((Activity) getContext()).showDialog(
                             VideoEditorActivity.DIALOG_CHANGE_RENDERING_MODE_ID, bundle);
                     break;
                 }
@@ -284,7 +249,7 @@ public class MediaLinearLayout extends LinearLayout {
                 case R.id.action_delete_media_item: {
                     final Bundle bundle = new Bundle();
                     bundle.putString(PARAM_DIALOG_MEDIA_ITEM_ID, mMediaItem.getId());
-                    ((Activity)getContext()).showDialog(
+                    ((Activity) getContext()).showDialog(
                             VideoEditorActivity.DIALOG_REMOVE_MEDIA_ITEM_ID, bundle);
                     break;
                 }
@@ -297,9 +262,7 @@ public class MediaLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onDestroyActionMode(ActionMode mode) {
             final View mediaItemView = getMediaItemView(mMediaItem.getId());
             if (mSelectedView != null) {
@@ -315,43 +278,71 @@ public class MediaLinearLayout extends LinearLayout {
 
             showAddMediaItemButtons(true);
         }
+
+        private void applyEffect(MenuItem clickedItem) {
+            if (!clickedItem.isChecked()) {
+                switch(clickedItem.getItemId()) {
+                    case R.id.action_gradient_effect:
+                        addEffect(EffectType.EFFECT_COLOR_GRADIENT,
+                                mMediaItem.getId(), null, null);
+                        clickedItem.setChecked(true);
+                        break;
+                    case R.id.action_sepia_effect:
+                        addEffect(EffectType.EFFECT_COLOR_SEPIA,
+                                mMediaItem.getId(), null, null);
+                        clickedItem.setChecked(true);
+                        break;
+                    case R.id.action_negative_effect:
+                        addEffect(EffectType.EFFECT_COLOR_NEGATIVE,
+                                mMediaItem.getId(), null, null);
+                        clickedItem.setChecked(true);
+                        break;
+                    case R.id.action_pan_zoom_effect: {
+                        // Note that we don't check the pan zoom checkbox here.
+                        // Because pan zoom effect will start a new activity and users
+                        // could cancel applying the effect. Once pan zoom effect has
+                        // really been applied. The action mode will be invalidated in
+                        // onActivityResult() method and the checkbox is then checked.
+                        final Intent intent = new Intent(getContext(), KenBurnsActivity.class);
+                        intent.putExtra(KenBurnsActivity.PARAM_MEDIA_ITEM_ID, mMediaItem.getId());
+                        intent.putExtra(KenBurnsActivity.PARAM_FILENAME, mMediaItem.getFilename());
+                        intent.putExtra(KenBurnsActivity.PARAM_WIDTH, mMediaItem.getWidth());
+                        intent.putExtra(KenBurnsActivity.PARAM_HEIGHT, mMediaItem.getHeight());
+                        ((Activity) getContext()).startActivityForResult(intent,
+                                VideoEditorActivity.REQUEST_CODE_KEN_BURNS);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     /**
-     * The transition action mode handler
+     * The transition action mode handler.
      */
     private class TransitionActionModeCallback implements ActionMode.Callback {
-        // Instance variables
         private final MovieTransition mTransition;
 
-        /**
-         * Constructor
-         *
-         * @param transition The transition
-         */
         public TransitionActionModeCallback(MovieTransition transition) {
             mTransition = transition;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mTransitionActionMode = mode;
 
-            final Activity activity = (Activity)getContext();
+            final Activity activity = (Activity) getContext();
             activity.getMenuInflater().inflate(R.menu.transition_mode_menu, menu);
-
             mode.setTitle(activity.getString(R.string.editor_transition_title));
 
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            final boolean enable = !ApiService.isProjectEdited(mProject.getPath()) &&
+            final boolean enable = !ApiService.isProjectBeingEdited(mProject.getPath()) &&
                 !mPlaybackInProgress;
 
             final MenuItem etmi = menu.findItem(R.id.action_change_transition);
@@ -363,15 +354,13 @@ public class MediaLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_remove_transition: {
                     final Bundle bundle = new Bundle();
                     bundle.putString(PARAM_DIALOG_TRANSITION_ID, mTransition.getId());
-                    ((Activity)getContext()).showDialog(
+                    ((Activity) getContext()).showDialog(
                             VideoEditorActivity.DIALOG_REMOVE_TRANSITION_ID, bundle);
                     break;
                 }
@@ -389,9 +378,7 @@ public class MediaLinearLayout extends LinearLayout {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onDestroyActionMode(ActionMode mode) {
             final View transitionView = getTransitionView(mTransition.getId());
             if (transitionView != null) {
@@ -404,16 +391,11 @@ public class MediaLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public MediaLinearLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         mMediaItemGestureListener = new ItemSimpleGestureListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onSingleTapConfirmed(View view, int area, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return false;
@@ -449,9 +431,7 @@ public class MediaLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onLongPress(View view, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return;
@@ -474,9 +454,7 @@ public class MediaLinearLayout extends LinearLayout {
         };
 
         mTransitionGestureListener = new ItemSimpleGestureListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onSingleTapConfirmed(View view, int area, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return false;
@@ -489,9 +467,7 @@ public class MediaLinearLayout extends LinearLayout {
                 return true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onLongPress(View view, MotionEvent e) {
                 if (mPlaybackInProgress) {
                     return;
@@ -511,9 +487,7 @@ public class MediaLinearLayout extends LinearLayout {
         // Add the beginning timeline item
         final View beginView = inflate(getContext(), R.layout.empty_left_timeline_item, null);
         beginView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 unselectAllViews();
             }
@@ -523,9 +497,7 @@ public class MediaLinearLayout extends LinearLayout {
                 R.id.add_left_media_item_button);
         mLeftAddClipButton.setVisibility(View.GONE);
         mLeftAddClipButton.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 if (mProject != null && mProject.getMediaItemCount() > 0) {
                     unselectAllViews();
@@ -540,20 +512,16 @@ public class MediaLinearLayout extends LinearLayout {
         // Add the end timeline item
         final View endView = inflate(getContext(), R.layout.empty_right_timeline_item, null);
         endView.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 unselectAllViews();
             }
         });
 
-        mRightAddClipButton = (ImageButton)endView.findViewById(
+        mRightAddClipButton = (ImageButton) endView.findViewById(
                 R.id.add_right_media_item_button);
         mRightAddClipButton.setOnClickListener(new View.OnClickListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onClick(View view) {
                 if (mProject != null) {
                     unselectAllViews();
@@ -589,52 +557,40 @@ public class MediaLinearLayout extends LinearLayout {
         setMotionEventSplittingEnabled(false);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public MediaLinearLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public MediaLinearLayout(Context context) {
         this(context, null, 0);
     }
 
     /**
-     * The activity was resumed
+     * Called when the containing activity is resumed.
      */
     public void onResume() {
-        // Invalidate all progress in case the transition generation
-        // or Ken Burns effect completed while the activity was be paused.
+        // Invalidate all progress in case the transition generation or
+        // Ken Burns effect completed while the activity was being paused.
         final int childrenCount = getChildCount();
         for (int i = 0; i < childrenCount; i++) {
             final View childView = getChildAt(i);
-            final Object tag = childView.getTag();
-            if (tag != null) {
-                if (tag instanceof MovieMediaItem) {
-                    ((MediaItemView)childView).setProgress(-1);
-                } else if (tag instanceof MovieTransition) {
-                    ((TransitionView)childView).setProgress(-1);
+            final Object item = childView.getTag();
+            if (item != null) {
+                if (item instanceof MovieMediaItem) {
+                    ((MediaItemView) childView).setProgress(-1);
+                } else if (item instanceof MovieTransition) {
+                    ((TransitionView) childView).setProgress(-1);
                 }
             }
         }
     }
 
-    /**
-     * @param listener The listener
-     */
-    public void setListener(MediaLayoutListener listener) {
+    public void setListener(MediaLinearLayoutListener listener) {
         mListener = listener;
     }
 
-    /**
-     * @param project The project
-     */
     public void setProject(VideoEditorProject project) {
-        // Close the contextual action bar
+        // Close the contextual action bar.
         if (mMediaItemActionMode != null) {
             mMediaItemActionMode.finish();
             mMediaItemActionMode = null;
@@ -656,7 +612,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * @param inProgress true if playback is in progress
+     * @param inProgress {@code true} if playback is in progress, false otherwise
      */
     public void setPlaybackInProgress(boolean inProgress) {
         mPlaybackInProgress = inProgress;
@@ -676,7 +632,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Add all the media items
+     * Adds all given media items.
      *
      * @param mediaItems The list of media items
      */
@@ -699,7 +655,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Add a new media item at the end of the timeline
+     * Adds a new media item at the end of the timeline.
      *
      * @param mediaItem The media item
      */
@@ -712,11 +668,12 @@ public class MediaLinearLayout extends LinearLayout {
 
         // Add the new view
         final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
-        // Add the view before the end, handle left and handle right views
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.FILL_PARENT);
+        // Add the view before the end view, left handle and right handle views.
         addView(mediaItemView, getChildCount() - 3, lp);
 
-        // If the new media item has beginning and end transitions add them
+        // If the new media item has beginning and end transitions, add them.
         final MovieTransition beginTransition = mediaItem.getBeginTransition();
         if (beginTransition != null) {
             final int cc = getChildCount();
@@ -751,7 +708,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Insert a new media item after the specified media item id
+     * Inserts a new media item after the specified media item id.
      *
      * @param mediaItem The media item
      * @param afterMediaItemId The id of the media item preceding the media item
@@ -827,7 +784,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Update media item
+     * Updates media item.
      *
      * @param mediaItem The media item
      */
@@ -882,7 +839,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Remove a media item view
+     * Removes a media item view.
      *
      * @param mediaItemId The media item id
      * @param transition The transition inserted at the removal position
@@ -1162,16 +1119,19 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Invalidate the CAB
+     * Invalidates the available action modes. Used to refresh menu contents.
      */
-    public void invalidateCAB() {
+    public void invalidateActionBar() {
         if (mMediaItemActionMode != null) {
             mMediaItemActionMode.invalidate();
+        }
+        if (mTransitionActionMode != null) {
+            mTransitionActionMode.invalidate();
         }
     }
 
     /**
-     * A Ken Burns movie is encoded for an MediaImageItem
+     * A Ken Burns movie is encoded for an MediaImageItem.
      *
      * @param mediaItemId The media item id
      * @param action The action
@@ -1222,7 +1182,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Create a new effect
+     * Creates a new effect on the specified media item.
      *
      * @param effectType The effect type
      * @param mediaItemId Add the effect for this media item id
@@ -1280,78 +1240,6 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Create a new effect
-     *
-     * @param effectType The effect type
-     * @param mediaItemId Add the effect for this media item id
-     * @param startRect The start rectangle
-     * @param endRect The end rectangle
-     */
-    public void editEffect(int effectType, String mediaItemId, Rect startRect, Rect endRect) {
-        final MovieMediaItem mediaItem = mProject.getMediaItem(mediaItemId);
-        if (mediaItem == null) {
-            Log.e(TAG, "editEffect media item not found: " + mediaItemId);
-            return;
-        }
-
-        final MovieEffect effect = mediaItem.getEffect();
-
-        final String id = ApiService.generateId();
-        switch (effectType) {
-            case EffectType.EFFECT_KEN_BURNS: {
-                ApiService.addEffectKenBurns(getContext(), mProject.getPath(), mediaItemId,
-                        id, 0, mediaItem.getDuration(), startRect, endRect);
-                break;
-            }
-
-            case EffectType.EFFECT_COLOR_GRADIENT: {
-                // Check if the type has changed
-                if (effect.getType() != effectType) {
-                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                            mediaItem.getDuration(), EffectColor.TYPE_GRADIENT,
-                            EffectColor.GRAY);
-                }
-                break;
-            }
-
-            case EffectType.EFFECT_COLOR_SEPIA: {
-                // Check if the type has changed
-                if (effect.getType() != effectType) {
-                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                            mediaItem.getDuration(), EffectColor.TYPE_SEPIA, 0);
-                }
-                break;
-            }
-
-            case EffectType.EFFECT_COLOR_NEGATIVE: {
-                // Check if the type has changed
-                if (effect.getType() != effectType) {
-                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                            mediaItem.getDuration(), EffectColor.TYPE_NEGATIVE, 0);
-                }
-                break;
-            }
-
-            case EffectType.EFFECT_COLOR_FIFTIES: {
-                // Check if the type has changed
-                if (effect.getType() != effectType) {
-                    ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                            mediaItem.getDuration(), EffectColor.TYPE_FIFTIES, 0);
-                }
-                break;
-            }
-
-            default: {
-                break;
-            }
-        }
-
-        if (mMediaItemActionMode != null) {
-            mMediaItemActionMode.invalidate();
-        }
-    }
-
-    /**
      * Set the media item thumbnails.
      *
      * @param mediaItemId The media item id
@@ -1378,7 +1266,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Set the transition thumbnails.
+     * Sets the transition thumbnails.
      *
      * @param transitionId The transition id
      * @param bitmaps The bitmaps array
@@ -1400,9 +1288,6 @@ public class MediaLinearLayout extends LinearLayout {
         return false;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         // Compute the total duration
@@ -1567,7 +1452,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Create a new dialog
+     * Creates a new dialog.
      *
      * @param id The dialog id
      * @param bundle The dialog bundle
@@ -1588,7 +1473,7 @@ public class MediaLinearLayout extends LinearLayout {
                     return null;
                 }
 
-                final Activity activity = (Activity)getContext();
+                final Activity activity = (Activity) getContext();
                 return AlertDialogs.createAlert(activity,
                         FileUtils.getSimpleName(mediaItem.getFilename()),
                         0, mediaItem.isVideoClip() ?
@@ -1596,9 +1481,7 @@ public class MediaLinearLayout extends LinearLayout {
                                     activity.getString(R.string.editor_remove_image_question),
                         activity.getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (mMediaItemActionMode != null) {
                             mMediaItemActionMode.finish();
@@ -1612,16 +1495,12 @@ public class MediaLinearLayout extends LinearLayout {
                                 mProject.getTheme());
                     }
                 }, activity.getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_MEDIA_ITEM_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_MEDIA_ITEM_ID);
                     }
@@ -1665,9 +1544,7 @@ public class MediaLinearLayout extends LinearLayout {
 
                 builder.setSingleChoiceItems(renderingModeStrings, currentRenderingModeIndex,
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0: {
@@ -1703,9 +1580,7 @@ public class MediaLinearLayout extends LinearLayout {
                 });
                 builder.setCancelable(true);
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_CHANGE_RENDERING_MODE_ID);
                     }
@@ -1720,15 +1595,13 @@ public class MediaLinearLayout extends LinearLayout {
                     return null;
                 }
 
-                final Activity activity = (Activity)getContext();
+                final Activity activity = (Activity) getContext();
                 return AlertDialogs.createAlert(activity,
                         activity.getString(R.string.remove),
                         0, activity.getString(R.string.editor_remove_transition_question),
                         activity.getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (mTransitionActionMode != null) {
                             mTransitionActionMode.finish();
@@ -1741,16 +1614,12 @@ public class MediaLinearLayout extends LinearLayout {
                                 transition.getId());
                     }
                 }, activity.getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_TRANSITION_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_TRANSITION_ID);
                     }
@@ -1764,15 +1633,13 @@ public class MediaLinearLayout extends LinearLayout {
                     return null;
                 }
 
-                final Activity activity = (Activity)getContext();
+                final Activity activity = (Activity) getContext();
                 return AlertDialogs.createAlert(activity,
                         FileUtils.getSimpleName(mediaItem.getFilename()),
                         0, activity.getString(R.string.editor_remove_effect_question),
                         activity.getString(R.string.yes),
                         new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID);
 
@@ -1784,16 +1651,12 @@ public class MediaLinearLayout extends LinearLayout {
                         }
                     }
                 }, activity.getString(R.string.no), new DialogInterface.OnClickListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID);
                     }
                 }, new DialogInterface.OnCancelListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onCancel(DialogInterface dialog) {
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_EFFECT_ID);
                     }
@@ -1806,9 +1669,6 @@ public class MediaLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onDragEvent(DragEvent event) {
         boolean result = false;
@@ -2088,61 +1948,41 @@ public class MediaLinearLayout extends LinearLayout {
         return timeMs;
     }
 
+
     /**
-     * Pick an overlay
-     *
-     * @param mediaItemId Media item id
+     * Adds/edits title overlay of the specified media item.
      */
-    private void pickOverlay(String mediaItemId) {
-        final Intent intent = new Intent(getContext(), OverlaysActivity.class);
-        intent.putExtra(OverlaysActivity.PARAM_MEDIA_ITEM_ID, mediaItemId);
-        ((Activity)getContext()).startActivityForResult(intent,
+    private void editOverlay(MovieMediaItem mediaItem) {
+        final Intent intent = new Intent(getContext(), OverlayTitleEditor.class);
+        intent.putExtra(OverlayTitleEditor.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
+
+        // Determine if user wants to edit an existing title overlay or add a new one.
+        // Add overlay id and attributes bundle to the extra if the overlay already exists.
+        final MovieOverlay overlay = mediaItem.getOverlay();
+        if (overlay != null) {
+            final String overlayId = mediaItem.getOverlay().getId();
+            intent.putExtra(OverlayTitleEditor.PARAM_OVERLAY_ID, overlayId);
+            final Bundle attributes = MovieOverlay.buildUserAttributes(
+                    overlay.getType(), overlay.getTitle(), overlay.getSubtitle());
+            intent.putExtra(OverlayTitleEditor.PARAM_OVERLAY_ATTRIBUTES,
+                    attributes);
+        }
+        ((Activity) getContext()).startActivityForResult(intent,
                 VideoEditorActivity.REQUEST_CODE_PICK_OVERLAY);
     }
 
     /**
-     * Pick an effect of the specified category
-     *
-     * @param category The category
-     * @param mediaItem The media item
+     * Removes the overlay of the specified media item.
      */
-    private void pickEffect(int category, MovieMediaItem mediaItem) {
-        final Intent intent = new Intent(getContext(), EffectsActivity.class);
-        intent.putExtra(EffectsActivity.PARAM_CATEGORY, category);
-        intent.putExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
-        intent.putExtra(EffectsActivity.PARAM_FILENAME, mediaItem.getFilename());
-        intent.putExtra(EffectsActivity.PARAM_WIDTH, mediaItem.getWidth());
-        intent.putExtra(EffectsActivity.PARAM_HEIGHT, mediaItem.getHeight());
-        ((Activity)getContext()).startActivityForResult(intent,
-                VideoEditorActivity.REQUEST_CODE_PICK_EFFECT);
+    private void removeOverlay(MovieMediaItem mediaItem) {
+        final Bundle bundle = new Bundle();
+        bundle.putString(PARAM_DIALOG_MEDIA_ITEM_ID, mediaItem.getId());
+        ((Activity) getContext()).showDialog(
+                VideoEditorActivity.DIALOG_REMOVE_OVERLAY_ID, bundle);
     }
 
     /**
-     * Edit an effect of the specified category
-     *
-     * @param category The category
-     * @param mediaItem Media item
-     * @param effect The effect
-     */
-    private void editEffect(int category, MovieMediaItem mediaItem, MovieEffect effect) {
-        final Intent intent = new Intent(getContext(), EffectsActivity.class);
-        intent.putExtra(EffectsActivity.PARAM_CATEGORY, category);
-        intent.putExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID, mediaItem.getId());
-        intent.putExtra(EffectsActivity.PARAM_EFFECT_TYPE, effect.getType());
-        intent.putExtra(EffectsActivity.PARAM_FILENAME, mediaItem.getFilename());
-        intent.putExtra(EffectsActivity.PARAM_WIDTH, mediaItem.getWidth());
-        intent.putExtra(EffectsActivity.PARAM_HEIGHT, mediaItem.getHeight());
-        if (effect.getType() == EffectType.EFFECT_KEN_BURNS) {
-            intent.putExtra(EffectsActivity.PARAM_START_RECT, effect.getStartRect());
-            intent.putExtra(EffectsActivity.PARAM_END_RECT, effect.getEndRect());
-        }
-
-        ((Activity)getContext()).startActivityForResult(intent,
-                VideoEditorActivity.REQUEST_CODE_EDIT_EFFECT);
-    }
-
-    /**
-     * Pick a transition
+     * Picks a transition.
      *
      * @param afterMediaItem After the media item
      *
@@ -2165,13 +2005,13 @@ public class MediaLinearLayout extends LinearLayout {
         intent.putExtra(TransitionsActivity.PARAM_DEFAULT_DURATION, transitionDurationMs);
         intent.putExtra(TransitionsActivity.PARAM_MAXIMUM_DURATION,
                 getMaxTransitionDuration(afterMediaItem));
-        ((Activity)getContext()).startActivityForResult(intent,
+        ((Activity) getContext()).startActivityForResult(intent,
                 VideoEditorActivity.REQUEST_CODE_PICK_TRANSITION);
         return true;
     }
 
     /**
-     * Edit a transition
+     * Edits a transition.
      *
      * @param transition The transition
      */
@@ -2353,9 +2193,6 @@ public class MediaLinearLayout extends LinearLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void setSelected(boolean selected) {
         // Close the contextual action bar
@@ -2390,10 +2227,10 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Select a view and unselect any view that is selected.
+     * Selects a view and un-selects any view that is selected.
      *
-     * @param selectedView The view to select
-     * @param selected true if selected
+     * @param selectedView the view to select
+     * @param selected {@code true} if the view must be selected
      */
     private void selectView(View selectedView, boolean selected) {
         // Check if the selection has changed
@@ -2456,9 +2293,7 @@ public class MediaLinearLayout extends LinearLayout {
                     private int mOriginalWidth;
                     private int mMovePosition;
 
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onMoveBegin(HandleView view) {
                         mMediaItem = (MovieMediaItem)mediaItemView.getTag();
                         mTransitionsDurationMs = (mMediaItem.getBeginTransition() != null ?
@@ -2484,9 +2319,7 @@ public class MediaLinearLayout extends LinearLayout {
                         scrollView.invalidate();
                     }
 
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public boolean onMove(HandleView view, int left, int delta) {
                         if (mMoveLayoutPending) {
                             return false;
@@ -2545,16 +2378,12 @@ public class MediaLinearLayout extends LinearLayout {
                         return true;
                     }
 
-                    /*
-                     * {@inheritDoc}
-                     */
+                    @Override
                     public void onMoveEnd(final HandleView view, final int left, final int delta) {
                         final int position = left + delta;
                         if (mMoveLayoutPending || (position != mMovePosition)) {
                             mHandler.post(new Runnable() {
-                                /*
-                                 * {@inheritDoc}
-                                 */
+                                @Override
                                 public void run() {
                                     if (mMoveLayoutPending) {
                                         mHandler.post(this);
@@ -2632,9 +2461,7 @@ public class MediaLinearLayout extends LinearLayout {
                 private long mMinimumItemDurationMs;
                 private int mMovePosition;
 
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public void onMoveBegin(HandleView view) {
                     mMediaItem = (MovieMediaItem)mediaItemView.getTag();
                     mTransitionsDurationMs = (mMediaItem.getBeginTransition() != null ?
@@ -2648,7 +2475,7 @@ public class MediaLinearLayout extends LinearLayout {
                     mTrimmedView = mediaItemView;
 
                     mListener.onTrimMediaItemBegin(mMediaItem);
-                    if (videoClip) { // Video clip
+                    if (videoClip) {  // Video clip
                         mListener.onTrimMediaItem(mMediaItem, mMediaItem.getAppBoundaryEndTime());
                     } else {
                         mListener.onTrimMediaItem(mMediaItem, 0);
@@ -2659,9 +2486,7 @@ public class MediaLinearLayout extends LinearLayout {
                     scrollView.invalidate();
                 }
 
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public boolean onMove(HandleView view, int left, int delta) {
                     if (mMoveLayoutPending) {
                         return false;
@@ -2751,16 +2576,12 @@ public class MediaLinearLayout extends LinearLayout {
                     return true;
                 }
 
-                /*
-                 * {@inheritDoc}
-                 */
+                @Override
                 public void onMoveEnd(final HandleView view, final int left, final int delta) {
                     final int position = left + delta;
                     if (mMoveLayoutPending || (position != mMovePosition)) {
                         mHandler.post(new Runnable() {
-                            /*
-                             * {@inheritDoc}
-                             */
+                            @Override
                             public void run() {
                                 if (mMoveLayoutPending) {
                                     mHandler.post(this);
@@ -2823,7 +2644,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Set the trimming state for all media item views
+     * Sets the trimming state for all media item views.
      *
      * @param trimmingView The view which enters/exists the trimming state
      * @param trimming true if trimming
@@ -2840,9 +2661,8 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Set the playback state for all media item views
+     * Sets the playback state for all media item views.
      *
-     * @param trimmingView The view which enters/exists the trimming state
      * @param playback true if trimming
      */
     private void setPlaybackState(boolean playback) {
@@ -2861,30 +2681,31 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Unselect all views
+     * Un-selects all views.
      */
     private void unselectAllViews() {
         ((RelativeLayout)getParent()).setSelected(false);
     }
 
     /**
-     * Invalidate all children
+     * Invalidates all children.
      */
     private void invalidateAllChildren() {
         final int childrenCount = getChildCount();
         for (int i = 0; i < childrenCount; i++) {
             final View childView = getChildAt(i);
-            childView.invalidate();
+            childView.invalidate();         
         }
     }
 
     /**
-     * Show/hide the media buttons
+     * Shows or hides "add media buttons".
      *
-     * @param show true to show the "Add media item" buttons
+     * @param show {@code true} to show the "Add media item" buttons, {@code false} to hide them
      */
     private void showAddMediaItemButtons(boolean show) {
         if (show) {
+            // Shows left add button iff there is at least one media item on the timeline.
             if (mProject.getMediaItemCount() > 0) {
                 mLeftAddClipButton.setVisibility(View.VISIBLE);
             }

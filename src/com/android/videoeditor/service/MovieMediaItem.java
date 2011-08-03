@@ -366,7 +366,7 @@ public class MovieMediaItem {
     }
 
     /**
-     * @param The begin transition
+     * @param beginTransition Begin transition
      */
     void setBeginTransition(MovieTransition beginTransition) {
         mBeginTransition = beginTransition;
@@ -380,7 +380,7 @@ public class MovieMediaItem {
     }
 
     /**
-     * @param The end transition
+     * @param endTransition end transition
      */
     void setEndTransition(MovieTransition endTransition) {
         mEndTransition = endTransition;
