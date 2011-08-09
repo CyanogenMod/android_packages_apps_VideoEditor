@@ -51,17 +51,11 @@ public class OverlayView extends ImageView {
     private boolean mLongPressMove;
     private MotionEvent mStartScrollEvent;
 
-    /*
-     * {@inheritDoc}
-     */
     public OverlayView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         mSimpleGestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
                         if (mGestureListener != null) {
@@ -71,9 +65,6 @@ public class OverlayView extends ImageView {
                         }
                     }
 
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public void onLongPress(MotionEvent e) {
                         if (mGestureListener == null) {
@@ -103,16 +94,10 @@ public class OverlayView extends ImageView {
         mState = STATE_STUB;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public OverlayView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public OverlayView(Context context) {
         this(context, null, 0);
     }
@@ -162,9 +147,6 @@ public class OverlayView extends ImageView {
         mGestureListener = listener;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void setSelected(boolean selected) {
         super.setSelected(selected);
@@ -176,9 +158,6 @@ public class OverlayView extends ImageView {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         mSimpleGestureDetector.onTouchEvent(ev);
@@ -210,9 +189,6 @@ public class OverlayView extends ImageView {
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);

@@ -39,23 +39,15 @@ public class EditorRelativeLayout extends RelativeLayout implements View.OnClick
         setOnClickListener(this);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public EditorRelativeLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public EditorRelativeLayout(Context context) {
         this(context, null, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
+    @Override
     public void onClick(View view) {
         findViewById(R.id.timeline).setSelected(false);
     }

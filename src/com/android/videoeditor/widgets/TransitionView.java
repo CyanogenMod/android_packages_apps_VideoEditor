@@ -58,18 +58,12 @@ public class TransitionView extends ImageView {
     private int mProgress;
     private boolean mIsPlaying;
 
-    /*
-     * {@inheritDoc}
-     */
     public TransitionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         // Setup the gesture listener
         mSimpleGestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
                         if (mGestureListener != null) {
@@ -80,9 +74,6 @@ public class TransitionView extends ImageView {
                         }
                     }
 
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public void onLongPress(MotionEvent e) {
                         if (mGestureListener != null) {
@@ -92,23 +83,17 @@ public class TransitionView extends ImageView {
                 });
 
         mScrollListener = new ScrollViewListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
                 mIsScrolling = true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
                 invalidate();
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 mIsScrolling = false;
                 mScrollX = scrollX;
@@ -145,23 +130,14 @@ public class TransitionView extends ImageView {
         mSeparatorPaint.setStrokeWidth(2);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TransitionView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TransitionView(Context context) {
         this(context, null, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onAttachedToWindow() {
         // Add the horizontal scroll view listener
@@ -171,9 +147,6 @@ public class TransitionView extends ImageView {
         scrollView.addScrollListener(mScrollListener);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDetachedFromWindow() {
         // Remove the horizontal scroll listener
@@ -263,9 +236,6 @@ public class TransitionView extends ImageView {
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -315,9 +285,6 @@ public class TransitionView extends ImageView {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         // Let the gesture detector inspect all events.

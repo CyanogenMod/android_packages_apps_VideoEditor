@@ -34,19 +34,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".OverlaysActivity"
-                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
-                  android:label="@string/overlays_select_type">
-            <intent-filter>
-                <action android:name="android.intent.action.PICK" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".OverlayTitleActivity"
+        <activity android:name=".OverlayTitleEditor"
                   android:theme="@android:style/Theme.Holo.Dialog"
                   android:label="@string/overlay_title">
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".OverlayTitleTemplatePicker"
+                  android:theme="@android:style/Theme.Holo.DialogWhenLarge"
+                  android:label="@string/overlays_select_type">
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
             </intent-filter>
         </activity>
 

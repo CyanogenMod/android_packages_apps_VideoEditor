@@ -40,25 +40,16 @@ public class TimelineRelativeLayout extends RelativeLayout {
         public void onLayoutComplete();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TimelineRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         setMotionEventSplittingEnabled(false);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TimelineRelativeLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public TimelineRelativeLayout(Context context) {
         this(context, null, 0);
     }
@@ -74,9 +65,6 @@ public class TimelineRelativeLayout extends RelativeLayout {
         requestLayout();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
@@ -87,9 +75,6 @@ public class TimelineRelativeLayout extends RelativeLayout {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void setSelected(boolean selected) {
         final int childrenCount = getChildCount();

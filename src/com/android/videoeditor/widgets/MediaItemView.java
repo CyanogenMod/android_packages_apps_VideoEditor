@@ -82,27 +82,18 @@ public class MediaItemView extends View {
         // Instance variables
         private final Drawable mFrame;
 
-        /*
-         * {@inheritDoc}
-         */
         public MediaItemShadowBuilder(View view) {
             super(view);
 
             mFrame = view.getContext().getResources().getDrawable(R.drawable.timeline_item_pressed);
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
             shadowSize.set(getShadowWidth(), getShadowHeight());
             shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y);
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public void onDrawShadow(Canvas canvas) {
             //super.onDrawShadow(canvas);
@@ -116,18 +107,12 @@ public class MediaItemView extends View {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public MediaItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         // Setup the gesture listener
         mGestureDetector = new GestureDetector(context,
                 new GestureDetector.SimpleOnGestureListener() {
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
                         if (mGestureListener == null) {
@@ -156,9 +141,6 @@ public class MediaItemView extends View {
                         }
                     }
 
-                    /*
-                     * {@inheritDoc}
-                     */
                     @Override
                     public void onLongPress (MotionEvent e) {
                         if (mGestureListener != null) {
@@ -168,24 +150,18 @@ public class MediaItemView extends View {
                 });
 
         mScrollListener = new ScrollViewListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
                 mIsScrolling = true;
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
                 mScrollingX = scrollX;
                 invalidate();
             }
 
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 mIsScrolling = false;
                 mScrollX = scrollX;
@@ -231,23 +207,14 @@ public class MediaItemView extends View {
         mRightState = View.EMPTY_STATE_SET;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public MediaItemView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public MediaItemView(Context context) {
         this(context, null, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onAttachedToWindow() {
         // Add the horizontal scroll view listener
@@ -257,9 +224,6 @@ public class MediaItemView extends View {
         scrollView.addScrollListener(mScrollListener);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDetachedFromWindow() {
         final TimelineHorizontalScrollView scrollView =
@@ -425,9 +389,6 @@ public class MediaItemView extends View {
         return true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -575,9 +536,6 @@ public class MediaItemView extends View {
                 2 * mAddTransitionDrawable.getIntrinsicWidth());
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         // Let the gesture detector inspect all events.

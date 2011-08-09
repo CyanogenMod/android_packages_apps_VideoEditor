@@ -56,9 +56,6 @@ public class ZoomControl extends View {
         public void onProgressChanged(int progress, boolean fromUser);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public ZoomControl(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -70,9 +67,6 @@ public class ZoomControl extends View {
         mThumb = context.getResources().getDrawable(R.drawable.zoom_thumb_selector);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
       super.onLayout(changed, left, top, right, bottom);
@@ -81,23 +75,14 @@ public class ZoomControl extends View {
       mInternalRadius = width * THUMB_INTERNAL_RADIUS_CONTAINER_SIZE_RATIO;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public ZoomControl(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public ZoomControl(Context context) {
         this(context, null, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void refreshDrawableState() {
         mThumb.setState(isPressed() ? PRESSED_WINDOW_FOCUSED_STATE_SET : ENABLED_STATE_SET);
@@ -129,9 +114,6 @@ public class ZoomControl extends View {
         mListener = listener;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -148,9 +130,6 @@ public class ZoomControl extends View {
         mThumb.draw(canvas);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         super.onTouchEvent(ev);

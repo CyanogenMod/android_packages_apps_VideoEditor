@@ -7,6 +7,8 @@
     <string name="editor_loading_project">Loading project...</string>
     <!-- Displayed in the center of the activity if a project could not be loaded. -->
     <string name="editor_no_project">No project found</string>
+    <!-- Menu text displayed for adding new media item. -->
+    <string name="editor_add">Add</string>
     <!-- Menu item used to launch the Gallery video clip picker. -->
     <string name="editor_import_video">Import video clip</string>
     <!-- Menu item used to launch the Gallery image picker. -->
@@ -26,17 +28,23 @@
     <!-- Menu item used to delete the project. -->
     <string name="editor_delete_project">Delete project</string>
     <!-- Menu item for capturing a new video clip. -->
-    <string name="editor_capture_video">New video clip</string>
+    <string name="editor_capture_video">Record a video</string>
     <!-- Menu item for capturing a new image. -->
-    <string name="editor_capture_image">New image</string>
+    <string name="editor_capture_image">Take a photo</string>
     <!-- Text displayed in the delete project confirmation dialog. -->
     <string name="editor_delete_project_question">Do you want to delete this project?</string>
     <!-- Text displayed in the playback widget to indicate the current playhead time position [CHAR_LIMIT=11] -->
     <string name="editor_zero_time_stamp">00:00:00.0</string>
     <!-- Text displayed in the remove audio track confirmation dialog. -->
     <string name="editor_remove_audio_track_question">Do you want to remove this audio track?</string>
-    <!-- Menu item used to change the overlay text. -->
-    <string name="editor_edit_overlay">Edit</string>
+    <!-- Menu header of title overlay menu. -->
+    <string name="editor_title_menu_header">Title</string>
+    <!-- Menu item used to add a new title (overlay title). -->
+    <string name="editor_add_overlay">Add title</string>
+    <!-- Menu item used to change the overlay title. -->
+    <string name="editor_edit_overlay">Edit title</string>
+    <!-- Menu item used to remove a title (overlay title). -->
+    <string name="editor_remove_overlay">Remove title</string>
     <!-- Text displayed in the remove overlay confirmation dialog. -->
     <string name="editor_remove_overlay_question">Do you want to remove this overlay?</string>
     <!-- Menu item used to change the rendering mode. Launches a single choice dialog. -->
@@ -49,18 +57,28 @@
     <string name="editor_remove_video_question">Do you want to remove this video clip?</string>
     <!-- Text displayed in the remove image confirmation dialog. -->
     <string name="editor_remove_image_question">Do you want to remove this image?</string>
+    <!-- Text displayed as the header of effect menu. -->
+    <string name="editor_effect_menu_header">effect</string>
     <!-- Menu item used to add an effect. -->
     <string name="editor_add_effect">Add effect</string>
     <!-- Menu item used to change an effect type and/or duration. -->
     <string name="editor_change_effect">Change effect</string>
     <!-- Menu item used to remove an effect. -->
     <string name="editor_remove_effect">Remove effect</string>
-    <!-- Menu item used to add a new title (overlay title). -->
-    <string name="editor_add_overlay">Add title</string>
+    <!-- Menu item text for effect pan zoom. -->
+    <string name="editor_pan_zoom_effect">Pan Zoom</string>
+    <!-- Menu item text for effect gradient. -->
+    <string name="editor_gradient_effect">Gradient</string>
+    <!-- Menu item text for effect sepia. -->
+    <string name="editor_sepia_effect">Sepia</string>
+    <!-- Menu item text for effect negative. -->
+    <string name="editor_negative_effect">Negative</string>
+    <!-- Menu item text for no effect. -->
+    <string name="editor_no_effect">no effect</string>
     <!-- Menu item used to add a transition at the beginning of the image or video clip. -->
-    <string name="editor_add_begin_transition">Add beginning transition</string>
+    <string name="editor_add_begin_transition">Transition into clip</string>
     <!-- Menu item used to add a transition at the end of the image or video clip. -->
-    <string name="editor_add_end_transition">Add ending transition</string>
+    <string name="editor_add_end_transition">Transition out of clip</string>
     <!-- Menu item used to change a transition type and/or duration. -->
     <string name="editor_change_transition">Change transition</string>
     <!-- Toast message used when a video clip needs to be downloaded before it can be used -->
@@ -228,6 +246,8 @@
     <string name="overlay_title_label">Title</string>
     <!-- The dialog label for the overlay sample subtitle. -->
     <string name="overlay_subtitle_label">Subtitle</string>
+    <!-- The text displayed on the button used to change overlay title template. -->
+    <string name="overlay_change_title_template_button_text">Change template</string>
 
     <!-- Effect names-->
     <!-- The effects selection dialog title. -->
@@ -280,6 +300,8 @@
     <string name="no">No</string>
     <!-- Displayed in dialog buttons. -->
     <string name="done">Done</string>
+    <!-- Displayed in dialog buttons and menu items. -->
+    <string name="edit">Edit</string>
     <!-- Displayed in dialog buttons and menu items. -->
     <string name="remove">Remove</string>
     <!-- Displayed in the carousel if the project does not have a name. -->

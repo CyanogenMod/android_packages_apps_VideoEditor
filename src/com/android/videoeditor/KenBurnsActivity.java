@@ -81,9 +81,6 @@ public class KenBurnsActivity extends Activity {
      * The simple gestures listener
      */
     private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (mImageView.getScale() > 1F) {
@@ -94,17 +91,11 @@ public class KenBurnsActivity extends Activity {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             // Switch between the original scale and 3x scale.
@@ -123,16 +114,12 @@ public class KenBurnsActivity extends Activity {
      * Scale gesture listener
      */
     private class MyScaleGestureListener implements OnScaleGestureListener {
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public boolean onScale(ScaleGestureDetector detector) {
             final float relativeScaleFactor = detector.getScaleFactor();
             final float newAbsoluteScale = relativeScaleFactor * mImageView.getScale();
@@ -144,9 +131,7 @@ public class KenBurnsActivity extends Activity {
             return true;
         }
 
-        /*
-         * {@inheritDoc}
-         */
+        @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             saveBitmapRectangle();
         }
@@ -169,9 +154,6 @@ public class KenBurnsActivity extends Activity {
             showProgress(true);
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         protected Bitmap doInBackground(Void... zzz) {
             if (mPaused) {
@@ -195,9 +177,6 @@ public class KenBurnsActivity extends Activity {
             }
         }
 
-        /*
-         * {@inheritDoc}
-         */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap == null) {
@@ -222,11 +201,8 @@ public class KenBurnsActivity extends Activity {
                 bitmap.recycle();
             }
         }
-    };
+    }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -316,9 +292,7 @@ public class KenBurnsActivity extends Activity {
         mRadioGroup.setEnabled(false);
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.start_rectangle: {
@@ -349,12 +323,10 @@ public class KenBurnsActivity extends Activity {
             }
         });
 
-        mBitmap = (Bitmap)getLastNonConfigurationInstance();
+        mBitmap = (Bitmap) getLastNonConfigurationInstance();
 
         mImageView.setEventListener(new ImageViewTouchBase.ImageTouchEventListener() {
-            /*
-             * {@inheritDoc}
-             */
+            @Override
             public boolean onImageTouchEvent(MotionEvent ev) {
                 if (null != mScaleGestureDetector) {
                     mScaleGestureDetector.onTouchEvent(ev);
@@ -369,9 +341,6 @@ public class KenBurnsActivity extends Activity {
         });
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -381,9 +350,6 @@ public class KenBurnsActivity extends Activity {
         new ImageLoaderAsyncTask(getIntent().getStringExtra(PARAM_FILENAME)).execute();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -391,9 +357,6 @@ public class KenBurnsActivity extends Activity {
         mPaused = true;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -407,17 +370,11 @@ public class KenBurnsActivity extends Activity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public Object onRetainNonConfigurationInstance() {
         return mBitmap;
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -428,9 +385,6 @@ public class KenBurnsActivity extends Activity {
         outState.putParcelable(STATE_END_RECTANGLE, mEndRect);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public void onClickHandler(View target) {
         switch (target.getId()) {
             case R.id.done: {

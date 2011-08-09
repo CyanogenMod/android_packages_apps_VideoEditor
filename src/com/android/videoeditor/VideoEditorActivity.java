@@ -48,6 +48,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -69,6 +70,7 @@ import com.android.videoeditor.util.MediaItemUtils;
 import com.android.videoeditor.util.StringUtils;
 import com.android.videoeditor.widgets.AudioTrackLinearLayout;
 import com.android.videoeditor.widgets.MediaLinearLayout;
+import com.android.videoeditor.widgets.MediaLinearLayoutListener;
 import com.android.videoeditor.widgets.OverlayLinearLayout;
 import com.android.videoeditor.widgets.PlayheadView;
 import com.android.videoeditor.widgets.PreviewSurfaceView;
@@ -83,26 +85,12 @@ import com.android.videoeditor.widgets.ZoomControl;
  */
 public class VideoEditorActivity extends VideoEditorBaseActivity
         implements SurfaceHolder.Callback {
-    // Logging
     private static final String TAG = "VideoEditorActivity";
 
     // State keys
     private static final String STATE_INSERT_AFTER_MEDIA_ITEM_ID = "insert_after_media_item_id";
     private static final String STATE_PLAYING = "playing";
     private static final String STATE_CAPTURE_URI = "capture_uri";
-
-    // Menu ids
-    private static final int MENU_IMPORT_IMAGE_ID = 2;
-    private static final int MENU_IMPORT_VIDEO_ID = 3;
-    private static final int MENU_IMPORT_AUDIO_ID = 4;
-    private static final int MENU_CHANGE_ASPECT_RATIO_ID = 5;
-    private static final int MENU_EDIT_PROJECT_NAME_ID = 6;
-    private static final int MENU_DELETE_PROJECT_ID = 7;
-    private static final int MENU_EXPORT_MOVIE_ID = 8;
-    private static final int MENU_PLAY_EXPORTED_MOVIE = 9;
-    private static final int MENU_SHARE_VIDEO = 10;
-    private static final int MENU_CAPTURE_VIDEO_ID = 11;
-    private static final int MENU_CAPTURE_IMAGE_ID = 12;
 
     // Dialog ids
     private static final int DIALOG_DELETE_PROJECT_ID = 1;
@@ -131,9 +119,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public static final int REQUEST_CODE_EDIT_TRANSITION = 10;
     public static final int REQUEST_CODE_PICK_TRANSITION = 11;
     public static final int REQUEST_CODE_PICK_OVERLAY = 12;
-    public static final int REQUEST_CODE_EDIT_OVERLAY = 13;
-    public static final int REQUEST_CODE_PICK_EFFECT = 14;
-    public static final int REQUEST_CODE_EDIT_EFFECT = 15;
+    public static final int REQUEST_CODE_KEN_BURNS = 13;
 
     // The maximum zoom level
     private static final int MAX_ZOOM_LEVEL = 120;
@@ -148,7 +134,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         @Override
         public void onLayoutComplete() {
             // Scroll the timeline such that the specified position
-            // is in the center of the screen
+            // is in the center of the screen.
             mTimelineScroller.appScrollTo(timeToDimension(mProject.getPlayheadPos()), false);
         }
     };
@@ -195,10 +181,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private int mAddEffectType;
     private Rect mAddKenBurnsStartRect;
     private Rect mAddKenBurnsEndRect;
-    private String mEditEffectMediaItemId;
-    private int mEditEffectType;
-    private Rect mEditKenBurnsStartRect;
-    private Rect mEditKenBurnsEndRect;
     private boolean mRestartPreview;
     private Uri mCaptureMediaUri;
 
@@ -242,7 +224,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        mMediaLayout.setListener(new MediaLinearLayout.MediaLayoutListener() {
+        mMediaLayout.setListener(new MediaLinearLayoutListener() {
             @Override
             public void onRequestScrollBy(int scrollBy, boolean smooth) {
                 mTimelineScroller.appScrollBy(scrollBy, smooth);
@@ -271,7 +253,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             @Override
             public void onTrimMediaItem(MovieMediaItem mediaItem, long timeMs) {
                 updateTimelineDuration();
-                if (mProject != null && mPreviewThread != null && !mPreviewThread.isPlaying()) {
+                if (mProject != null && isPreviewPlaying()) {
                     if (mediaItem.isVideoClip()) {
                         if (timeMs >= 0) {
                             mPreviewThread.renderMediaItemFrame(mediaItem, timeMs);
@@ -288,7 +270,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             public void onTrimMediaItemEnd(MovieMediaItem mediaItem, long timeMs) {
                 onProjectEditStateChange(false);
                 // We need to repaint the timeline layout to clear the old
-                // playhead position (the one drawn during trimming)
+                // playhead position (the one drawn during trimming).
                 mTimelineLayout.invalidate();
                 showPreviewFrame();
             }
@@ -421,7 +403,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     @Override
                     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                             float velocityY) {
-                        if (mPreviewThread != null && mPreviewThread.isPlaying()) {
+                        if (isPreviewPlaying()) {
                             return false;
                         }
 
@@ -432,7 +414,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
                             float distanceY) {
-                        if (mPreviewThread != null && mPreviewThread.isPlaying()) {
+                        if (isPreviewPlaying()) {
                             return false;
                         }
 
@@ -455,6 +437,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mCpuWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Video Editor Activity CPU Wake Lock");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -484,73 +474,47 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         super.onSaveInstanceState(outState);
 
         outState.putString(STATE_INSERT_AFTER_MEDIA_ITEM_ID, mInsertMediaItemAfterMediaItemId);
-        outState.putBoolean(STATE_PLAYING,
-                mPreviewThread != null ? mPreviewThread.isPlaying() : false);
+        outState.putBoolean(STATE_PLAYING, isPreviewPlaying());
         outState.putParcelable(STATE_CAPTURE_URI, mCaptureMediaUri);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, MENU_CAPTURE_VIDEO_ID, Menu.NONE,
-                R.string.editor_capture_video).setIcon(
-                        R.drawable.ic_menu_video_camera).setShowAsAction(
-                                MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, MENU_CAPTURE_IMAGE_ID, Menu.NONE,
-                R.string.editor_capture_image).setIcon(
-                        R.drawable.ic_menu_camera).setShowAsAction(
-                                MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, MENU_IMPORT_VIDEO_ID, Menu.NONE,
-                R.string.editor_import_video).setIcon(
-                        R.drawable.ic_menu_add_video).setShowAsAction(
-                                MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, MENU_IMPORT_IMAGE_ID, Menu.NONE,
-                R.string.editor_import_image).setIcon(
-                        R.drawable.ic_menu_add_image).setShowAsAction(
-                                MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(Menu.NONE, MENU_IMPORT_AUDIO_ID, Menu.NONE, R.string.editor_import_audio).setIcon(
-                R.drawable.ic_menu_add_audio_clip);
-        menu.add(Menu.NONE, MENU_CHANGE_ASPECT_RATIO_ID, Menu.NONE,
-                R.string.editor_change_aspect_ratio);
-        menu.add(Menu.NONE, MENU_EDIT_PROJECT_NAME_ID, Menu.NONE,
-                R.string.editor_edit_project_name);
-        menu.add(Menu.NONE, MENU_EXPORT_MOVIE_ID, Menu.NONE, R.string.editor_export_movie);
-        menu.add(Menu.NONE, MENU_PLAY_EXPORTED_MOVIE, Menu.NONE,
-                R.string.editor_play_exported_movie);
-        menu.add(Menu.NONE, MENU_SHARE_VIDEO, Menu.NONE, R.string.editor_share_movie);
-        menu.add(Menu.NONE, MENU_DELETE_PROJECT_ID, Menu.NONE, R.string.editor_delete_project);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_menu, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        final boolean haveProject = mProject != null;
+        final boolean haveProject = (mProject != null);
         final boolean haveMediaItems = haveProject && mProject.getMediaItemCount() > 0;
-        menu.findItem(MENU_CAPTURE_VIDEO_ID).setVisible(haveProject);
-        menu.findItem(MENU_CAPTURE_IMAGE_ID).setVisible(haveProject);
-        menu.findItem(MENU_IMPORT_VIDEO_ID).setVisible(haveProject);
-        menu.findItem(MENU_IMPORT_IMAGE_ID).setVisible(haveProject);
-        menu.findItem(MENU_IMPORT_AUDIO_ID).setVisible(haveProject &&
+        menu.findItem(R.id.menu_item_capture_video).setVisible(haveProject);
+        menu.findItem(R.id.menu_item_capture_image).setVisible(haveProject);
+        menu.findItem(R.id.menu_item_import_video).setVisible(haveProject);
+        menu.findItem(R.id.menu_item_import_image).setVisible(haveProject);
+        menu.findItem(R.id.menu_item_import_audio).setVisible(haveProject &&
                 mProject.getAudioTracks().size() == 0 && haveMediaItems);
-        menu.findItem(MENU_CHANGE_ASPECT_RATIO_ID).setVisible(haveProject &&
+        menu.findItem(R.id.menu_item_change_aspect_ratio).setVisible(haveProject &&
                 mProject.hasMultipleAspectRatios());
-        menu.findItem(MENU_EDIT_PROJECT_NAME_ID).setVisible(haveProject);
+        menu.findItem(R.id.menu_item_edit_project_name).setVisible(haveProject);
 
-        // Check if there is an operation pending or preview is on
+        // Check if there is an operation pending or preview is on.
         boolean enableMenu = haveProject;
         if (enableMenu && mPreviewThread != null) {
             // Preview is in progress
             enableMenu = mPreviewThread.isStopped();
             if (enableMenu && mProjectPath != null) {
-                enableMenu = !ApiService.isProjectEdited(mProjectPath);
+                enableMenu = !ApiService.isProjectBeingEdited(mProjectPath);
             }
         }
 
-        menu.findItem(MENU_EXPORT_MOVIE_ID).setVisible(enableMenu && haveMediaItems);
-        menu.findItem(MENU_PLAY_EXPORTED_MOVIE).setVisible(enableMenu &&
+        menu.findItem(R.id.menu_item_export_movie).setVisible(enableMenu && haveMediaItems);
+        menu.findItem(R.id.menu_item_delete_project).setVisible(enableMenu);
+        menu.findItem(R.id.menu_item_play_exported_movie).setVisible(enableMenu &&
                 mProject.getExportedMovieUri() != null);
-        menu.findItem(MENU_SHARE_VIDEO).setVisible(enableMenu &&
+        menu.findItem(R.id.menu_item_share_movie).setVisible(enableMenu &&
                 mProject.getExportedMovieUri() != null);
-        menu.findItem(MENU_DELETE_PROJECT_ID).setVisible(enableMenu);
         return true;
     }
 
@@ -558,15 +522,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
+                // Returns to project picker if user clicks on the app icon in the action bar.
                 final Intent intent = new Intent(this, ProjectsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
                 finish();
                 return true;
             }
 
-            case MENU_CAPTURE_VIDEO_ID: {
+            case R.id.menu_item_capture_video: {
                 final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
                         mProject.getPlayheadPos());
                 if (mediaItem != null) {
@@ -586,7 +550,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            case MENU_CAPTURE_IMAGE_ID: {
+            case R.id.menu_item_capture_image: {
                 final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
                         mProject.getPlayheadPos());
                 if (mediaItem != null) {
@@ -606,7 +570,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            case MENU_IMPORT_VIDEO_ID: {
+            case R.id.menu_item_import_video: {
                 final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
                         mProject.getPlayheadPos());
                 if (mediaItem != null) {
@@ -622,7 +586,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            case MENU_IMPORT_IMAGE_ID: {
+            case R.id.menu_item_import_image: {
                 final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
                         mProject.getPlayheadPos());
                 if (mediaItem != null) {
@@ -638,14 +602,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            case MENU_IMPORT_AUDIO_ID: {
+            case R.id.menu_item_import_audio: {
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("audio/*");
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_MUSIC);
                 return true;
             }
 
-            case MENU_CHANGE_ASPECT_RATIO_ID: {
+            case R.id.menu_item_change_aspect_ratio: {
                 final ArrayList<Integer> aspectRatiosList = mProject.getUniqueAspectRatiosList();
                 final int size = aspectRatiosList.size();
                 if (size > 1) {
@@ -668,24 +632,24 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            case MENU_EDIT_PROJECT_NAME_ID: {
+            case R.id.menu_item_edit_project_name: {
                 showDialog(DIALOG_EDIT_PROJECT_NAME_ID);
                 return true;
             }
 
-            case MENU_DELETE_PROJECT_ID: {
+            case R.id.menu_item_delete_project: {
                 // Confirm project delete
                 showDialog(DIALOG_DELETE_PROJECT_ID);
                 return true;
             }
 
-            case MENU_EXPORT_MOVIE_ID: {
+            case R.id.menu_item_export_movie: {
                 // Present the user with a dialog to choose export options
                 showDialog(DIALOG_EXPORT_OPTIONS_ID);
                 return true;
             }
 
-            case MENU_PLAY_EXPORTED_MOVIE: {
+            case R.id.menu_item_play_exported_movie: {
                 final Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(mProject.getExportedMovieUri(), "video/*");
                 intent.putExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, false);
@@ -693,7 +657,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return true;
             }
 
-            case MENU_SHARE_VIDEO: {
+            case R.id.menu_item_share_movie: {
                 final Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_STREAM, mProject.getExportedMovieUri());
                 intent.setType("video/*");
@@ -925,8 +889,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
     }
 
-    /*
-     * {@inheritDoc}
+
+    /**
+     * Called when user clicks on the button in the control panel.
+     * @param target one of the "play", "rewind", "next",
+     *         and "prev" buttons in the control panel
      */
     public void onClickHandler(View target) {
         final long playheadPosMs = mProject.getPlayheadPos();
@@ -936,7 +903,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 if (mProject != null && mPreviewThread != null) {
                     if (mPreviewThread.isPlaying()) {
                         mPreviewThread.stopPreviewPlayback();
-                    } else if (mProject.getMediaItemCount() > 0){
+                    } else if (mProject.getMediaItemCount() > 0) {
                         mPreviewThread.startPreviewPlayback(mProject, playheadPosMs);
                     }
                 }
@@ -1165,81 +1132,54 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             case REQUEST_CODE_PICK_OVERLAY: {
+                // If there is no overlay id, it means we are adding a new overlay.
+                // Otherwise we generate a unique new id for the new overlay.
                 final String mediaItemId =
-                    extras.getStringExtra(OverlayTitleActivity.PARAM_MEDIA_ITEM_ID);
+                    extras.getStringExtra(OverlayTitleEditor.PARAM_MEDIA_ITEM_ID);
+                final String overlayId =
+                    extras.getStringExtra(OverlayTitleEditor.PARAM_OVERLAY_ID);
                 final Bundle bundle =
-                    extras.getBundleExtra(OverlayTitleActivity.PARAM_OVERLAY_ATTRIBUTES);
+                    extras.getBundleExtra(OverlayTitleEditor.PARAM_OVERLAY_ATTRIBUTES);
                 if (mProject != null) {
                     final MovieMediaItem mediaItem = mProject.getMediaItem(mediaItemId);
                     if (mediaItem != null) {
-                        ApiService.addOverlay(this, mProject.getPath(), mediaItemId,
-                                ApiService.generateId(), bundle,
-                                mediaItem.getAppBoundaryBeginTime(),
-                                OverlayLinearLayout.DEFAULT_TITLE_DURATION);
+                        if (overlayId == null) {
+                            ApiService.addOverlay(this, mProject.getPath(), mediaItemId,
+                                    ApiService.generateId(), bundle,
+                                    mediaItem.getAppBoundaryBeginTime(),
+                                    OverlayLinearLayout.DEFAULT_TITLE_DURATION);
+                        } else {
+                            ApiService.setOverlayUserAttributes(this, mProject.getPath(),
+                                    mediaItemId, overlayId, bundle);
+                        }
                         mOverlayLayout.invalidateCAB();
                     }
                 } else {
-                    // Add this overlay after you load the project
+                    // Add this overlay after you load the project.
                     mAddOverlayMediaItemId = mediaItemId;
                     mAddOverlayUserAttributes = bundle;
-                }
-                break;
-            }
-
-            case REQUEST_CODE_EDIT_OVERLAY: {
-                final Bundle bundle =
-                    extras.getBundleExtra(OverlayTitleActivity.PARAM_OVERLAY_ATTRIBUTES);
-                final String mediaItemId =
-                    extras.getStringExtra(OverlayTitleActivity.PARAM_MEDIA_ITEM_ID);
-                final String overlayId =
-                    extras.getStringExtra(OverlayTitleActivity.PARAM_OVERLAY_ID);
-                if (mProject != null) {
-                    ApiService.setOverlayUserAttributes(this, mProject.getPath(), mediaItemId,
-                            overlayId, bundle);
-                    mOverlayLayout.invalidateCAB();
-                } else {
-                    // Edit this overlay after you load the project
-                    mEditOverlayMediaItemId = mediaItemId;
                     mEditOverlayId = overlayId;
-                    mEditOverlayUserAttributes = bundle;
                 }
                 break;
             }
 
-            case REQUEST_CODE_PICK_EFFECT: {
-                final String mediaItemId =
-                    extras.getStringExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID);
-                final int type = extras.getIntExtra(EffectsActivity.PARAM_EFFECT_TYPE,
-                        EffectType.EFFECT_COLOR_GRADIENT);
-                final Rect startRect = extras.getParcelableExtra(EffectsActivity.PARAM_START_RECT);
-                final Rect endRect = extras.getParcelableExtra(EffectsActivity.PARAM_END_RECT);
+            case REQUEST_CODE_KEN_BURNS: {
+                final String mediaItemId = extras.getStringExtra(
+                        KenBurnsActivity.PARAM_MEDIA_ITEM_ID);
+                final Rect startRect = extras.getParcelableExtra(
+                        KenBurnsActivity.PARAM_START_RECT);
+                final Rect endRect = extras.getParcelableExtra(
+                        KenBurnsActivity.PARAM_END_RECT);
                 if (mProject != null) {
-                    mMediaLayout.addEffect(type, mediaItemId, startRect, endRect);
+                    mMediaLayout.addEffect(EffectType.EFFECT_KEN_BURNS, mediaItemId,
+                        startRect, endRect);
+                    mMediaLayout.invalidateActionBar();
                 } else {
-                    // Add this effect after you load the project
+                    // Add this effect after you load the project.
                     mAddEffectMediaItemId = mediaItemId;
-                    mAddEffectType = type;
+                    mAddEffectType = EffectType.EFFECT_KEN_BURNS;
                     mAddKenBurnsStartRect = startRect;
                     mAddKenBurnsEndRect = endRect;
-                }
-                break;
-            }
-
-            case REQUEST_CODE_EDIT_EFFECT: {
-                final String mediaItemId =
-                    extras.getStringExtra(EffectsActivity.PARAM_MEDIA_ITEM_ID);
-                final int type = extras.getIntExtra(EffectsActivity.PARAM_EFFECT_TYPE,
-                        EffectType.EFFECT_COLOR_GRADIENT);
-                final Rect startRect = extras.getParcelableExtra(EffectsActivity.PARAM_START_RECT);
-                final Rect endRect = extras.getParcelableExtra(EffectsActivity.PARAM_END_RECT);
-                if (mProject != null) {
-                    mMediaLayout.editEffect(type, mediaItemId, startRect, endRect);
-                } else {
-                    // Add this effect after you load the project
-                    mEditEffectMediaItemId = mediaItemId;
-                    mEditEffectType = type;
-                    mEditKenBurnsStartRect = startRect;
-                    mEditKenBurnsEndRect = endRect;
                 }
                 break;
             }
@@ -1252,20 +1192,15 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "surfaceCreated");
-        }
+        logd("surfaceCreated");
 
         mPreviewThread = new PreviewThread(mSurfaceHolder);
-
         restartPreview();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "surfaceChanged: " + width + "x" + height);
-        }
+        logd("surfaceChanged: " + width + "x" + height);
 
         if (mPreviewThread != null) {
             mPreviewThread.onSurfaceChanged(width, height);
@@ -1274,9 +1209,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "surfaceDestroyed");
-        }
+        logd("surfaceDestroyed");
 
         // Stop the preview playback if pending and quit the preview thread
         if (mPreviewThread != null) {
@@ -1314,7 +1247,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     @Override
     protected boolean showPreviewFrame() {
-        if (mPreviewThread == null) { // The surface is not ready
+        if (mPreviewThread == null) {  // The surface is not ready yet.
             return false;
         }
 
@@ -1476,9 +1409,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
         }
 
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "setAspectRatio: " + aspectRatio + ", size: " + lp.width + "x" + lp.height);
-        }
+        logd("setAspectRatio: " + aspectRatio + ", size: " + lp.width + "x" + lp.height);
         mSurfaceView.setLayoutParams(lp);
         mOverlayView.setLayoutParams(lp);
     }
@@ -1515,9 +1446,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     @Override
     protected void onProjectEditStateChange(boolean projectEdited) {
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "onProjectEditStateChange: " + projectEdited);
-        }
+        logd("onProjectEditStateChange: " + projectEdited);
 
         mPreviewPlayButton.setAlpha(projectEdited ? 100 : 255);
         mPreviewPlayButton.setEnabled(!projectEdited);
@@ -1525,15 +1454,13 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mPreviewNextButton.setEnabled(!projectEdited);
         mPreviewPrevButton.setEnabled(!projectEdited);
 
-        mMediaLayout.invalidateCAB();
+        mMediaLayout.invalidateActionBar();
         mOverlayLayout.invalidateCAB();
     }
 
     @Override
     protected void initializeFromProject(boolean updateUI) {
-        if (Log.isLoggable(TAG, Log.DEBUG)) {
-            Log.d(TAG, "Project was clean: " + mProject.isClean());
-        }
+        logd("Project was clean: " + mProject.isClean());
 
         if (updateUI || !mProject.isClean()) {
             getActionBar().setTitle(mProject.getName());
@@ -1644,12 +1571,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mAddEffectMediaItemId = null;
         }
 
-        if (mEditEffectMediaItemId != null) {
-            mMediaLayout.editEffect(mEditEffectType, mEditEffectMediaItemId,
-                    mEditKenBurnsStartRect, mEditKenBurnsEndRect);
-            mEditEffectMediaItemId = null;
-        }
-
         enterReadyState();
 
         if (mPendingExportFilename != null) {
@@ -1737,6 +1658,13 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mExportProgressDialog = null;
     }
 
+    private boolean isPreviewPlaying() {
+        if (mPreviewThread == null)
+            return false;
+
+        return mPreviewThread.isPlaying();
+    }
+
     /**
      * The preview thread
      */
@@ -1800,9 +1728,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 stopPreviewPlayback();
             }
 
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Preview frame at: " + timeMs + " " + clear);
-            }
+            logd("Preview frame at: " + timeMs + " " + clear);
 
             // We only need to see the last frame
             mQueue.clear();
@@ -1838,10 +1764,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         try {
                             if (project.renderPreviewFrame(mSurfaceHolder, timeMs, overlayData)
                                     < 0) {
-                                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "Cannot render preview frame at: " + timeMs +
-                                            " of " + mProject.computeDuration());
-                                }
+                                logd("Cannot render preview frame at: " + timeMs +
+                                        " of " + mProject.computeDuration());
 
                                 mOverlayDataQueue.add(overlayData);
                             } else {
@@ -1867,9 +1791,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                 }
                             }
                         } catch (Exception ex) {
-                            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                Log.d(TAG, "renderPreviewFrame failed at timeMs: " + timeMs, ex);
-                            }
+                            logd("renderPreviewFrame failed at timeMs: " + timeMs + "\n" + ex);
                             mOverlayDataQueue.add(overlayData);
                         }
                     }
@@ -1905,15 +1827,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     try {
                         if (mProject.renderMediaItemFrame(mSurfaceHolder, mediaItem.getId(),
                                 timeMs) < 0) {
-                            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                Log.d(TAG, "Cannot render media item frame at: " + timeMs +
-                                        " of " + mediaItem.getDuration());
+                            logd("Cannot render media item frame at: " + timeMs +
+                                    " of " + mediaItem.getDuration());
                             }
-                        }
                     } catch (Exception ex) {
-                        if (Log.isLoggable(TAG, Log.DEBUG)) {
-                            Log.d(TAG, "Cannot render preview frame at: " + timeMs, ex);
-                        }
+                        logd("Cannot render preview frame at: " + timeMs + "\n" + ex);
                     }
                 }
             });
@@ -1931,16 +1849,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          */
         private void startPreviewPlayback(final VideoEditorProject project, final long fromMs) {
             if (mPreviewState != PREVIEW_STATE_STOPPED) {
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "Preview did not start: " + mPreviewState);
-                }
+                logd("Preview did not start: " + mPreviewState);
                 return;
             }
 
             previewStarted(project);
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Start preview at: " + fromMs);
-            }
+            logd("Start preview at: " + fromMs);
 
             // Clear any pending preview frames
             mQueue.clear();
@@ -2001,9 +1915,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         // This exception may occur when trying to play frames
                         // at the end of the timeline
                         // (e.g. when fromMs == clip duration)
-                        if (Log.isLoggable(TAG, Log.DEBUG)) {
-                            Log.d(TAG, "Cannot start preview at: " + fromMs, ex);
-                        }
+                        logd("Cannot start preview at: " + fromMs + "\n" + ex);
 
                         mMainHandler.post(new Runnable() {
                             @Override
@@ -2044,30 +1956,23 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         /**
-         * Stop previewing
+         * Stops the preview.
          */
         private void stopPreviewPlayback() {
             switch (mPreviewState) {
                 case PREVIEW_STATE_STOPPED: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STOPPED");
-                    }
+                    logd("stopPreviewPlayback: State was PREVIEW_STATE_STOPPED");
                     return;
                 }
 
                 case PREVIEW_STATE_STOPPING: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STOPPING");
-                    }
+                    logd("stopPreviewPlayback: State was PREVIEW_STATE_STOPPING");
                     return;
                 }
 
                 case PREVIEW_STATE_STARTING: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STARTING " +
-                                "now PREVIEW_STATE_STOPPING");
-                    }
-
+                    logd("stopPreviewPlayback: State was PREVIEW_STATE_STARTING " +
+                            "now PREVIEW_STATE_STOPPING");
                     mPreviewState = PREVIEW_STATE_STOPPING;
 
                     // We need to wait until the preview starts
@@ -2076,40 +1981,26 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         public void run() {
                             if (isFinishing() || isChangingConfigurations()) {
                                 // The activity is shutting down. Force stopping now.
-                                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "stopPreviewPlayback: Activity is shutting down");
-                                }
-
+                                logd("stopPreviewPlayback: Activity is shutting down");
                                 mPreviewState = PREVIEW_STATE_STARTED;
                                 previewStopped(true);
                             } else if (mPreviewState == PREVIEW_STATE_STARTED) {
-                                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "stopPreviewPlayback: Now PREVIEW_STATE_STARTED");
-                                }
-
+                                logd("stopPreviewPlayback: Now PREVIEW_STATE_STARTED");
                                 previewStopped(false);
                             } else if (mPreviewState == PREVIEW_STATE_STOPPING) {
                                 // Keep waiting
                                 mMainHandler.postDelayed(this, 100);
-
-                                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "stopPreviewPlayback: Waiting for PREVIEW_STATE_STARTED");
-                                }
+                                logd("stopPreviewPlayback: Waiting for PREVIEW_STATE_STARTED");
                             } else {
-                                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                                    Log.d(TAG, "stopPreviewPlayback: PREVIEW_STATE_STOPPED while waiting");
-                                }
+                                logd("stopPreviewPlayback: PREVIEW_STATE_STOPPED while waiting");
                             }
                         }
                     }, 50);
-
                     break;
                 }
 
                 case PREVIEW_STATE_STARTED: {
-                    if (Log.isLoggable(TAG, Log.DEBUG)) {
-                        Log.d(TAG, "stopPreviewPlayback: State was PREVIEW_STATE_STARTED");
-                    }
+                    logd("stopPreviewPlayback: State was PREVIEW_STATE_STARTED");
 
                     // We need to stop
                     previewStopped(false);
@@ -2142,9 +2033,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             // Create the overlay bitmap
-            if (Log.isLoggable(TAG, Log.DEBUG)) {
-                Log.d(TAG, "Overlay size: " + width + " x " + height);
-            }
+            logd("Overlay size: " + width + " x " + height);
 
             mOverlayBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
             mOverlayView.setImageBitmap(mOverlayBitmap);
@@ -2172,13 +2061,9 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 // Set the playhead position at the position where the playback stopped
                 final long stopTimeMs = mProject.stopPreview();
                 movePlayhead(stopTimeMs);
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "PREVIEW_STATE_STOPPED: " + stopTimeMs);
-                }
+                logd("PREVIEW_STATE_STOPPED: " + stopTimeMs);
             } else {
-                if (Log.isLoggable(TAG, Log.DEBUG)) {
-                    Log.d(TAG, "PREVIEW_STATE_STOPPED due to error");
-                }
+                logd("PREVIEW_STATE_STOPPED due to error");
             }
 
             mPreviewState = PREVIEW_STATE_STOPPED;
@@ -2199,7 +2084,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          */
         private boolean isPlaying() {
             return mPreviewState == PREVIEW_STATE_STARTING ||
-                mPreviewState == PREVIEW_STATE_STARTED;
+                    mPreviewState == PREVIEW_STATE_STARTED;
         }
 
         /**
@@ -2229,7 +2114,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         /**
-         * Quit the thread
+         * Quits the thread
          */
         public void quit() {
             // Release the overlay bitmap
@@ -2249,6 +2134,12 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             mQueue.clear();
+        }
+    }
+
+    private static void logd(String message) {
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, message);
         }
     }
 }

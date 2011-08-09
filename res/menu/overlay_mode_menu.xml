@@ -16,9 +16,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_edit_overlay"
-        android:title="@string/editor_edit_overlay"
-        android:icon="@drawable/ic_menu_edit_selector"/>
+        android:title="@string/edit"
+        android:icon="@drawable/ic_menu_edit_selector"
+        android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/action_remove_overlay"
         android:title="@string/remove"
-        android:icon="@drawable/ic_menu_delete_selector"/>
+        android:icon="@drawable/ic_menu_delete_selector"
+        android:showAsAction="ifRoom|withText" />
 </menu>
