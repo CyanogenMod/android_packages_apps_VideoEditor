@@ -1223,12 +1223,6 @@ public class MediaLinearLayout extends LinearLayout {
                 break;
             }
 
-            case EffectType.EFFECT_COLOR_FIFTIES: {
-                ApiService.addEffectColor(getContext(), mProject.getPath(), mediaItemId, id, 0,
-                        mediaItem.getDuration(), EffectColor.TYPE_FIFTIES, 0);
-                break;
-            }
-
             default: {
                 break;
             }

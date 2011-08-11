@@ -19,7 +19,7 @@ package com.android.videoeditor;
 import android.content.Context;
 
 /**
- * An effect type
+ * Represents an effect that consists of name and type.
  */
 public class EffectType {
     // Effect categories
@@ -31,19 +31,9 @@ public class EffectType {
     public static final int EFFECT_COLOR_GRADIENT = 1;
     public static final int EFFECT_COLOR_SEPIA = 2;
     public static final int EFFECT_COLOR_NEGATIVE = 3;
-    public static final int EFFECT_COLOR_FIFTIES = 4;
-
-    // Effect preview resources
-    public final static int EFFECT_RESOURCE_IDS[] = {
-        R.drawable.effects_pan_zoom,
-        R.drawable.effects_gradient,
-        R.drawable.effects_sepia,
-        R.drawable.effects_negative,
-        R.drawable.effects_fifties
-    };
 
     /**
-     * Get effects for the specified category
+     * Gets effects for the specified category, either image or video.
      *
      * @param context The context
      * @param category The category
@@ -68,15 +58,13 @@ public class EffectType {
             }
 
             case CATEGORY_VIDEO: {
-                effects = new EffectType[4];
+                effects = new EffectType[3];
                 effects[0] = new EffectType(
                         context.getString(R.string.effect_gradient), EFFECT_COLOR_GRADIENT);
                 effects[1] = new EffectType(
                         context.getString(R.string.effect_sepia), EFFECT_COLOR_SEPIA);
                 effects[2] = new EffectType(
                         context.getString(R.string.effect_negative), EFFECT_COLOR_NEGATIVE);
-                effects[3] = new EffectType(
-                        context.getString(R.string.effect_fifties), EFFECT_COLOR_FIFTIES);
                 break;
             }
 
@@ -93,24 +81,15 @@ public class EffectType {
     private final String mName;
     private final int mType;
 
-    /**
-     * Constructor
-     */
     public EffectType(String name, int type) {
         mName = name;
         mType = type;
     }
 
-    /**
-     * @return The theme name
-     */
     public String getName() {
         return mName;
     }
 
-    /**
-     * @return The type
-     */
     public int getType() {
         return mType;
     }

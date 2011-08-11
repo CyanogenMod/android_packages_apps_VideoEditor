@@ -440,14 +440,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
 

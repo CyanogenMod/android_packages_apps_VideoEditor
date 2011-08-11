@@ -162,10 +162,6 @@ public class MovieEffect {
                     return EffectType.EFFECT_COLOR_NEGATIVE;
                 }
 
-                case EffectColor.TYPE_FIFTIES: {
-                    return EffectType.EFFECT_COLOR_FIFTIES;
-                }
-
                 case EffectColor.TYPE_COLOR:
                 default: {
                     throw new IllegalArgumentException("Unsupported color type effect: " +
@@ -177,9 +173,6 @@ public class MovieEffect {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof MovieEffect)) {
@@ -188,9 +181,6 @@ public class MovieEffect {
         return mUniqueId.equals(((MovieEffect)object).mUniqueId);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public int hashCode() {
         return mUniqueId.hashCode();
