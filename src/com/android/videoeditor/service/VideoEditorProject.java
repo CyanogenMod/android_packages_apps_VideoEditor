@@ -471,7 +471,7 @@ public class VideoEditorProject {
     }
 
     /**
-     * @return The last media item
+     * @return The last media item. {@code null} if no item is in the project.
      */
     public MovieMediaItem getLastMediaItem() {
         final int count = mMediaItems.size();
@@ -480,6 +480,18 @@ public class VideoEditorProject {
         } else {
             return mMediaItems.get(count - 1);
         }
+    }
+
+    /**
+     * Gets the id of the last media item in this project.
+     *
+     * @return Id of the last media item. {@code null} if no item is in this project.
+     */
+    public String getLastMediaItemId() {
+        MovieMediaItem lastMediaItem = getLastMediaItem();
+        if (lastMediaItem != null)
+            return lastMediaItem.getId();
+        return null;
     }
 
     /**

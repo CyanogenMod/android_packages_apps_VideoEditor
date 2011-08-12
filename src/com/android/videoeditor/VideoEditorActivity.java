@@ -523,13 +523,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             case R.id.menu_item_capture_video: {
-                final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
-                        mProject.getPlayheadPos());
-                if (mediaItem != null) {
-                    mInsertMediaItemAfterMediaItemId = mediaItem.getId();
-                } else {
-                    mInsertMediaItemAfterMediaItemId = null;
-                }
+                mInsertMediaItemAfterMediaItemId = mProject.getLastMediaItemId();
 
                 // Create parameters for Intent with filename
                 final ContentValues values = new ContentValues();
@@ -543,13 +537,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             case R.id.menu_item_capture_image: {
-                final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
-                        mProject.getPlayheadPos());
-                if (mediaItem != null) {
-                    mInsertMediaItemAfterMediaItemId = mediaItem.getId();
-                } else {
-                    mInsertMediaItemAfterMediaItemId = null;
-                }
+                mInsertMediaItemAfterMediaItemId = mProject.getLastMediaItemId();
 
                 // Create parameters for Intent with filename
                 final ContentValues values = new ContentValues();
@@ -563,13 +551,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             case R.id.menu_item_import_video: {
-                final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
-                        mProject.getPlayheadPos());
-                if (mediaItem != null) {
-                    mInsertMediaItemAfterMediaItemId = mediaItem.getId();
-                } else {
-                    mInsertMediaItemAfterMediaItemId = null;
-                }
+                mInsertMediaItemAfterMediaItemId = mProject.getLastMediaItemId();
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("video/*");
@@ -579,13 +561,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             case R.id.menu_item_import_image: {
-                final MovieMediaItem mediaItem = mProject.getInsertAfterMediaItem(
-                        mProject.getPlayheadPos());
-                if (mediaItem != null) {
-                    mInsertMediaItemAfterMediaItemId = mediaItem.getId();
-                } else {
-                    mInsertMediaItemAfterMediaItemId = null;
-                }
+                mInsertMediaItemAfterMediaItemId = mProject.getLastMediaItemId();
 
                 final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
