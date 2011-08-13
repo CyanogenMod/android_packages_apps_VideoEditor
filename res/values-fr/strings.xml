@@ -5,6 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"Chargement du projet..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Aucun projet trouvé"</string>
+    <string name="editor_add" msgid="1728703558703319942">"Ajouter"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Importer un clip vidéo"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"Importer une image"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"Importer un morceau"</string>
@@ -14,24 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Modifier les proportions"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"Modifier le nom de projet"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"Supprimer le projet"</string>
-    <string name="editor_capture_video" msgid="8062206918403182504">"Nouveau clip vidéo"</string>
-    <string name="editor_capture_image" msgid="7286273213965159369">"Nouvelle image"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"Enregistrer une vidéo"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"Prendre une photo"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"Voulez-vous supprimer ce projet ?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Voulez-vous supprimer cette piste audio ?"</string>
-    <string name="editor_edit_overlay" msgid="882498881948174496">"Modifier"</string>
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"Titre"</string>
+    <string name="editor_add_overlay" msgid="1515525110646122291">"Ajouter un titre"</string>
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"Modifier le titre"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"Supprimer le titre"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Voulez-vous supprimer cette superposition ?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Modifier le mode de rendu"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"Voulez-vous supprimer cette transition ?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"Voulez-vous supprimer cet effet ?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"Voulez-vous supprimer ce clip vidéo ?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"Voulez-vous supprimer cette image ?"</string>
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"effet"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"Ajouter un effet"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Changer d\'effet"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Supprimer l\'effet"</string>
-    <string name="editor_add_overlay" msgid="1515525110646122291">"Ajouter un titre"</string>
-    <string name="editor_add_begin_transition" msgid="1195671095438906932">"Ajouter une transition au début"</string>
-    <string name="editor_add_end_transition" msgid="6882194984917137730">"Ajouter une transition à la fin"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Zoom panoramique"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Dégradé"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"Sépia"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"Négatif"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"aucun effet"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Transition de début de clip"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Transition de fin de clip"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Modifier la transition"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"Le téléchargement du clip vidéo a démarré. Vous serez averti une fois celui-ci terminé."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"Le téléchargement de l\'image a démarré. Vous serez averti une fois celui-ci terminé."</string>
@@ -40,7 +49,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Ne pas lire en boucle"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Couper le son"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Réactiver le son"</string>
-    <!-- outdated translation 3690441080533712908 -->     <string name="projects_new_project" msgid="7515160975627001972">"Nouveau projet"</string>
+    <string name="projects_new_project" msgid="7515160975627001972">"Créer un projet"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Nom de projet"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
@@ -108,6 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"Sélectionnez le modèle du titre."</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Titre"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Sous-titre"</string>
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Modifier le modèle"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"Effets"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"Effet panoramique et zoom"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"Effet dégradé"</string>
@@ -130,6 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"Oui"</string>
     <string name="no" msgid="4303537392215476576">"Non"</string>
     <string name="done" msgid="5693464841369633740">"OK"</string>
+    <string name="edit" msgid="8659197150838109875">"Modifier"</string>
     <string name="remove" msgid="7886072447916861923">"Supprimer"</string>
     <string name="untitled" msgid="579236531346245199">"Sans nom"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> h <xliff:g id="MINUTES">%d</xliff:g> mn"</string>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- no translation found for short_app_name (5507177282765852169) -->
+    <skip />
+    <!-- no translation found for full_app_name (5729546228978363869) -->
+    <skip />
+    <!-- no translation found for editor_loading_project (3510642162166476100) -->
+    <skip />
+    <!-- no translation found for editor_no_project (3873338552933049950) -->
+    <skip />
+    <string name="editor_add" msgid="1728703558703319942">"Engeza"</string>
+    <!-- no translation found for editor_import_video (6939466871773802646) -->
+    <skip />
+    <!-- no translation found for editor_import_image (4711897454453141861) -->
+    <skip />
+    <!-- no translation found for editor_import_audio (1382830016716612319) -->
+    <skip />
+    <!-- no translation found for editor_share_movie (7902085631426113162) -->
+    <skip />
+    <!-- no translation found for editor_export_movie (6179595763732596532) -->
+    <skip />
+    <!-- no translation found for editor_play_exported_movie (4312100359380734615) -->
+    <skip />
+    <!-- no translation found for editor_change_aspect_ratio (4979215677592420989) -->
+    <skip />
+    <!-- no translation found for editor_edit_project_name (1910357904276802782) -->
+    <skip />
+    <!-- no translation found for editor_delete_project (2521676016183608234) -->
+    <skip />
+    <string name="editor_capture_video" msgid="7441727320975225967">"Rekhoda ividiyo"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"Thatha isithombe"</string>
+    <!-- no translation found for editor_delete_project_question (1453862802788814277) -->
+    <skip />
+    <!-- no translation found for editor_zero_time_stamp (3534077185153971762) -->
+    <skip />
+    <!-- no translation found for editor_remove_audio_track_question (6857027674045947187) -->
+    <skip />
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"Isihloko"</string>
+    <!-- no translation found for editor_add_overlay (1515525110646122291) -->
+    <skip />
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"Hlela isihloko"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"Khipha isihloko"</string>
+    <!-- no translation found for editor_remove_overlay_question (1113396043958946144) -->
+    <skip />
+    <!-- no translation found for editor_change_rendering_mode (1703741281523626932) -->
+    <skip />
+    <!-- no translation found for editor_remove_transition_question (2679033947203081687) -->
+    <skip />
+    <!-- no translation found for editor_remove_effect_question (8346475525473044890) -->
+    <skip />
+    <!-- no translation found for editor_remove_video_question (2503609249297907900) -->
+    <skip />
+    <!-- no translation found for editor_remove_image_question (1785701428761756119) -->
+    <skip />
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"inguquko"</string>
+    <!-- no translation found for editor_add_effect (7598526041207561912) -->
+    <skip />
+    <!-- no translation found for editor_change_effect (2867521171671527910) -->
+    <skip />
+    <!-- no translation found for editor_remove_effect (7802250142621203881) -->
+    <skip />
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Pan Khulisa"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Umyela"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"I-Sepia"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"Akulungile"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"ayikho inguquko"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Guqulela kwisiqeshana"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Guqulela ngaphandle kwesiqeshana"</string>
+    <!-- no translation found for editor_change_transition (1729795192684212426) -->
+    <skip />
+    <!-- no translation found for editor_video_load (1982994058443715056) -->
+    <skip />
+    <!-- no translation found for editor_image_load (4485265196685081793) -->
+    <skip />
+    <!-- no translation found for editor_transition_title (4340622816798792302) -->
+    <skip />
+    <!-- no translation found for editor_enable_loop_audio_track (3621067524622203394) -->
+    <skip />
+    <!-- no translation found for editor_disable_loop_audio_track (7726861077018487853) -->
+    <skip />
+    <!-- no translation found for editor_mute (4901844675777155179) -->
+    <skip />
+    <!-- no translation found for editor_unmute (905024676961016538) -->
+    <skip />
+    <!-- no translation found for projects_new_project (7515160975627001972) -->
+    <skip />
+    <!-- no translation found for projects_project_name (9077511317849923976) -->
+    <skip />
+    <!-- no translation found for aspect_ratio_11_9 (3529342152764150538) -->
+    <skip />
+    <!-- no translation found for aspect_ratio_16_9 (1423027126389220080) -->
+    <skip />
+    <!-- no translation found for aspect_ratio_3_2 (507963433914879558) -->
+    <skip />
+    <!-- no translation found for aspect_ratio_4_3 (3697255322178944937) -->
+    <skip />
+    <!-- no translation found for aspect_ratio_5_3 (8540286002309128174) -->
+    <skip />
+    <!-- no translation found for editor_storage_not_available (1766787433930459119) -->
+    <skip />
+    <!-- no translation found for editor_create_error (4400962470820741140) -->
+    <skip />
+    <!-- no translation found for editor_load_error (6187178948889981589) -->
+    <skip />
+    <!-- no translation found for editor_aspect_ratio_error (7490797134786829807) -->
+    <skip />
+    <!-- no translation found for editor_apply_theme_error (4099539447056163679) -->
+    <skip />
+    <!-- no translation found for editor_export_error (4936990440394275855) -->
+    <skip />
+    <!-- no translation found for editor_saved_error (9164923264525454828) -->
+    <skip />
+    <!-- no translation found for editor_release_error (7441115096973424601) -->
+    <skip />
+    <!-- no translation found for editor_delete_error (2764342215256765694) -->
+    <skip />
+    <!-- no translation found for editor_add_video_clip_error (3158142971877933056) -->
+    <skip />
+    <!-- no translation found for editor_add_image_error (3347574514977406648) -->
+    <skip />
+    <!-- no translation found for editor_move_media_item_error (1557186534117805335) -->
+    <skip />
+    <!-- no translation found for editor_remove_media_item_error (5704496024782526459) -->
+    <skip />
+    <!-- no translation found for editor_set_rendering_mode_error (7149393157853651241) -->
+    <skip />
+    <!-- no translation found for editor_set_media_item_duration_error (7062880519480750655) -->
+    <skip />
+    <!-- no translation found for editor_set_media_item_boundaries_error (5583425478931274112) -->
+    <skip />
+    <!-- no translation found for editor_add_transition_error (2536143807482160807) -->
+    <skip />
+    <!-- no translation found for editor_remove_transition_error (1368159023884546005) -->
+    <skip />
+    <!-- no translation found for editor_set_transition_duration_error (2689703633926044264) -->
+    <skip />
+    <!-- no translation found for editor_add_overlay_error (5455180707661310901) -->
+    <skip />
+    <!-- no translation found for editor_remove_overlay_error (2779204496931287337) -->
+    <skip />
+    <!-- no translation found for editor_set_duration_overlay_error (5345900654170991799) -->
+    <skip />
+    <!-- no translation found for editor_set_start_time_overlay_error (4550804633600757861) -->
+    <skip />
+    <!-- no translation found for editor_set_user_attributes_overlay_error (2738824949937821156) -->
+    <skip />
+    <!-- no translation found for editor_add_effect_error (3887316140333037866) -->
+    <skip />
+    <!-- no translation found for editor_remove_effect_error (3999717994912943400) -->
+    <skip />
+    <!-- no translation found for editor_add_audio_track_error (6946541201857209876) -->
+    <skip />
+    <!-- no translation found for editor_remove_audio_track_error (3432665721794329909) -->
+    <skip />
+    <!-- no translation found for editor_set_audio_track_boundaries_error (5850938851754227439) -->
+    <skip />
+    <!-- no translation found for editor_transition_too_short (3956089619553629988) -->
+    <skip />
+    <!-- no translation found for editor_media_load_error (2421624042826573589) -->
+    <skip />
+    <!-- no translation found for export_dialog_export (3425471919331193846) -->
+    <skip />
+    <!-- no translation found for export_dialog_movie_size (7285302703460176418) -->
+    <skip />
+    <!-- no translation found for export_dialog_movie_quality (5455709803799359041) -->
+    <skip />
+    <!-- no translation found for export_dialog_movie_quality_low (5453423100969821309) -->
+    <skip />
+    <!-- no translation found for export_dialog_movie_quality_medium (4907951890148318364) -->
+    <skip />
+    <!-- no translation found for export_dialog_movie_quality_high (4622241978022000159) -->
+    <skip />
+    <!-- no translation found for pan_zoom_title (5962535722026848255) -->
+    <skip />
+    <!-- no translation found for pan_zoom_start (3201190627057376354) -->
+    <skip />
+    <!-- no translation found for pan_zoom_end (8577364516174049589) -->
+    <skip />
+    <!-- no translation found for pan_zoom_small_image_error (4250616742809088660) -->
+    <skip />
+    <!-- no translation found for theme_name_travel (667328014375405107) -->
+    <skip />
+    <!-- no translation found for theme_travel_title (6001352420200418178) -->
+    <skip />
+    <!-- no translation found for theme_travel_subtitle (5861186449934194608) -->
+    <skip />
+    <!-- no translation found for theme_name_surfing (2471612497551183476) -->
+    <skip />
+    <!-- no translation found for theme_surfing_title (1920259292079171251) -->
+    <skip />
+    <!-- no translation found for theme_surfing_subtitle (1393064778029517696) -->
+    <skip />
+    <!-- no translation found for theme_name_film (1892661451040100151) -->
+    <skip />
+    <!-- no translation found for theme_film_title (1947686292272656661) -->
+    <skip />
+    <!-- no translation found for theme_film_subtitle (7643987171132687629) -->
+    <skip />
+    <!-- no translation found for theme_name_rock_and_roll (7039966973129770782) -->
+    <skip />
+    <!-- no translation found for theme_rock_and_roll_title (8582629683726942675) -->
+    <skip />
+    <!-- no translation found for theme_rock_and_roll_subtitle (434809222274818898) -->
+    <skip />
+    <!-- no translation found for overlay_preview_center (7245976365405053755) -->
+    <skip />
+    <!-- no translation found for overlay_preview_bottom (251307616509818157) -->
+    <skip />
+    <!-- no translation found for overlay_title (4956934604656932207) -->
+    <skip />
+    <!-- no translation found for overlay_title_sample (8273092953382736653) -->
+    <skip />
+    <!-- no translation found for overlay_subtitle_sample (3780261169507563826) -->
+    <skip />
+    <!-- no translation found for overlays_select_type (6409278066167032335) -->
+    <skip />
+    <!-- no translation found for overlay_title_label (4354132919363220241) -->
+    <skip />
+    <!-- no translation found for overlay_subtitle_label (7551473702348702251) -->
+    <skip />
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Shintsha ithempulethi"</string>
+    <!-- no translation found for effects_select_effect (236707968441680914) -->
+    <skip />
+    <!-- no translation found for effect_pan_zoom (569977803331838206) -->
+    <skip />
+    <!-- no translation found for effect_gradient (3375636253347853008) -->
+    <skip />
+    <!-- no translation found for effect_sepia (674793199333159952) -->
+    <skip />
+    <!-- no translation found for effect_negative (4266435358235859136) -->
+    <skip />
+    <!-- no translation found for effect_fifties (8481127912713456758) -->
+    <skip />
+    <!-- no translation found for transitions_select_transition (4967975803733317444) -->
+    <skip />
+    <!-- no translation found for transitions_alpha_countour (8172271436629067722) -->
+    <skip />
+    <!-- no translation found for transitions_alpha_diagonal (41249798064809453) -->
+    <skip />
+    <!-- no translation found for transitions_crossfade (8675768530446018936) -->
+    <skip />
+    <!-- no translation found for transitions_fade_black (4660683008630768277) -->
+    <skip />
+    <!-- no translation found for transitions_sliding_right_out_left_in (1389887781046015922) -->
+    <skip />
+    <!-- no translation found for transitions_sliding_left_out_right_in (3356163485812291888) -->
+    <skip />
+    <!-- no translation found for transitions_sliding_top_out_bottom_in (5442312445544903771) -->
+    <skip />
+    <!-- no translation found for transitions_sliding_bottom_out_top_in (2053651773008656618) -->
+    <skip />
+    <!-- no translation found for transitions_duration (8920913306085446845) -->
+    <skip />
+    <!-- no translation found for rendering_mode_black_borders (3328779663112893086) -->
+    <skip />
+    <!-- no translation found for rendering_mode_stretch (6386449069902135234) -->
+    <skip />
+    <!-- no translation found for rendering_mode_crop (1892533060338728880) -->
+    <skip />
+    <!-- no translation found for yes (5627909733720577098) -->
+    <skip />
+    <!-- no translation found for no (4303537392215476576) -->
+    <skip />
+    <!-- no translation found for done (5693464841369633740) -->
+    <skip />
+    <string name="edit" msgid="8659197150838109875">"Hlela"</string>
+    <!-- no translation found for remove (7886072447916861923) -->
+    <skip />
+    <!-- no translation found for untitled (579236531346245199) -->
+    <skip />
+    <!-- no translation found for hours_and_minutes (3321381734132704902) -->
+    <skip />
+    <!-- no translation found for hour_and_minutes (1067026366169392034) -->
+    <skip />
+    <!-- no translation found for minutes (6924555888655437479) -->
+    <skip />
+    <!-- no translation found for minute_and_seconds (421389061027404642) -->
+    <skip />
+    <!-- no translation found for seconds (6169618193647386033) -->
+    <skip />
+</resources>

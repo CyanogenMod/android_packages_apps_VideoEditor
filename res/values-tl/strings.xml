@@ -5,6 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"Naglo-load ang proyekto..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Walang nakitang proyekto"</string>
+    <string name="editor_add" msgid="1728703558703319942">"Idagdag"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"I-import ang video clip"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"I-import ang larawan"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"Mag-import ng musika"</string>
@@ -14,24 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Baguhin ang aspect ratio"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"Baguhin ang pangalan ng proyekto"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"Tanggalin ang proyekto"</string>
-    <string name="editor_capture_video" msgid="8062206918403182504">"Bagong video clip"</string>
-    <string name="editor_capture_image" msgid="7286273213965159369">"Bagong larawan"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"Mag-record ng video"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"Kumuha ng larawan"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"Gusto mo bang tanggalin ang proyektong ito?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Gusto mo bang alisin ang track ng audio na ito?"</string>
-    <string name="editor_edit_overlay" msgid="882498881948174496">"I-edit"</string>
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"Pamagat"</string>
+    <string name="editor_add_overlay" msgid="1515525110646122291">"Magdagdag ng pamagat"</string>
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"I-edit ang pamagat"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"Alisin ang pamagat"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Gusto mong alisin ang overlay na ito?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Baguhin ang mode sa pag-render"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"Gusto mo bang alisin ang paglilipat na ito?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"Gusto mo bang alisin ang effect na ito?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"Gusto mo bang alisin ang video clip na ito?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"Gusto mong alisin ang larawang ito?"</string>
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"effect"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"Magdagdag ng effect"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Baguhin ang effect"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Alisin ang effect"</string>
-    <string name="editor_add_overlay" msgid="1515525110646122291">"Magdagdag ng pamagat"</string>
-    <string name="editor_add_begin_transition" msgid="1195671095438906932">"Magdagdag ng simulang paglilipat"</string>
-    <string name="editor_add_end_transition" msgid="6882194984917137730">"Magdagdag ng katapusang paglilipat"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Pan Zoom"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Gradient"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"Sepia"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"Negatibo"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"walang effect"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Transition sa clip"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Mag-transition palabas ng clip"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Baguhin ang paglilipat"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"Nagsisimula na ang pag-download ng video clip. Ino-notify ka kapag nakumpleto ito."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"Nagsisimula na ang pag-download ng larawan. Ino-notify ka kapag nakumpleto ito."</string>
@@ -40,7 +49,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Huwag mag-loop"</string>
     <string name="editor_mute" msgid="4901844675777155179">"I-mute"</string>
     <string name="editor_unmute" msgid="905024676961016538">"I-unmute"</string>
-    <!-- outdated translation 3690441080533712908 -->     <string name="projects_new_project" msgid="7515160975627001972">"Bagong proyekto"</string>
+    <string name="projects_new_project" msgid="7515160975627001972">"Lumikha ng Bagong Proyekto"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Pangalan ng proyekto"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
@@ -108,6 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"Pumili ng template ng pamagat"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Pamagat"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Subtitle"</string>
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Baguhin ang template"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"Mga Effect"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"Pan &amp; zoom effect"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"Gradient effect"</string>
@@ -130,6 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"Oo"</string>
     <string name="no" msgid="4303537392215476576">"Hindi"</string>
     <string name="done" msgid="5693464841369633740">"Tapos na"</string>
+    <string name="edit" msgid="8659197150838109875">"I-edit"</string>
     <string name="remove" msgid="7886072447916861923">"Alisin"</string>
     <string name="untitled" msgid="579236531346245199">"Walang Pamagat"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> (na) oras <xliff:g id="MINUTES">%d</xliff:g> (na) min"</string>
