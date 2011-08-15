@@ -242,30 +242,14 @@ public class ApiServiceListener {
      * @param projectPath The project path
      * @param mediaItemId The id of the media item
      * @param thumbnail The bitmap thumbnail
-     * @param timeMs The time position
+     * @param index The index of the thumbnail
+     * @param token The token given in the original request
      * @param exception The exception which occurred
      *
      * @return true if the bitmap is used
      */
     public boolean onMediaItemThumbnail(String projectPath, String mediaItemId,
-            Bitmap thumbnail, long timeMs, Exception exception) {
-        return false;
-    }
-
-    /**
-     * A set of media item thumbnails were extracted
-     *
-     * @param projectPath The project path
-     * @param mediaItemId The id of the media item
-     * @param thumbnails The thumbnails array
-     * @param startMs The start time position
-     * @param endMs The end time position
-     * @param exception The exception which occurred
-     *
-     * @return true if the bitmap is used
-     */
-    public boolean onMediaItemThumbnails(String projectPath, String mediaItemId,
-            Bitmap[] thumbnails, long startMs, long endMs, Exception exception) {
+            Bitmap thumbnail, int index, int token, Exception exception) {
         return false;
     }
 

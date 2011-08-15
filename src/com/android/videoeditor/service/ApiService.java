@@ -57,6 +57,7 @@ import android.media.videoeditor.TransitionSliding;
 import android.media.videoeditor.VideoEditor;
 import android.media.videoeditor.VideoEditorFactory;
 import android.media.videoeditor.WaveformData;
+import android.media.videoeditor.MediaItem.GetThumbnailListCallback;
 import android.media.videoeditor.VideoEditor.ExportProgressListener;
 import android.media.videoeditor.VideoEditor.MediaProcessingProgressListener;
 import android.net.Uri;
@@ -128,6 +129,8 @@ public class ApiService extends Service {
     private static final String PARAM_THEME = "theme";
     private static final String PARAM_ACTION = "action";
     private static final String PARAM_COUNT = "count";
+    private static final String PARAM_TOKEN = "token";
+    private static final String PARAM_INDICES = "indices";
 
     // Operations
     private static final int OP_VIDEO_EDITOR_CREATE = 1;
@@ -154,7 +157,6 @@ public class ApiService extends Service {
     private static final int OP_MEDIA_ITEM_SET_MUTE = 108;
     private static final int OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM = 109;
     private static final int OP_MEDIA_ITEM_EXTRACT_AUDIO_WAVEFORM_STATUS = 110;
-    private static final int OP_MEDIA_ITEM_GET_THUMBNAIL = 111;
     private static final int OP_MEDIA_ITEM_GET_THUMBNAILS = 112;
     private static final int OP_MEDIA_ITEM_LOAD = 113;
     private static final int OP_MEDIA_ITEM_LOAD_STATUS = 114;
@@ -450,7 +452,6 @@ public class ApiService extends Service {
                 case OP_VIDEO_EDITOR_SAVE:
                 case OP_MEDIA_ITEM_SET_VOLUME:
                 case OP_MEDIA_ITEM_SET_MUTE:
-                case OP_MEDIA_ITEM_GET_THUMBNAIL:
                 case OP_MEDIA_ITEM_GET_THUMBNAILS:
                 case OP_MEDIA_ITEM_LOAD:
                 case OP_TRANSITION_GET_THUMBNAIL:
@@ -646,29 +647,6 @@ public class ApiService extends Service {
     }
 
     /**
-     * Get the thumbnail of the specified size
-     *
-     * @param context The context
-     * @param projectPath The project path
-     * @param mediaItemId The id of the media item
-     * @param width The width
-     * @param height The height
-     * @param timeMs The time position
-     */
-    public static void getMediaItemThumbnail(Context context, String projectPath,
-            String mediaItemId, int width, int height, long timeMs) {
-        final Intent intent = mIntentPool.get(context, ApiService.class);
-        intent.putExtra(PARAM_OP, OP_MEDIA_ITEM_GET_THUMBNAIL);
-        intent.putExtra(PARAM_PROJECT_PATH, projectPath);
-        intent.putExtra(PARAM_STORYBOARD_ITEM_ID, mediaItemId);
-        intent.putExtra(PARAM_WIDTH, width);
-        intent.putExtra(PARAM_HEIGHT, height);
-        intent.putExtra(PARAM_START_TIME, timeMs);
-
-        startCommand(context, intent);
-    }
-
-    /**
      * Get the thumbnails of the specified size
      *
      * @param context The context
@@ -680,8 +658,9 @@ public class ApiService extends Service {
      * @param endMs The end time in milliseconds
      * @param count The number of thumbnails
      */
-    public static void getMediaItemThumbnails(Context context, String projectPath,
-            String mediaItemId, int width, int height, long startMs, long endMs, int count) {
+    public static void getMediaItemThumbnails(Context context,
+            String projectPath, String mediaItemId, int width, int height,
+            long startMs, long endMs, int count, int token, int[] indices) {
         final Intent intent = mIntentPool.get(context, ApiService.class);
         intent.putExtra(PARAM_OP, OP_MEDIA_ITEM_GET_THUMBNAILS);
         intent.putExtra(PARAM_PROJECT_PATH, projectPath);
@@ -691,6 +670,8 @@ public class ApiService extends Service {
         intent.putExtra(PARAM_START_TIME, startMs);
         intent.putExtra(PARAM_END_TIME, endMs);
         intent.putExtra(PARAM_COUNT, count);
+        intent.putExtra(PARAM_TOKEN, token);
+        intent.putExtra(PARAM_INDICES, indices);
 
         startCommand(context, intent);
     }
@@ -1462,18 +1443,21 @@ public class ApiService extends Service {
                 break;
             }
 
-            case OP_MEDIA_ITEM_GET_THUMBNAIL:
             case OP_MEDIA_ITEM_GET_THUMBNAILS: {
                 final String projectPath = intent.getStringExtra(PARAM_PROJECT_PATH);
                 final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
+                final int token = intent.getIntExtra(PARAM_TOKEN, 0);
                 // Cancel any pending thumbnail request for the same media item
+                // but with a different token
                 Iterator<Intent> intentQueueIterator = mThumbnailThread.getIntentQueueIterator();
                 while (intentQueueIterator.hasNext()) {
                     Intent qIntent = intentQueueIterator.next();
                     int opi = qIntent.getIntExtra(PARAM_OP, -1);
                     String pp = qIntent.getStringExtra(PARAM_PROJECT_PATH);
                     String mid = qIntent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    if (opi == op && pp.equals(projectPath) && mid.equals(mediaItemId)) {
+                    int tk = qIntent.getIntExtra(PARAM_TOKEN, 0);
+                    if (opi == op && pp.equals(projectPath) && mid.equals(mediaItemId)
+                            && tk != token) {
                         boolean canceled = mThumbnailThread.cancel(qIntent);
                         if (canceled) {
                             logd("Canceled operation: " + op + " for media item" + mediaItemId);
@@ -1537,7 +1521,7 @@ public class ApiService extends Service {
      *
      * @param intent The intent
      */
-    public void processIntent(Intent intent) {
+    public void processIntent(final Intent intent) {
         final int op = intent.getIntExtra(PARAM_OP, -1);
         VideoEditor videoEditor = null;
         try {
@@ -2173,25 +2157,6 @@ public class ApiService extends Service {
                     break;
                 }
 
-                case OP_MEDIA_ITEM_GET_THUMBNAIL: {
-                    // Note that this command is executed in the thumbnail thread
-                    final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
-                    logd("OP_MEDIA_ITEM_GET_THUMBNAIL: " + mediaItemId);
-
-                    final MediaItem mediaItem = videoEditor.getMediaItem(mediaItemId);
-                    if (mediaItem == null) {
-                        throw new IllegalArgumentException("MediaItem not found: " + mediaItemId);
-                    }
-
-                    final Bitmap thumbnail = mediaItem.getThumbnail(
-                            intent.getIntExtra(PARAM_WIDTH, 0),
-                            intent.getIntExtra(PARAM_HEIGHT, 0),
-                            intent.getLongExtra(PARAM_START_TIME, 0));
-
-                    completeRequest(intent, videoEditor, null, thumbnail, null, true);
-                    break;
-                }
-
                 case OP_MEDIA_ITEM_GET_THUMBNAILS: {
                     // Note that this command is executed in the thumbnail thread
                     final String mediaItemId = intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID);
@@ -2202,14 +2167,24 @@ public class ApiService extends Service {
                         throw new IllegalArgumentException("MediaItem not found: " + mediaItemId);
                     }
 
-                    final Bitmap[] thumbnails = mediaItem.getThumbnailList(
+                    final VideoEditor ve = videoEditor; // Just to make it "final"
+                    mediaItem.getThumbnailList(
                             intent.getIntExtra(PARAM_WIDTH, 0),
                             intent.getIntExtra(PARAM_HEIGHT, 0),
                             intent.getLongExtra(PARAM_START_TIME, 0),
                             intent.getLongExtra(PARAM_END_TIME, 0),
-                            intent.getIntExtra(PARAM_COUNT, 0));
+                            intent.getIntExtra(PARAM_COUNT, 0),
+                            intent.getIntArrayExtra(PARAM_INDICES),
+                            new GetThumbnailListCallback() {
+                                public void onThumbnail(Bitmap bitmap, int index) {
+                                    completeRequest(
+                                            intent, ve, null, bitmap,
+                                            Integer.valueOf(index), false);
+                                }
+                            }
+                            );
 
-                    completeRequest(intent, videoEditor, null, thumbnails, null, true);
+                    completeRequest(intent, videoEditor, null, null, null, true);
                     break;
                 }
 
@@ -3414,47 +3389,25 @@ public class ApiService extends Service {
                 break;
             }
 
-            case OP_MEDIA_ITEM_GET_THUMBNAIL: {
+            case OP_MEDIA_ITEM_GET_THUMBNAILS: {
                 if (finalize) {
                     finalizeRequest(intent);
+                    break;
                 }
 
                 final Bitmap bitmap = (Bitmap)result;
+                final int index = (Integer)extraResult;
                 boolean used = false;
                 for (ApiServiceListener listener : mListeners) {
                     used |= listener.onMediaItemThumbnail(projectPath,
                             intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID),
-                            bitmap, intent.getLongExtra(PARAM_START_TIME, 0), ex);
+                            bitmap, index, intent.getIntExtra(PARAM_TOKEN, 0),
+                            ex);
                 }
 
                 if (used == false) {
                     if (bitmap != null) {
                         bitmap.recycle();
-                    }
-                }
-
-                break;
-            }
-
-            case OP_MEDIA_ITEM_GET_THUMBNAILS: {
-                if (finalize) {
-                    finalizeRequest(intent);
-                }
-
-                final Bitmap[] bitmaps = (Bitmap[])result;
-                boolean used = false;
-                for (ApiServiceListener listener : mListeners) {
-                    used |= listener.onMediaItemThumbnails(projectPath,
-                            intent.getStringExtra(PARAM_STORYBOARD_ITEM_ID),
-                            bitmaps, intent.getLongExtra(PARAM_START_TIME, 0),
-                            intent.getLongExtra(PARAM_END_TIME, 0), ex);
-                }
-
-                if (used == false) {
-                    if (bitmaps != null) {
-                        for (int i = 0; i < bitmaps.length; i++) {
-                            bitmaps[i].recycle();
-                        }
                     }
                 }
 

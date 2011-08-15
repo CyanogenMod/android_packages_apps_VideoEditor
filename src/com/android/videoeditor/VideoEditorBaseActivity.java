@@ -459,8 +459,8 @@ public abstract class VideoEditorBaseActivity extends Activity {
         }
 
         @Override
-        public boolean onMediaItemThumbnails(String projectPath, String mediaItemId,
-                Bitmap[] thumbnails, long startMs, long endMs, Exception exception) {
+        public boolean onMediaItemThumbnail(String projectPath, String mediaItemId,
+                Bitmap thumbnail, int index, int token, Exception exception) {
             // Check if the VideoEditor is the one we are expecting
             if (!projectPath.equals(mProjectPath)) {
                 return false;
@@ -473,8 +473,8 @@ public abstract class VideoEditorBaseActivity extends Activity {
             if (exception != null) {
                 return false;
             } else {
-                return getMediaLayout().setMediaItemThumbnails(mediaItemId, thumbnails, startMs,
-                        endMs);
+                return getMediaLayout().setMediaItemThumbnail(
+                        mediaItemId, thumbnail, index, token);
             }
         }
 

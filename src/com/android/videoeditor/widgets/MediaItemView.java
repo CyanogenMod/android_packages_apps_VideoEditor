@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2011 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,28 +29,27 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+
 /**
  * Media item preview view
  */
 public class MediaItemView extends View {
-    // Logging
     private static final String TAG = "MediaItemView";
 
-    // Reasons for requesting thumbnails
-    private static final int REASON_SCROLL_END = 1;
-    private static final int REASON_REFRESH = 2;
-    private static final int REASON_PROGRESS_END = 3;
-    private static final int REASON_NEED_THUMBNAILS = 4;
-    private static final int REASON_PLAYBACK = 5;
-
-    private static Drawable mAddTransitionDrawable;
-    private static Drawable mEmptyFrameDrawable;
+    // Static variables
+    private static Drawable sAddTransitionDrawable;
+    private static Drawable sEmptyFrameDrawable;
+    private static ThumbnailCache sThumbnailCache;
 
     // Instance variables
     private final GestureDetector mGestureDetector;
@@ -58,154 +57,25 @@ public class MediaItemView extends View {
     private final Rect mProgressDestRect;
 
     private boolean mIsScrolling;
-    private boolean mWaitForThumbnailsAfterScroll;
-    private int mScrollX, mScrollingX;
-    private int mStart, mEnd;
-    private int mStartOffset, mEndOffset;
-    private int mRequestedStartOffset, mRequestedEndOffset;
-    private long mRequestedStartMs, mRequestedEndMs;
-    private int mRequestedCount;
-    private int mScreenWidth;
-    private String mProjectPath;
-    private Bitmap[] mBitmaps;
-    private ItemSimpleGestureListener mGestureListener;
-    private int mProgress;
-    private int[] mLeftState, mRightState;
     private boolean mIsTrimming;
     private boolean mIsPlaying;
+    private int mProgress;  // -1: not in progress, 0-100: in progress
+
+    private static int mScreenWidth;
+    private int mScrollX;
+
+    private String mProjectPath;
+    private MovieMediaItem mMediaItem;
+    private ItemSimpleGestureListener mGestureListener;
+    private int[] mLeftState, mRightState;
+
     private int mThumbnailWidth, mThumbnailHeight;
+    private int mNumberOfThumbnails;
+    private long mBeginTimeMs, mEndTimeMs;
 
-    /**
-     * Shadow builder for the media item
-     */
-    private class MediaItemShadowBuilder extends DragShadowBuilder {
-        // Instance variables
-        private final Drawable mFrame;
-
-        public MediaItemShadowBuilder(View view) {
-            super(view);
-
-            mFrame = view.getContext().getResources().getDrawable(R.drawable.timeline_item_pressed);
-        }
-
-        @Override
-        public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
-            shadowSize.set(getShadowWidth(), getShadowHeight());
-            shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y);
-        }
-
-        @Override
-        public void onDrawShadow(Canvas canvas) {
-            //super.onDrawShadow(canvas);
-            mFrame.setBounds(0, 0, getShadowWidth(), getShadowHeight());
-            mFrame.draw(canvas);
-
-            if (mBitmaps != null && mBitmaps.length > 0) {
-                final View view = getView();
-                canvas.drawBitmap(mBitmaps[0], view.getPaddingLeft(), view.getPaddingTop(), null);
-            }
-        }
-    }
-
-    public MediaItemView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-
-        // Setup the gesture listener
-        mGestureDetector = new GestureDetector(context,
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onSingleTapConfirmed(MotionEvent e) {
-                        if (mGestureListener == null) {
-                            return false;
-                        }
-
-                        if (hasAddTransition()) {
-                            final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-                            if (mediaItem.getBeginTransition() == null &&
-                                    e.getX() < mAddTransitionDrawable.getIntrinsicWidth() +
-                                    getPaddingLeft()) {
-                                return mGestureListener.onSingleTapConfirmed(MediaItemView.this,
-                                        ItemSimpleGestureListener.LEFT_AREA, e);
-                            } else if (mediaItem.getEndTransition() == null &&
-                                    e.getX() >= getWidth() - getPaddingRight() -
-                                    mAddTransitionDrawable.getIntrinsicWidth()) {
-                                return mGestureListener.onSingleTapConfirmed(MediaItemView.this,
-                                        ItemSimpleGestureListener.RIGHT_AREA, e);
-                            } else {
-                                return mGestureListener.onSingleTapConfirmed(MediaItemView.this,
-                                        ItemSimpleGestureListener.CENTER_AREA, e);
-                            }
-                        } else {
-                            return mGestureListener.onSingleTapConfirmed(MediaItemView.this,
-                                    ItemSimpleGestureListener.CENTER_AREA, e);
-                        }
-                    }
-
-                    @Override
-                    public void onLongPress (MotionEvent e) {
-                        if (mGestureListener != null) {
-                            mGestureListener.onLongPress(MediaItemView.this, e);
-                        }
-                    }
-                });
-
-        mScrollListener = new ScrollViewListener() {
-            @Override
-            public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
-                mIsScrolling = true;
-            }
-
-            @Override
-            public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
-                mScrollingX = scrollX;
-                invalidate();
-            }
-
-            @Override
-            public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
-                mIsScrolling = false;
-                mScrollX = scrollX;
-                mScrollingX = scrollX;
-
-                if (requestThumbnails(REASON_SCROLL_END)) {
-                    invalidate();
-                }
-            }
-        };
-
-        // Prepare the bitmap rectangles
-        final ProgressBar progressBar = ProgressBar.getProgressBar(context);
-        final int layoutHeight = (int)(getResources().getDimension(R.dimen.media_layout_height) -
-            getResources().getDimension(R.dimen.media_layout_padding));
-        mProgressDestRect = new Rect(getPaddingLeft(),
-                layoutHeight - progressBar.getHeight() - getPaddingBottom(), 0,
-                layoutHeight - getPaddingBottom());
-
-        // Initialize the progress value
-        mProgress = -1;
-
-        if (mAddTransitionDrawable == null) {
-            mAddTransitionDrawable = getResources().getDrawable(
-                    R.drawable.add_transition_selector);
-        }
-
-        if (mEmptyFrameDrawable == null) {
-            mEmptyFrameDrawable = getResources().getDrawable(R.drawable.timeline_loading);
-        }
-
-        // Get the screen width
-        final Display display = ((WindowManager)context.getSystemService(
-                Context.WINDOW_SERVICE)).getDefaultDisplay();
-        final DisplayMetrics metrics = new DisplayMetrics();
-        display.getMetrics(metrics);
-        mScreenWidth = metrics.widthPixels;
-
-        mRequestedStartMs = -1;
-        mRequestedEndMs = -1;
-
-        mLeftState = View.EMPTY_STATE_SET;
-        mRightState = View.EMPTY_STATE_SET;
-    }
+    private int mGeneration;
+    private HashSet<Integer> mPending;
+    private ArrayList<Integer> mWantThumbnails;
 
     public MediaItemView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -215,23 +85,124 @@ public class MediaItemView extends View {
         this(context, null, 0);
     }
 
+    public MediaItemView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+
+        // Initialize static data
+        if (sAddTransitionDrawable == null) {
+            sAddTransitionDrawable = getResources().getDrawable(
+                    R.drawable.add_transition_selector);
+            sEmptyFrameDrawable = getResources().getDrawable(
+                    R.drawable.timeline_loading);
+
+            // Initialize the thumbnail cache, limit the memory usage to 3MB
+            sThumbnailCache = new ThumbnailCache(3*1024*1024);
+        }
+
+        // Get the screen width
+        final Display display = ((WindowManager)context.getSystemService(
+                Context.WINDOW_SERVICE)).getDefaultDisplay();
+        final DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        mScreenWidth = metrics.widthPixels;
+
+        // Setup our gesture detector and scroll listener
+        mGestureDetector = new GestureDetector(context, new MyGestureListener());
+        mScrollListener = new MyScrollViewListener();
+
+        // Prepare the progress bar rectangles
+        final ProgressBar progressBar = ProgressBar.getProgressBar(context);
+        final int layoutHeight = (int)(
+                getResources().getDimension(R.dimen.media_layout_height) -
+                getResources().getDimension(R.dimen.media_layout_padding));
+        mProgressDestRect = new Rect(getPaddingLeft(),
+                layoutHeight - progressBar.getHeight() - getPaddingBottom(), 0,
+                layoutHeight - getPaddingBottom());
+
+        // Initialize the progress value
+        mProgress = -1;
+
+        // Initialize the "Add transition" indicators state
+        mLeftState = View.EMPTY_STATE_SET;
+        mRightState = View.EMPTY_STATE_SET;
+
+        // Initialize the thumbnail indices we want to request
+        mWantThumbnails = new ArrayList<Integer>();
+
+        // Initialize the set of indices we are waiting
+        mPending = new HashSet<Integer>();
+    }
+
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            if (mGestureListener == null) {
+                return false;
+            }
+
+            int tappedArea = ItemSimpleGestureListener.CENTER_AREA;
+
+            if (hasAddTransition()) {
+                if (mMediaItem.getBeginTransition() == null &&
+                        e.getX() < sAddTransitionDrawable.getIntrinsicWidth() +
+                        getPaddingLeft()) {
+                    tappedArea = ItemSimpleGestureListener.LEFT_AREA;
+                } else if (mMediaItem.getEndTransition() == null &&
+                        e.getX() >= getWidth() - getPaddingRight() -
+                        sAddTransitionDrawable.getIntrinsicWidth()) {
+                    tappedArea = ItemSimpleGestureListener.RIGHT_AREA;
+                }
+            }
+            return mGestureListener.onSingleTapConfirmed(
+                    MediaItemView.this, tappedArea, e);
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            if (mGestureListener != null) {
+                mGestureListener.onLongPress(MediaItemView.this, e);
+            }
+        }
+    }
+
+    private class MyScrollViewListener implements ScrollViewListener {
+        @Override
+        public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
+            mIsScrolling = true;
+        }
+
+        @Override
+        public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
+            mScrollX = scrollX;
+            invalidate();
+        }
+
+        @Override
+        public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
+            mIsScrolling = false;
+            mScrollX = scrollX;
+            invalidate();
+        }
+    }
+
     @Override
     protected void onAttachedToWindow() {
+        mMediaItem = (MovieMediaItem)getTag();
         // Add the horizontal scroll view listener
         final TimelineHorizontalScrollView scrollView =
                 (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
-        mScrollingX = mScrollX = scrollView.getScrollX();
+        mScrollX = scrollView.getScrollX();
         scrollView.addScrollListener(mScrollListener);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         final TimelineHorizontalScrollView scrollView =
-            (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
+                (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
         scrollView.removeScrollListener(mScrollListener);
 
-        // Release the current set of bitmaps
-        releaseBitmaps();
+        // Release the cached bitmaps
+        releaseBitmapsAndClear();
     }
 
     /**
@@ -242,21 +213,68 @@ public class MediaItemView extends View {
     }
 
     /**
+     * Shadow builder for the media item
+     */
+    private class MediaItemShadowBuilder extends DragShadowBuilder {
+        private final Drawable mFrame;
+
+        public MediaItemShadowBuilder(View view) {
+            super(view);
+            mFrame = view.getContext().getResources().getDrawable(
+                    R.drawable.timeline_item_pressed);
+        }
+
+        @Override
+        public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
+            shadowSize.set(getShadowWidth(), getShadowHeight());
+            shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y);
+        }
+
+        @Override
+        public void onDrawShadow(Canvas canvas) {
+            mFrame.setBounds(0, 0, getShadowWidth(), getShadowHeight());
+            mFrame.draw(canvas);
+
+            Bitmap bitmap = getOneThumbnail();
+            if (bitmap != null) {
+                final View view = getView();
+                canvas.drawBitmap(bitmap, view.getPaddingLeft(),
+                        view.getPaddingTop(), null);
+            }
+        }
+    }
+
+    /**
      * @return The shadow width
      */
-    public int getShadowWidth() {
+    private int getShadowWidth() {
         final int thumbnailHeight = getHeight() - getPaddingTop() - getPaddingBottom();
-        final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-        final int thumbnailWidth = (thumbnailHeight * mediaItem.getWidth()) /
-            mediaItem.getHeight();
+        final int thumbnailWidth = (thumbnailHeight * mMediaItem.getWidth()) /
+            mMediaItem.getHeight();
         return thumbnailWidth + getPaddingLeft() + getPaddingRight();
     }
 
     /**
      * @return The shadow height
      */
-    public int getShadowHeight() {
+    private int getShadowHeight() {
         return getHeight();
+    }
+
+    private Bitmap getOneThumbnail() {
+        ThumbnailKey key = new ThumbnailKey();
+        key.mediaItemId = mMediaItem.getId();
+
+        // Find any one cached thumbnail
+        for (int i = 0; i < mNumberOfThumbnails; i++) {
+            key.index = i;
+            Bitmap bitmap = sThumbnailCache.get(key);
+            if (bitmap != null) {
+                return bitmap;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -274,22 +292,25 @@ public class MediaItemView extends View {
     }
 
     /**
-     * The view has been layout out
+     * A view enters or exits the playback mode
      *
-     * @param oldLeft The old left position
-     * @param oldRight The old right position
+     * @param playback true if playback is in progress
      */
-    public void onLayoutPerformed(int oldLeft, int oldRight) {
-        // Compute the thumbnail width and height
-        final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-        mThumbnailHeight = getHeight() - getPaddingTop() - getPaddingBottom();
-        mThumbnailWidth = (mThumbnailHeight * mediaItem.getWidth()) / mediaItem.getHeight();
+    public void setPlaybackMode(boolean playback) {
+        mIsPlaying = playback;
+        invalidate();
+    }
 
-        releaseBitmapsAndClear();
-
-        if (!mIsScrolling && !mIsTrimming && mProgress < 0) {
-            requestThumbnails(REASON_REFRESH);
-        }
+    /**
+     * A view enters or exits the trimming mode
+     *
+     * @param trimmingView The view which is being trimmed
+     * @param trimming true if trimming
+     */
+    public void setTrimMode(View trimmingView, boolean trimming) {
+        mIsTrimming = trimming;
+        // Redraw the control to hide the "Add transition" areas
+        invalidate();
     }
 
     /**
@@ -301,13 +322,31 @@ public class MediaItemView extends View {
             // Release the current set of bitmaps. New content is being generated.
             releaseBitmapsAndClear();
         } else if (progress == 100) {
-            // Request the preview bitmaps
-            requestThumbnails(REASON_PROGRESS_END);
             mProgress = -1;
         } else {
             mProgress = progress;
         }
 
+        invalidate();
+    }
+
+    /**
+     * The view has been layout out
+     *
+     * @param oldLeft The old left position
+     * @param oldRight The old right position
+     */
+    public void onLayoutPerformed(int oldLeft, int oldRight) {
+        // Compute the thumbnail width and height
+        mThumbnailHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+        mThumbnailWidth = (mThumbnailHeight * mMediaItem.getWidth()) / mMediaItem.getHeight();
+
+        int usableWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+        mNumberOfThumbnails = (usableWidth + mThumbnailWidth - 1) / mThumbnailWidth;
+        mBeginTimeMs = mMediaItem.getAppBoundaryBeginTime();
+        mEndTimeMs = mMediaItem.getAppBoundaryEndTime();
+
+        releaseBitmapsAndClear();
         invalidate();
     }
 
@@ -318,208 +357,126 @@ public class MediaItemView extends View {
         return (mProgress >= 0);
     }
 
-    /**
-     * A view enters or exits the trimming mode
-     *
-     * @param trimmingView The view which is being trimmed
-     * @param trimming true if trimming
-     */
-    public void setTrimMode(View trimmingView, boolean trimming) {
-        mIsTrimming = trimming;
-
-        if (trimmingView == this) {
-            // Redraw the control to hide the "Add transition" areas
-            invalidate();
-        }
-    }
-
-    /**
-     * A view enters or exits the playback mode
-     *
-     * @param playback true if playback is in progress
-     */
-    public void setPlaybackMode(boolean playback) {
-        mIsPlaying = playback;
-    }
-
-    /**
-     * Set the bitmaps
-     *
-     * @param bitmaps The array of bitmaps
-     * @param startMs The start time
-     * @param endMs The end time
-     *
-     * @return true if the bitmap array is used
-     */
-    public boolean setBitmaps(Bitmap[] bitmaps, long startMs, long endMs) {
-        if (mProgress >= 0) {
-            if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                Log.v(TAG, "Ignore thumbnails: progress is displayed");
-            }
-
-            mWaitForThumbnailsAfterScroll = false;
-            return false;
-        } else if (startMs != mRequestedStartMs || endMs != mRequestedEndMs) {
-            // Old request
-            if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                Log.v(TAG, "Ignore thumbnails: " + startMs + "ms to: " + endMs + "ms, have: " +
-                        mRequestedStartMs + "ms to: " + mRequestedEndMs + "ms");
-            }
-            // Do not use this set of bitmaps
+    public boolean setBitmap(Bitmap bitmap, int index, int token) {
+        // Ignore results from previous requests
+        if (token != mGeneration) {
             return false;
         }
-
-        // Release the current set of bitmaps
-        releaseBitmaps();
-
-        mWaitForThumbnailsAfterScroll = false;
-
-        mStartOffset = mRequestedStartOffset;
-        mEndOffset = mRequestedEndOffset;
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-            Log.v(TAG, "Using thumbnails: " + bitmaps.length + ", from: "+ startMs +
-                    "ms to: " + endMs + "ms, between: " + mStartOffset + " and " + mEndOffset +
-                    ", thumbnail width: " + bitmaps[0].getWidth() + ", id: " + mediaItem.getId());
+        if (!mPending.contains(index)) {
+            Log.e(TAG, "received unasked bitmap, index = " + index);
+            return false;
         }
+        if (bitmap == null) {
+            Log.w(TAG, "receive null bitmap for index = " + index);
+            // We keep this request in mPending, so we won't request it again.
+            return false;
+        }
+        mPending.remove(index);
+        ThumbnailKey key = new ThumbnailKey(mMediaItem.getId(), index);
+        sThumbnailCache.put(key, bitmap);
 
-        mBitmaps = bitmaps;
         invalidate();
-
         return true;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         if (mProgress >= 0) {
-            ProgressBar.getProgressBar(getContext()).draw(canvas, mProgress,
-                    mProgressDestRect, getPaddingLeft(), getWidth() - getPaddingRight());
-        } else if (mIsPlaying || mIsTrimming || mIsScrolling || mWaitForThumbnailsAfterScroll) {
-            drawThumbnails(canvas);
-        } else if (mBitmaps != null) {
-            final int paddingTop = getPaddingTop();
+            ProgressBar.getProgressBar(getContext()).draw(
+                    canvas, mProgress, mProgressDestRect,
+                    getPaddingLeft(), getWidth() - getPaddingRight());
+        } else {
             // Do not draw in the padding area
-            canvas.clipRect(getPaddingLeft(), paddingTop, getWidth() - getPaddingRight(),
+            canvas.clipRect(getPaddingLeft(), getPaddingTop(),
+                    getWidth() - getPaddingRight(),
                     getHeight() - getPaddingBottom());
 
-            // Draw the bitmaps
-            int offsetX = mStartOffset;
-            for (int i = 0; i < mBitmaps.length; i++) {
-                canvas.drawBitmap(mBitmaps[i], offsetX, paddingTop, null);
-                offsetX += mBitmaps[i].getWidth();
-            }
-
-            if (isSelected()) {
-                drawAddTransitions(canvas);
-            }
-        } else { // Not scrolling
+            // Draw thumbnails
             drawThumbnails(canvas);
 
-            requestThumbnails(REASON_NEED_THUMBNAILS);
-
+            // Draw the "Add transition" indicators
             if (isSelected()) {
                 drawAddTransitions(canvas);
+            }
+
+            // Request thumbnails if things are not moving
+            boolean isBusy = mIsPlaying || mIsTrimming || mIsScrolling;
+            if (!isBusy && !mWantThumbnails.isEmpty()) {
+                requestThumbnails();
             }
         }
     }
 
-    /**
-     * Draw while scrolling
-     *
-     * @param canvas The canvas
-     */
+    // Draws the thumbnails, also put unavailable thumbnail indices in
+    // mWantThumbnails.
     private void drawThumbnails(Canvas canvas) {
-        int start = getLeft() + getPaddingLeft() - mScrollingX;
-        int end = getRight() - getPaddingRight() - mScrollingX;
+        mWantThumbnails.clear();
 
-        if (start >= mScreenWidth || end < 0 || start == end) {
+        // The screen coordinate of the left edge of the usable area.
+        int left = getLeft() + getPaddingLeft() - mScrollX;
+        // The screen coordinate of the right edge of the usable area.
+        int right = getRight() - getPaddingRight() - mScrollX;
+        // Return if the usable area is not on screen.
+        if (left >= mScreenWidth || right <= 0 || left >= right) {
             return;
         }
 
-        // Clip it to the screen
-        if (end > mScreenWidth) {
-            end = mScreenWidth;
-        }
+        // Map [0, mScreenWidth - 1] to the indices of the thumbnail.
+        int startIdx = (0 - left) / mThumbnailWidth;
+        int endIdx = (mScreenWidth - 1 - left) / mThumbnailWidth;
 
-        // Convert to local coordinates
-        end -= start - getPaddingLeft();
-        if (start < 0) {
-            start = -start;
-            final int off = start % mThumbnailWidth;
-            if (off > 0) {
-                start = start - off + getPaddingLeft();
-            } else {
-            }
+        startIdx = clamp(startIdx, 0, mNumberOfThumbnails - 1);
+        endIdx = clamp(endIdx, 0, mNumberOfThumbnails - 1);
 
-            if (start < getPaddingLeft()) {
-                start = getPaddingLeft();
-            }
-        } else {
-            start = getPaddingLeft();
-        }
+        // Prepare variables used in the loop
+        ThumbnailKey key = new ThumbnailKey();
+        key.mediaItemId = mMediaItem.getId();
+        int x = getPaddingLeft() + startIdx * mThumbnailWidth;
+        int y = getPaddingTop();
 
-        final int paddingTop = getPaddingTop();
-        // Do not draw in the padding area
-        canvas.clipRect(getPaddingLeft(), paddingTop, getWidth() - getPaddingRight(),
-                getHeight() - getPaddingBottom());
-
-        if (mBitmaps == null || mBitmaps.length == 0) {
-            while (start < end) {
+        // Loop through the thumbnails on screen and draw it
+        for (int i = startIdx; i <= endIdx; i++) {
+            key.index = i;
+            Bitmap bitmap = sThumbnailCache.get(key);
+            if (bitmap == null) {
                 // Draw a frame placeholder
-                mEmptyFrameDrawable.setBounds(start, paddingTop,
-                        start + mThumbnailWidth, paddingTop + mThumbnailHeight);
-                mEmptyFrameDrawable.draw(canvas);
-                start += mThumbnailWidth;
-            }
-        } else {
-            Bitmap bitmap;
-            while (start < end) {
-                if (start >= mStartOffset && start < mEndOffset) {
-                    bitmap = mBitmaps[Math.min((start - mStartOffset) / mThumbnailWidth,
-                            mBitmaps.length - 1)];
-                    canvas.drawBitmap(bitmap, start, paddingTop, null);
-                } else {
-                    // Draw a frame placeholder
-                    mEmptyFrameDrawable.setBounds(start, paddingTop,
-                            start + mThumbnailWidth, paddingTop + mThumbnailHeight);
-                    mEmptyFrameDrawable.draw(canvas);
+                sEmptyFrameDrawable.setBounds(
+                        x, y, x + mThumbnailWidth, y + mThumbnailHeight);
+                sEmptyFrameDrawable.draw(canvas);
+                if (!mPending.contains(i)) {
+                    mWantThumbnails.add(Integer.valueOf(i));
                 }
-
-                start += mThumbnailWidth;
+            } else {
+                canvas.drawBitmap(bitmap, x, y, null);
             }
-        }
-
-        if (isSelected()) {
-            drawAddTransitions(canvas);
+            x += mThumbnailWidth;
         }
     }
 
     /**
-     * Draw the "Add transition" area at the beginning and end of the media item"
+     * Draw the "Add transition" area at the beginning and end of the media item
      *
      * @param canvas Draw on this canvas
      */
     private void drawAddTransitions(Canvas canvas) {
         if (hasAddTransition()) {
-            final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-            if (mediaItem.getBeginTransition() == null) {
-                mAddTransitionDrawable.setState(mLeftState);
-                mAddTransitionDrawable.setBounds(getPaddingLeft(), getPaddingTop(),
-                        mAddTransitionDrawable.getIntrinsicWidth() + getPaddingLeft(),
-                        getPaddingTop() + mAddTransitionDrawable.getIntrinsicHeight());
-                mAddTransitionDrawable.draw(canvas);
+            if (mMediaItem.getBeginTransition() == null) {
+                sAddTransitionDrawable.setState(mLeftState);
+                sAddTransitionDrawable.setBounds(getPaddingLeft(), getPaddingTop(),
+                        sAddTransitionDrawable.getIntrinsicWidth() + getPaddingLeft(),
+                        getPaddingTop() + sAddTransitionDrawable.getIntrinsicHeight());
+                sAddTransitionDrawable.draw(canvas);
             }
 
-            if (mediaItem.getEndTransition() == null) {
-                mAddTransitionDrawable.setState(mRightState);
-                mAddTransitionDrawable.setBounds(
+            if (mMediaItem.getEndTransition() == null) {
+                sAddTransitionDrawable.setState(mRightState);
+                sAddTransitionDrawable.setBounds(
                         getWidth() - getPaddingRight() -
-                        mAddTransitionDrawable.getIntrinsicWidth(),
+                        sAddTransitionDrawable.getIntrinsicWidth(),
                         getPaddingTop(), getWidth() - getPaddingRight(),
-                        getPaddingTop() + mAddTransitionDrawable.getIntrinsicHeight());
-                mAddTransitionDrawable.draw(canvas);
+                        getPaddingTop() + sAddTransitionDrawable.getIntrinsicHeight());
+                sAddTransitionDrawable.draw(canvas);
             }
         }
     }
@@ -533,7 +490,29 @@ public class MediaItemView extends View {
         }
 
         return (getWidth() - getPaddingLeft() - getPaddingRight() >=
-                2 * mAddTransitionDrawable.getIntrinsicWidth());
+                2 * sAddTransitionDrawable.getIntrinsicWidth());
+    }
+
+    // clamp the input value v to the range [low, high]
+    private static int clamp(int v, int low, int high) {
+        return Math.min(Math.max(v, low), high);
+    }
+
+    // Requests the thumbnails in mWantThumbnails (which is filled by onDraw)
+    private void requestThumbnails() {
+        // Copy mWantThumbnails to an array
+        int indices[] = new int[mWantThumbnails.size()];
+        for (int i = 0; i < mWantThumbnails.size(); i++) {
+            indices[i] = mWantThumbnails.get(i);
+        }
+
+        // Put them in the pending set
+        mPending.addAll(mWantThumbnails);
+
+        ApiService.getMediaItemThumbnails(getContext(), mProjectPath,
+                mMediaItem.getId(), mThumbnailWidth, mThumbnailHeight,
+                mBeginTimeMs, mEndTimeMs, mNumberOfThumbnails, mGeneration,
+                indices);
     }
 
     @Override
@@ -544,35 +523,21 @@ public class MediaItemView extends View {
 
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN: {
+                mLeftState = View.EMPTY_STATE_SET;
+                mRightState = View.EMPTY_STATE_SET;
                 if (isSelected() && hasAddTransition()) {
-                    final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-                    if (ev.getX() < mAddTransitionDrawable.getIntrinsicWidth() +
+                    if (ev.getX() < sAddTransitionDrawable.getIntrinsicWidth() +
                             getPaddingLeft()) {
-                        if (mediaItem.getBeginTransition() == null) {
+                        if (mMediaItem.getBeginTransition() == null) {
                             mLeftState = View.PRESSED_WINDOW_FOCUSED_STATE_SET;
-                            mRightState = View.EMPTY_STATE_SET;
-                        } else {
-                            mRightState = View.EMPTY_STATE_SET;
-                            mLeftState = View.EMPTY_STATE_SET;
                         }
                     } else if (ev.getX() >= getWidth() - getPaddingRight() -
-                            mAddTransitionDrawable.getIntrinsicWidth()) {
-                        if (mediaItem.getEndTransition() == null) {
+                            sAddTransitionDrawable.getIntrinsicWidth()) {
+                        if (mMediaItem.getEndTransition() == null) {
                             mRightState = View.PRESSED_WINDOW_FOCUSED_STATE_SET;
-                            mLeftState = View.EMPTY_STATE_SET;
-                        } else {
-                            mRightState = View.EMPTY_STATE_SET;
-                            mLeftState = View.EMPTY_STATE_SET;
                         }
-                    } else {
-                        mRightState = View.EMPTY_STATE_SET;
-                        mLeftState = View.EMPTY_STATE_SET;
                     }
-                } else {
-                    mRightState = View.EMPTY_STATE_SET;
-                    mLeftState = View.EMPTY_STATE_SET;
                 }
-
                 invalidate();
                 break;
             }
@@ -581,7 +546,6 @@ public class MediaItemView extends View {
             case MotionEvent.ACTION_CANCEL: {
                 mRightState = View.EMPTY_STATE_SET;
                 mLeftState = View.EMPTY_STATE_SET;
-
                 invalidate();
                 break;
             }
@@ -594,191 +558,65 @@ public class MediaItemView extends View {
         return true;
     }
 
-    /**
-     * Request thumbnails if necessary
-     *
-     * @param reason The reason for the request
-     *
-     * @return true if the bitmaps are already available
-     */
-    private boolean requestThumbnails(int reason) {
-        int start, end;
-        if (reason == REASON_PLAYBACK) {
-            start = getLeft() + getPaddingLeft() - mScrollingX;
-            end = getRight() - getPaddingRight() - mScrollingX;
-        } else {
-            start = getLeft() + getPaddingLeft() - mScrollX;
-            end = getRight() - getPaddingRight() - mScrollX;
-        }
+    private void releaseBitmapsAndClear() {
+        sThumbnailCache.clearForMediaItemId(mMediaItem.getId());
+        mPending.clear();
+        mGeneration++;
+    }
+}
 
-        if (start >= mScreenWidth || end < 0 || start == end) {
-            if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-                Log.v(TAG, "MediaItem view is off screen: " + mediaItem.getId() +
-                        " " + start + " to " + end);
-            }
+class ThumbnailKey {
+    public String mediaItemId;
+    public int index;
 
-            releaseBitmapsAndClear();
+    public ThumbnailKey() {
+    }
+
+    public ThumbnailKey(String id, int idx) {
+        mediaItemId = id;
+        index = idx;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ThumbnailKey)) {
             return false;
         }
-
-        // Clip it to the screen
-        if (end > mScreenWidth) {
-            end = mScreenWidth;
-        }
-
-        // Convert to local coordinates
-        end -= start - getPaddingLeft();
-        if (start < 0) {
-            start = -start;
-        } else {
-            start = getPaddingLeft();
-        }
-
-        boolean result = false;
-        if (start != mStart || mEnd != end) {
-            // Compute the thumbnail width
-            final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-            final long durationMs = mediaItem.getAppTimelineDuration();
-            final int viewWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-
-            // Compute the start offset
-            final long startMs;
-            // Adjust the start to be a thumbnail boundary
-            final int off = (start % mThumbnailWidth);
-            int startOffset;
-            if (off > 0) {
-                startOffset = start - off + getPaddingLeft();
-            } else {
-                startOffset = start;
-            }
-            if (startOffset <= getPaddingLeft()) {
-                startOffset = getPaddingLeft();
-                startMs = mediaItem.getAppBoundaryBeginTime();
-            } else {
-                startMs = mediaItem.getAppBoundaryBeginTime()
-                        + ((startOffset * durationMs) / viewWidth);
-            }
-
-            // Compute the end offset
-            final long endMs;
-            int endOffset = end;
-            if (endOffset > getWidth() - getPaddingRight()) {
-                endOffset = getWidth() - getPaddingRight();
-                endMs = mediaItem.getAppBoundaryEndTime();
-            } else {
-                endMs = Math.min(mediaItem.getAppBoundaryBeginTime()
-                        + ((endOffset * durationMs) / viewWidth),
-                        mediaItem.getAppBoundaryEndTime());
-            }
-
-            if (startOffset < endOffset) {
-                // Compute the thumbnail count
-                final int count = ((endOffset - startOffset) / mThumbnailWidth) + 1;
-
-                if (startMs >= mRequestedStartMs && endMs <= mRequestedEndMs &&
-                        count <= mRequestedCount && startOffset >= mRequestedStartOffset &&
-                        endOffset <= mRequestedEndOffset) {
-                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                        Log.v(TAG, "Inclusive new from: " + startMs + "ms to: " + endMs +
-                                "ms, count: " + count + ", rendered between: " +
-                                    startOffset + " and " + endOffset + ", old: " +
-                                mRequestedStartMs + "ms to " + mRequestedEndMs +
-                                "ms, count: " + mRequestedCount + ", rendered between: " +
-                                mRequestedStartOffset + " and " + mRequestedEndOffset +
-                                ", id: " + mediaItem.getId());
-                    }
-
-                    // The new interval is included in the one we already requested
-                    if (mBitmaps != null) {
-                        result = true;
-                    }
-                } else if (mIsPlaying) {
-                    // Do not request thumbnails during playback
-                } else {
-                    mWaitForThumbnailsAfterScroll = reason == REASON_SCROLL_END;
-                    if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                        Log.v(TAG, "Request thumbnails: " + count + " thumbnails from: " +
-                                startMs + "ms to: " + endMs + "ms, rendered between: " +
-                                startOffset + " and " + endOffset + ", wait for scroll: " +
-                                mWaitForThumbnailsAfterScroll + ", id: " + mediaItem.getId());
-                    }
-
-                    // Request the thumbnails
-                    ApiService.getMediaItemThumbnails(getContext(), mProjectPath,
-                            mediaItem.getId(), mThumbnailWidth, mThumbnailHeight, startMs, endMs,
-                            count);
-
-                    mRequestedStartMs = startMs;
-                    mRequestedEndMs = endMs;
-                    mRequestedCount = count;
-                    mRequestedStartOffset = startOffset;
-                    mRequestedEndOffset = endOffset;
-                }
-            } else {
-                if (Log.isLoggable(TAG, Log.VERBOSE)) {
-                    Log.v(TAG, "View is too small for thumbnails: " +
-                            startOffset + " and " + endOffset + ", view width: " + viewWidth);
-                }
-            }
-
-            mStart = start;
-            mEnd = end;
-        } else if (mBitmaps != null) {
-            result = true;
-        }
-
-        return result;
+        ThumbnailKey key = (ThumbnailKey) o;
+        return index == key.index && mediaItemId.equals(key.mediaItemId);
     }
 
-    /**
-     * Recycle all the bitmaps
-     */
-    private void releaseBitmaps() {
-        if (mBitmaps != null) {
-            for (int i = 0; i < mBitmaps.length; i++) {
-                mBitmaps[i].recycle();
-            }
+    @Override
+    public int hashCode() {
+        return mediaItemId.hashCode() ^ index;
+    }
+}
 
-            mStartOffset = -1;
-            mEndOffset = -1;
-        }
+class ThumbnailCache {
+    private LruCache<ThumbnailKey, Bitmap> mCache;
+
+    public ThumbnailCache(int size) {
+        mCache = new LruCache(size) {
+            protected int sizeOf(ThumbnailKey key, Bitmap value) {
+                return value.getByteCount();
+            }
+        };
     }
 
-    /**
-     * Recycle the bitmaps and reset the pending request. This method
-     * invalidates any pending request by reseting the pending request
-     * parameters.
-     */
-    private void releaseBitmapsAndClear() {
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            final MovieMediaItem mediaItem = (MovieMediaItem)getTag();
-            Log.v(TAG, "releaseBitmapsAndClear: " + mediaItem.getId() + " " +
-                    mRequestedStartMs + "ms to: " +
-                    mRequestedEndMs + "ms, between: " + mStartOffset + " and " + mEndOffset);
-        }
+    void put(ThumbnailKey key, Bitmap value) {
+        mCache.put(key, value);
+    }
 
-        // Release the current set of bitmaps
-        if (mBitmaps != null) {
-            for (int i = 0; i < mBitmaps.length; i++) {
-                mBitmaps[i].recycle();
+    Bitmap get(ThumbnailKey key) {
+        return mCache.get(key);
+    }
+
+    void clearForMediaItemId(String id) {
+        Map<ThumbnailKey, Bitmap> map = mCache.snapshot();
+        for (ThumbnailKey key : map.keySet()) {
+            if (key.mediaItemId.equals(id)) {
+                mCache.remove(key);
             }
-
-            mBitmaps = null;
-
-            mStartOffset = -1;
-            mEndOffset = -1;
         }
-
-        mRequestedStartMs = -1;
-        mRequestedEndMs = -1;
-        mRequestedCount = 0;
-        mRequestedStartOffset = -1;
-        mRequestedEndOffset = -1;
-
-        mStart = 0;
-        mEnd = 0;
-
-        mWaitForThumbnailsAfterScroll = false;
     }
 }

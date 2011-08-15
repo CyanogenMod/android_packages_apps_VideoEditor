@@ -1234,24 +1234,25 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Set the media item thumbnails.
+     * Set the media item thumbnail.
      *
      * @param mediaItemId The media item id
-     * @param bitmaps The bitmaps array
-     * @param startMs The start time position
-     * @param endMs The end time position
+     * @param bitmap The bitmap
+     * @param index The index of the bitmap
+     * @param token The token given in the original request
      *
-     * @return true if the bitmaps were used
+     * @return true if the bitmap is used
      */
-    public boolean setMediaItemThumbnails(String mediaItemId, Bitmap[] bitmaps, long startMs,
-            long endMs) {
+    public boolean setMediaItemThumbnail(
+            String mediaItemId, Bitmap bitmap, int index, int token) {
         final int childrenCount = getChildCount();
         for (int i = 0; i < childrenCount; i++) {
             final Object tag = getChildAt(i).getTag();
             if (tag != null && tag instanceof MovieMediaItem) {
                 final MovieMediaItem mi = (MovieMediaItem)tag;
                 if (mediaItemId.equals(mi.getId())) {
-                    return ((MediaItemView)getChildAt(i)).setBitmaps(bitmaps, startMs, endMs);
+                    return ((MediaItemView)getChildAt(i)).setBitmap(
+                            bitmap, index, token);
                 }
             }
         }
