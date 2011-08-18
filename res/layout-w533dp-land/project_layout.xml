@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/playback_buttons"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="200dip"
+        android:layout_marginLeft="250dip"
         android:layout_marginTop="110dip"
         android:singleLine="true"
         android:text="@string/editor_zero_time_stamp"
@@ -88,7 +88,7 @@
     <FrameLayout android:id="@+id/video_frame_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="179dip"
+        android:layout_marginLeft="160dip"
         android:layout_alignParentTop="true"
         android:padding="1dip"
         android:background="@drawable/surface_background">
