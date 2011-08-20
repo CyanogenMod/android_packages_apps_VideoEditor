@@ -1424,6 +1424,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
         mMediaLayout.invalidateActionBar();
         mOverlayLayout.invalidateCAB();
+        invalidateOptionsMenu();
     }
 
     @Override

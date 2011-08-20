@@ -291,12 +291,8 @@ public abstract class VideoEditorBaseActivity extends Activity {
         public void onMediaItemAdded(String projectPath, String mediaItemId,
                 MovieMediaItem mediaItem, String afterMediaItemId, Class<?> mediaItemClass,
                 Integer newAspectRatio, Exception exception) {
-            // Check if the VideoEditor is the one we are expecting
-            if (!projectPath.equals(mProjectPath)) {
-                return;
-            }
-
-            if (mProject == null) {
+            // Check if the VideoEditor is the one we are expecting.
+            if (!projectPath.equals(mProjectPath) || mProject == null) {
                 return;
             }
 
