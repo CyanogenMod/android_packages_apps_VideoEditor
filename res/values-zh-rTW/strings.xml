@@ -5,8 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"Android 電影工作室"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"正在載入專案..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"找不到專案"</string>
-    <!-- no translation found for editor_add (1728703558703319942) -->
-    <skip />
+    <string name="editor_add" msgid="1728703558703319942">"新增"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"匯入影片剪輯"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"匯入圖片"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"匯入音樂"</string>
@@ -16,40 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"變更長寬比"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"變更專案名稱"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"刪除專案"</string>
-    <!-- outdated translation 8062206918403182504 -->     <string name="editor_capture_video" msgid="7441727320975225967">"新影片剪輯"</string>
-    <!-- outdated translation 7286273213965159369 -->     <string name="editor_capture_image" msgid="7243706032936431456">"新圖片"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"錄製影片"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"拍攝相片"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"您要刪除這個專案嗎？"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"您要移除這個音軌嗎？"</string>
-    <!-- no translation found for editor_title_menu_header (8042548112022118522) -->
-    <skip />
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"標題"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"新增標題"</string>
-    <!-- outdated translation 882498881948174496 -->     <string name="editor_edit_overlay" msgid="6425579635817051901">"編輯"</string>
-    <!-- no translation found for editor_remove_overlay (5027979271603770938) -->
-    <skip />
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"編輯標題"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"移除標題"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"您要移除這個重疊效果嗎？"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"變更轉譯模式"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"您要移除這個轉場效果嗎？"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"您要移除這個效果嗎？"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"您要移除這個影片剪輯嗎？"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"您要移除這個圖片嗎？"</string>
-    <!-- no translation found for editor_effect_menu_header (7749812053746520420) -->
-    <skip />
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"效果"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"新增效果"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"變更效果"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"移除效果"</string>
-    <!-- no translation found for editor_pan_zoom_effect (7040551005893392872) -->
-    <skip />
-    <!-- no translation found for editor_gradient_effect (7850306294518429709) -->
-    <skip />
-    <!-- no translation found for editor_sepia_effect (2862418961255160687) -->
-    <skip />
-    <!-- no translation found for editor_negative_effect (2768007868568598873) -->
-    <skip />
-    <!-- no translation found for editor_no_effect (960037351930077107) -->
-    <skip />
-    <!-- outdated translation 1195671095438906932 -->     <string name="editor_add_begin_transition" msgid="1797563833232547946">"新增開頭轉場效果"</string>
-    <!-- outdated translation 6882194984917137730 -->     <string name="editor_add_end_transition" msgid="578791466048263129">"新增結尾轉場效果"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"平移縮放"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"漸層"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"懷舊色調"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"負片效果"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"沒有效果"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"在片段開頭添加轉場特效"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"在片段結尾添加轉場特效"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"變更轉場效果"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"影片剪輯已開始下載，下載完畢時會通知您。"</string>
     <string name="editor_image_load" msgid="4485265196685081793">"圖片已開始下載，下載完畢時會通知您。"</string>
@@ -126,8 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"選取標題範本"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"標題"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"字幕"</string>
-    <!-- no translation found for overlay_change_title_template_button_text (5764969336814781829) -->
-    <skip />
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"變更範本"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"效果"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"平移和縮放效果"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"漸層效果"</string>
@@ -150,8 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"是"</string>
     <string name="no" msgid="4303537392215476576">"否"</string>
     <string name="done" msgid="5693464841369633740">"完成"</string>
-    <!-- no translation found for edit (8659197150838109875) -->
-    <skip />
+    <string name="edit" msgid="8659197150838109875">"編輯"</string>
     <string name="remove" msgid="7886072447916861923">"移除"</string>
     <string name="untitled" msgid="579236531346245199">"未命名"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> 小時 <xliff:g id="MINUTES">%d</xliff:g> 分鐘"</string>

@@ -34,7 +34,7 @@
     <string name="editor_add_effect" msgid="7598526041207561912">"Effekt hinzufügen"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Effekt ändern"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Effekt entfernen"</string>
-    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Schwenk &amp; Zoom"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Schwenken &amp; Zoomen"</string>
     <string name="editor_gradient_effect" msgid="7850306294518429709">"Neigung"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Sepia"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Negativ"</string>
@@ -49,7 +49,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Nicht wiederholen"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Stummschalten"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Stummschaltung aufheben"</string>
-    <!-- outdated translation 3690441080533712908 -->     <string name="projects_new_project" msgid="7515160975627001972">"Neues Projekt"</string>
+    <string name="projects_new_project" msgid="7515160975627001972">"Neues Projekt"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Projektname"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>

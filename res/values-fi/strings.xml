@@ -5,8 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"Android-elokuvastudio"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"Ladataan projektia..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Projektia ei löydy"</string>
-    <!-- no translation found for editor_add (1728703558703319942) -->
-    <skip />
+    <string name="editor_add" msgid="1728703558703319942">"Lisää"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Tuo otos"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"Tuo kuva"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"Tuo musiikkia"</string>
@@ -16,40 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Vaihda kuvasuhdetta"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"Vaihda projektin nimeä"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"Poista projekti"</string>
-    <!-- outdated translation 8062206918403182504 -->     <string name="editor_capture_video" msgid="7441727320975225967">"Uusi otos"</string>
-    <!-- outdated translation 7286273213965159369 -->     <string name="editor_capture_image" msgid="7243706032936431456">"Uusi kuva"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"Nauhoita video"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"Ota valokuva"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"Poistetaanko tämä projekti?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00.00.00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Poistetaanko tämä ääniraita?"</string>
-    <!-- no translation found for editor_title_menu_header (8042548112022118522) -->
-    <skip />
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"Otsikko"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"Lisää nimi"</string>
-    <!-- outdated translation 882498881948174496 -->     <string name="editor_edit_overlay" msgid="6425579635817051901">"Muokkaa"</string>
-    <!-- no translation found for editor_remove_overlay (5027979271603770938) -->
-    <skip />
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"Muokkaa otsikkoa"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"Poista otsikko"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Poistetaanko tämä peittokuva?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Vaihda hahmonnustilaa"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"Poistetaanko tämä siirtymä?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"Poistetaanko tämä tehoste?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"Poistetaanko tämä otos?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"Poistetaanko tämä kuva?"</string>
-    <!-- no translation found for editor_effect_menu_header (7749812053746520420) -->
-    <skip />
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"tehoste"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"Lisää tehoste"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Vaihda tehostetta"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Poista tehoste"</string>
-    <!-- no translation found for editor_pan_zoom_effect (7040551005893392872) -->
-    <skip />
-    <!-- no translation found for editor_gradient_effect (7850306294518429709) -->
-    <skip />
-    <!-- no translation found for editor_sepia_effect (2862418961255160687) -->
-    <skip />
-    <!-- no translation found for editor_negative_effect (2768007868568598873) -->
-    <skip />
-    <!-- no translation found for editor_no_effect (960037351930077107) -->
-    <skip />
-    <!-- outdated translation 1195671095438906932 -->     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Lisää siirtymä alkuun"</string>
-    <!-- outdated translation 6882194984917137730 -->     <string name="editor_add_end_transition" msgid="578791466048263129">"Lisää siirtymä loppuun"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Panorointi ja zoomaus"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Gradient-tehoste"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"Seepia"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"Käänteiset värit"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"ei tehostetta"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Siirtymä leikkeeseen"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Siirtymä pois leikkeestä"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Vaihda siirtymää"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"Otoksen lataus aloitettu. Saat ilmoituksen kun lataus on valmis."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"Kuvan lataus aloitettu. Saat ilmoituksen kun lataus on valmis."</string>
@@ -58,7 +49,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Älä soita toistaen"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Mykistä"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Poista mykistys"</string>
-    <!-- outdated translation 3690441080533712908 -->     <string name="projects_new_project" msgid="7515160975627001972">"Uusi projekti"</string>
+    <string name="projects_new_project" msgid="7515160975627001972">"Luo uusi projekti"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Projektin nimi"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
@@ -126,8 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"Valitse otsikon malli"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Nimi"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Tekstitys"</string>
-    <!-- no translation found for overlay_change_title_template_button_text (5764969336814781829) -->
-    <skip />
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Vaihda mallia"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"Tehosteet"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"Panorointi ja zoomaus -tehoste"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"Gradientti-tehoste"</string>
@@ -150,8 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"Kyllä"</string>
     <string name="no" msgid="4303537392215476576">"Ei"</string>
     <string name="done" msgid="5693464841369633740">"Valmis"</string>
-    <!-- no translation found for edit (8659197150838109875) -->
-    <skip />
+    <string name="edit" msgid="8659197150838109875">"Muokkaa"</string>
     <string name="remove" msgid="7886072447916861923">"Poista"</string>
     <string name="untitled" msgid="579236531346245199">"Nimetön"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> t <xliff:g id="MINUTES">%d</xliff:g> min"</string>

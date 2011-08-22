@@ -39,8 +39,8 @@
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Nâu đỏ"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Âm bản"</string>
     <string name="editor_no_effect" msgid="960037351930077107">"không có hiệu ứng nào"</string>
-    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Thêm chuyển đổi vào đầu clip"</string>
-    <string name="editor_add_end_transition" msgid="578791466048263129">"Thêm chuyển đổi vào cuối clip"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Thêm hiệu ứng chuyển tiếp vào đầu clip"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Thêm hiệu ứng chuyển tiếp vào cuối clip"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Thay đổi phần chuyển đổi"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"Quá trình tải xuống video clip đã bắt đầu. Bạn sẽ được thông báo khi hoàn tất."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"Quá trình tải ảnh xuống đã bắt đầu. Bạn sẽ được thông báo khi hoàn tất."</string>
