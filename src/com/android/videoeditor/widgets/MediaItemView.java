@@ -41,7 +41,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Media item preview view
+ * Media item preview view on the timeline.
  */
 public class MediaItemView extends View {
     private static final String TAG = "MediaItemView";
@@ -54,14 +54,19 @@ public class MediaItemView extends View {
     // Instance variables
     private final GestureDetector mGestureDetector;
     private final ScrollViewListener mScrollListener;
-    private final Rect mProgressDestRect;
+    private final Rect mGeneratingEffectProgressDestRect;
 
     private boolean mIsScrolling;
     private boolean mIsTrimming;
     private boolean mIsPlaying;
-    private int mProgress;  // -1: not in progress, 0-100: in progress
 
-    private static int mScreenWidth;
+    // Progress of generation of the effect applied on this media item view.
+    // -1 indicates the generation is not in progress. 0-100 indicates the
+    // generation is in progress. Currently only Ken Burns effect is used with
+    // the progress bar.
+    private int mGeneratingEffectProgress;
+
+    // The scrolled left pixels of this view.
     private int mScrollX;
 
     private String mProjectPath;
@@ -69,6 +74,7 @@ public class MediaItemView extends View {
     private ItemSimpleGestureListener mGestureListener;
     private int[] mLeftState, mRightState;
 
+    private int mScreenWidth;
     private int mThumbnailWidth, mThumbnailHeight;
     private int mNumberOfThumbnails;
     private long mBeginTimeMs, mEndTimeMs;
@@ -115,12 +121,12 @@ public class MediaItemView extends View {
         final int layoutHeight = (int)(
                 getResources().getDimension(R.dimen.media_layout_height) -
                 getResources().getDimension(R.dimen.media_layout_padding));
-        mProgressDestRect = new Rect(getPaddingLeft(),
+        mGeneratingEffectProgressDestRect = new Rect(getPaddingLeft(),
                 layoutHeight - progressBar.getHeight() - getPaddingBottom(), 0,
                 layoutHeight - getPaddingBottom());
 
         // Initialize the progress value
-        mProgress = -1;
+        mGeneratingEffectProgress = -1;
 
         // Initialize the "Add transition" indicators state
         mLeftState = View.EMPTY_STATE_SET;
@@ -142,7 +148,7 @@ public class MediaItemView extends View {
 
             int tappedArea = ItemSimpleGestureListener.CENTER_AREA;
 
-            if (hasAddTransition()) {
+            if (hasSpaceForAddTransitionIcons()) {
                 if (mMediaItem.getBeginTransition() == null &&
                         e.getX() < sAddTransitionDrawable.getIntrinsicWidth() +
                         getPaddingLeft()) {
@@ -302,36 +308,42 @@ public class MediaItemView extends View {
     }
 
     /**
-     * A view enters or exits the trimming mode
+     * A view enters or exits the trimming mode.
      *
-     * @param trimmingView The view which is being trimmed
      * @param trimming true if trimming
      */
-    public void setTrimMode(View trimmingView, boolean trimming) {
+    public void setTrimMode(boolean trimming) {
         mIsTrimming = trimming;
         // Redraw the control to hide the "Add transition" areas
         invalidate();
     }
 
     /**
-     * @param progress The progress
+     * Resets the effect generation progress status.
      */
-    public void setProgress(int progress) {
+    public void resetGeneratingEffectProgress() {
+        setGeneratingEffectProgress(-1);
+    }
+
+    /**
+     * Sets the effect generation progress of this view.
+     */
+    public void setGeneratingEffectProgress(int progress) {
         if (progress == 0) {
-            mProgress = progress;
+            mGeneratingEffectProgress = progress;
             // Release the current set of bitmaps. New content is being generated.
             releaseBitmapsAndClear();
         } else if (progress == 100) {
-            mProgress = -1;
+            mGeneratingEffectProgress = -1;
         } else {
-            mProgress = progress;
+            mGeneratingEffectProgress = progress;
         }
 
         invalidate();
     }
 
     /**
-     * The view has been layout out
+     * The view has been layout out.
      *
      * @param oldLeft The old left position
      * @param oldRight The old right position
@@ -342,6 +354,7 @@ public class MediaItemView extends View {
         mThumbnailWidth = (mThumbnailHeight * mMediaItem.getWidth()) / mMediaItem.getHeight();
 
         int usableWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+        // Compute the ceiling of (usableWidth / mThumbnailWidth).
         mNumberOfThumbnails = (usableWidth + mThumbnailWidth - 1) / mThumbnailWidth;
         mBeginTimeMs = mMediaItem.getAppBoundaryBeginTime();
         mEndTimeMs = mMediaItem.getAppBoundaryEndTime();
@@ -351,10 +364,10 @@ public class MediaItemView extends View {
     }
 
     /**
-     * @return True if generation is in progress
+     * @return True if the effect generation is in progress
      */
-    public boolean isInProgress() {
-        return (mProgress >= 0);
+    public boolean isGeneratingEffect() {
+        return (mGeneratingEffectProgress >= 0);
     }
 
     public boolean setBitmap(Bitmap bitmap, int index, int token) {
@@ -382,9 +395,9 @@ public class MediaItemView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mProgress >= 0) {
+        if (mGeneratingEffectProgress >= 0) {
             ProgressBar.getProgressBar(getContext()).draw(
-                    canvas, mProgress, mProgressDestRect,
+                    canvas, mGeneratingEffectProgress, mGeneratingEffectProgressDestRect,
                     getPaddingLeft(), getWidth() - getPaddingRight());
         } else {
             // Do not draw in the padding area
@@ -397,7 +410,7 @@ public class MediaItemView extends View {
 
             // Draw the "Add transition" indicators
             if (isSelected()) {
-                drawAddTransitions(canvas);
+                drawAddTransitionIcons(canvas);
             }
 
             // Request thumbnails if things are not moving
@@ -455,12 +468,12 @@ public class MediaItemView extends View {
     }
 
     /**
-     * Draw the "Add transition" area at the beginning and end of the media item
+     * Draws the "Add transition" icons at the beginning and end of the media item.
      *
-     * @param canvas Draw on this canvas
+     * @param canvas Canvas to be drawn
      */
-    private void drawAddTransitions(Canvas canvas) {
-        if (hasAddTransition()) {
+    private void drawAddTransitionIcons(Canvas canvas) {
+        if (hasSpaceForAddTransitionIcons()) {
             if (mMediaItem.getBeginTransition() == null) {
                 sAddTransitionDrawable.setState(mLeftState);
                 sAddTransitionDrawable.setBounds(getPaddingLeft(), getPaddingTop(),
@@ -482,9 +495,10 @@ public class MediaItemView extends View {
     }
 
     /**
-     * @return true if the "Add transition" areas exist
+     * @return true if the visible area of this view is big enough to display
+     *      "add transition" icons on both sides; false otherwise.
      */
-    private boolean hasAddTransition() {
+    private boolean hasSpaceForAddTransitionIcons() {
         if (mIsTrimming) {
             return false;
         }
@@ -493,12 +507,16 @@ public class MediaItemView extends View {
                 2 * sAddTransitionDrawable.getIntrinsicWidth());
     }
 
-    // clamp the input value v to the range [low, high]
+    /**
+     * Clamps the input value v to the range [low, high].
+     */
     private static int clamp(int v, int low, int high) {
         return Math.min(Math.max(v, low), high);
     }
 
-    // Requests the thumbnails in mWantThumbnails (which is filled by onDraw)
+    /**
+     * Requests the thumbnails in mWantThumbnails (which is filled by onDraw).
+     */
     private void requestThumbnails() {
         // Copy mWantThumbnails to an array
         int indices[] = new int[mWantThumbnails.size()];
@@ -525,7 +543,7 @@ public class MediaItemView extends View {
             case MotionEvent.ACTION_DOWN: {
                 mLeftState = View.EMPTY_STATE_SET;
                 mRightState = View.EMPTY_STATE_SET;
-                if (isSelected() && hasAddTransition()) {
+                if (isSelected() && hasSpaceForAddTransitionIcons()) {
                     if (ev.getX() < sAddTransitionDrawable.getIntrinsicWidth() +
                             getPaddingLeft()) {
                         if (mMediaItem.getBeginTransition() == null) {
@@ -596,7 +614,8 @@ class ThumbnailCache {
     private LruCache<ThumbnailKey, Bitmap> mCache;
 
     public ThumbnailCache(int size) {
-        mCache = new LruCache(size) {
+        mCache = new LruCache<ThumbnailKey, Bitmap>(size) {
+            @Override
             protected int sizeOf(ThumbnailKey key, Bitmap value) {
                 return value.getByteCount();
             }

@@ -38,7 +38,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 /**
- * Transition view
+ * Transition view.
  */
 public class TransitionView extends ImageView {
     // Logging
@@ -47,7 +47,7 @@ public class TransitionView extends ImageView {
     // Instance variables
     private final GestureDetector mSimpleGestureDetector;
     private final ScrollViewListener mScrollListener;
-    private final Rect mProgressDestRect;
+    private final Rect mGeneratingTransitionProgressDestRect;
     private final Paint mSeparatorPaint;
     private boolean mIsScrolling;
     private int mScrollX;
@@ -55,7 +55,7 @@ public class TransitionView extends ImageView {
     private String mProjectPath;
     private Bitmap[] mBitmaps;
     private ItemSimpleGestureListener mGestureListener;
-    private int mProgress;
+    private int mGeneratingTransitionProgress;
     private boolean mIsPlaying;
 
     public TransitionView(Context context, AttributeSet attrs, int defStyle) {
@@ -110,12 +110,12 @@ public class TransitionView extends ImageView {
         final int layoutHeight = (int)(resources.getDimension(R.dimen.media_layout_height) -
                 resources.getDimension(R.dimen.media_layout_padding) -
                 (2 * resources.getDimension(R.dimen.timelime_transition_vertical_inset)));
-        mProgressDestRect = new Rect(getPaddingLeft(),
+        mGeneratingTransitionProgressDestRect = new Rect(getPaddingLeft(),
                 layoutHeight - progressBar.getHeight() - getPaddingBottom(), 0,
                 layoutHeight - getPaddingBottom());
 
         // Initialize the progress value
-        mProgress = -1;
+        mGeneratingTransitionProgress = -1;
 
         // Get the screen width
         final Display display = ((WindowManager) getContext().getSystemService(
@@ -181,15 +181,22 @@ public class TransitionView extends ImageView {
     }
 
     /**
-     * @param progress The progress
+     * Resets the transition generation progress.
      */
-    public void setProgress(int progress) {
+    public void resetGeneratingTransitionProgress() {
+        setGeneratingTransitionProgress(-1);
+    }
+
+    /**
+     * Sets the transition generation progress.
+     */
+    public void setGeneratingTransitionProgress(int progress) {
         if (progress == 100) {
             // Request the preview bitmaps
             requestThumbnails();
-            mProgress = -1;
+            mGeneratingTransitionProgress = -1;
         } else {
-            mProgress = progress;
+            mGeneratingTransitionProgress = progress;
         }
 
         invalidate();
@@ -198,8 +205,8 @@ public class TransitionView extends ImageView {
     /**
      * @return true if generation is in progress
      */
-    public boolean isInProgress() {
-        return (mProgress >= 0);
+    public boolean isGeneratingTransition() {
+        return (mGeneratingTransitionProgress >= 0);
     }
 
     /**
@@ -217,7 +224,7 @@ public class TransitionView extends ImageView {
      * @return true if the bitmaps were used
      */
     public boolean setBitmaps(Bitmap[] bitmaps) {
-        if (mProgress >= 0) {
+        if (mGeneratingTransitionProgress >= 0) {
             return false;
         }
 
@@ -245,9 +252,10 @@ public class TransitionView extends ImageView {
             return;
         }
 
-        if (mProgress >= 0) {
-            ProgressBar.getProgressBar(getContext()).draw(canvas, mProgress,
-                    mProgressDestRect, getPaddingLeft(), getWidth() - getPaddingRight());
+        if (mGeneratingTransitionProgress >= 0) {
+            ProgressBar.getProgressBar(getContext()).draw(canvas, mGeneratingTransitionProgress,
+                    mGeneratingTransitionProgressDestRect, getPaddingLeft(),
+                    getWidth() - getPaddingRight());
         } else if (mBitmaps != null) {
             final int halfWidth = getWidth() / 2;
             // Draw the bitmaps

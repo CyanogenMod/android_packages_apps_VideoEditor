@@ -98,6 +98,7 @@ public class MediaLinearLayout extends LinearLayout {
     private boolean mPlaybackInProgress;
     private HandleView mLeftHandle, mRightHandle;
     private boolean mMoveLayoutPending;
+    private View mScrollView;  // Convenient handle to the parent scroll view.
     private View mSelectedView;
     private String mDragMediaItemId;
     private float mPrevDragPosition;
@@ -271,7 +272,7 @@ public class MediaLinearLayout extends LinearLayout {
             }
 
             if (mediaItemView != null) {
-                selectView(mediaItemView, false);
+                unSelect(mediaItemView);
             }
 
             mMediaItemActionMode = null;
@@ -382,7 +383,7 @@ public class MediaLinearLayout extends LinearLayout {
         public void onDestroyActionMode(ActionMode mode) {
             final View transitionView = getTransitionView(mTransition.getId());
             if (transitionView != null) {
-                selectView(transitionView, false);
+                unSelect(transitionView);
             }
 
             mTransitionActionMode = null;
@@ -404,7 +405,7 @@ public class MediaLinearLayout extends LinearLayout {
                 switch (area) {
                     case ItemSimpleGestureListener.LEFT_AREA: {
                         if (view.isSelected()) {
-                            final MovieMediaItem mediaItem = (MovieMediaItem)view.getTag();
+                            final MovieMediaItem mediaItem = (MovieMediaItem) view.getTag();
                             final MovieMediaItem prevMediaItem = mProject.getPreviousMediaItem(
                                     mediaItem.getId());
                             pickTransition(prevMediaItem);
@@ -418,15 +419,12 @@ public class MediaLinearLayout extends LinearLayout {
 
                     case ItemSimpleGestureListener.RIGHT_AREA: {
                         if (view.isSelected()) {
-                            pickTransition((MovieMediaItem)view.getTag());
+                            pickTransition((MovieMediaItem) view.getTag());
                         }
                         break;
                     }
                 }
-
-                if (!view.isSelected()) {
-                    selectView(view, true);
-                }
+                select(view);
 
                 return true;
             }
@@ -443,9 +441,7 @@ public class MediaLinearLayout extends LinearLayout {
                             ((MediaItemView)view).getShadowBuilder(), mediaItem.getId(), 0);
                 }
 
-                if (!view.isSelected()) {
-                    selectView(view, true);
-                }
+                select(view);
 
                 if (mMediaItemActionMode == null) {
                     startActionMode(new MediaItemActionModeCallback(mediaItem));
@@ -459,11 +455,7 @@ public class MediaLinearLayout extends LinearLayout {
                 if (mPlaybackInProgress) {
                     return false;
                 }
-
-                if (!view.isSelected()) {
-                    selectView(view, true);
-                }
-
+                select(view);
                 return true;
             }
 
@@ -473,13 +465,11 @@ public class MediaLinearLayout extends LinearLayout {
                     return;
                 }
 
-                if (!view.isSelected()) {
-                    selectView(view, true);
-                }
+                select(view);
 
                 if (mTransitionActionMode == null) {
                     startActionMode(new TransitionActionModeCallback(
-                            (MovieTransition)view.getTag()));
+                            (MovieTransition) view.getTag()));
                 }
             }
         };
@@ -489,24 +479,23 @@ public class MediaLinearLayout extends LinearLayout {
         beginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                unselectAllViews();
+                unselectAllTimelineViews();
             }
         });
 
-        mLeftAddClipButton = (ImageButton)beginView.findViewById(
+        mLeftAddClipButton = (ImageButton) beginView.findViewById(
                 R.id.add_left_media_item_button);
         mLeftAddClipButton.setVisibility(View.GONE);
         mLeftAddClipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mProject != null && mProject.getMediaItemCount() > 0) {
-                    unselectAllViews();
-                    // Add a clip at the beginning of the movie
+                    unselectAllTimelineViews();
+                    // Add a clip at the beginning of the movie.
                     mListener.onAddMediaItem(null);
                 }
             }
         });
-
         addView(beginView);
 
         // Add the end timeline item
@@ -514,7 +503,7 @@ public class MediaLinearLayout extends LinearLayout {
         endView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                unselectAllViews();
+                unselectAllTimelineViews();
             }
         });
 
@@ -524,8 +513,8 @@ public class MediaLinearLayout extends LinearLayout {
             @Override
             public void onClick(View view) {
                 if (mProject != null) {
-                    unselectAllViews();
-                    // Add a clip at the end of the movie
+                    unselectAllTimelineViews();
+                    // Add a clip at the end of the movie.
                     final MovieMediaItem lastMediaItem = mProject.getLastMediaItem();
                     if (lastMediaItem != null) {
                         mListener.onAddMediaItem(lastMediaItem.getId());
@@ -543,13 +532,13 @@ public class MediaLinearLayout extends LinearLayout {
         mRightHandle = (HandleView)inflate(getContext(), R.layout.right_handle_view, null);
         addView(mRightHandle);
 
-        mHandleWidth = (int)context.getResources().getDimension(R.dimen.handle_width);
+        mHandleWidth = (int) context.getResources().getDimension(R.dimen.handle_width);
 
-        mTransitionVerticalInset = (int)context.getResources().getDimension(
+        mTransitionVerticalInset = (int) context.getResources().getDimension(
                 R.dimen.timelime_transition_vertical_inset);
 
-        // Compute half the width of the screen (and therefore the parent view)
-        final Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
+        // Compute half the width of the screen (and therefore the parent view).
+        final Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         mHalfParentWidth = display.getWidth() / 2;
 
         mHandler = new Handler();
@@ -565,6 +554,10 @@ public class MediaLinearLayout extends LinearLayout {
         this(context, null, 0);
     }
 
+    public void setParentTimelineScrollView(View scrollView) {
+        mScrollView = scrollView;
+    }
+
     /**
      * Called when the containing activity is resumed.
      */
@@ -577,9 +570,9 @@ public class MediaLinearLayout extends LinearLayout {
             final Object item = childView.getTag();
             if (item != null) {
                 if (item instanceof MovieMediaItem) {
-                    ((MediaItemView) childView).setProgress(-1);
+                    ((MediaItemView) childView).resetGeneratingEffectProgress();
                 } else if (item instanceof MovieTransition) {
-                    ((TransitionView) childView).setProgress(-1);
+                    ((TransitionView) childView).resetGeneratingTransitionProgress();
                 }
             }
         }
@@ -590,23 +583,9 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     public void setProject(VideoEditorProject project) {
-        // Close the contextual action bar.
-        if (mMediaItemActionMode != null) {
-            mMediaItemActionMode.finish();
-            mMediaItemActionMode = null;
-        }
-
-        if (mTransitionActionMode != null) {
-            mTransitionActionMode.finish();
-            mTransitionActionMode = null;
-        }
-
-        mLeftHandle.setVisibility(View.GONE);
-        mLeftHandle.setListener(null);
-        mRightHandle.setVisibility(View.GONE);
-        mRightHandle.setListener(null);
-
-        removeViews();
+        closeActionBars();
+        clearAndHideTrimHandles();
+        removeAllMediaItemAndTransitionViews();
 
         mProject = project;
     }
@@ -616,38 +595,20 @@ public class MediaLinearLayout extends LinearLayout {
      */
     public void setPlaybackInProgress(boolean inProgress) {
         mPlaybackInProgress = inProgress;
-
         setPlaybackState(inProgress);
         // Don't allow the user to interact with media items or
-        // transitions while is in progress
-        if (mMediaItemActionMode != null) {
-            mMediaItemActionMode.finish();
-            mMediaItemActionMode = null;
-        }
-
-        if (mTransitionActionMode != null) {
-            mTransitionActionMode.finish();
-            mTransitionActionMode = null;
-        }
+        // transitions while the playback is in progress.
+        closeActionBars();
     }
 
     /**
-     * Adds all given media items.
+     * Clears existing media or transition items and adds all given media items.
      *
      * @param mediaItems The list of media items
      */
     public void addMediaItems(List<MovieMediaItem> mediaItems) {
-        if (mMediaItemActionMode != null) {
-            mMediaItemActionMode.finish();
-            mMediaItemActionMode = null;
-        }
-
-        if (mTransitionActionMode != null) {
-            mTransitionActionMode.finish();
-            mTransitionActionMode = null;
-        }
-
-        removeViews();
+        closeActionBars();
+        removeAllMediaItemAndTransitionViews();
 
         for (MovieMediaItem mediaItem : mediaItems) {
             addMediaItem(mediaItem);
@@ -661,9 +622,8 @@ public class MediaLinearLayout extends LinearLayout {
      */
     private void addMediaItem(MovieMediaItem mediaItem) {
         final View mediaItemView = inflate(getContext(), R.layout.media_item, null);
-        ((MediaItemView)mediaItemView).setGestureListener(mMediaItemGestureListener);
-        ((MediaItemView)mediaItemView).setProjectPath(mProject.getPath());
-
+        ((MediaItemView) mediaItemView).setGestureListener(mMediaItemGestureListener);
+        ((MediaItemView) mediaItemView).setProjectPath(mProject.getPath());
         mediaItemView.setTag(mediaItem);
 
         // Add the new view
@@ -696,7 +656,6 @@ public class MediaLinearLayout extends LinearLayout {
             addTransition(endTransition, mediaItem.getId());
         }
 
-        // Adjust the size of all the views
         requestLayout();
 
         if (mMediaItemActionMode != null) {
@@ -772,7 +731,6 @@ public class MediaLinearLayout extends LinearLayout {
             addTransition(endTransition, mediaItem.getId());
         }
 
-        // Adjust the size of all the views
         requestLayout();
 
         if (mMediaItemActionMode != null) {
@@ -784,9 +742,9 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Updates media item.
+     * Updates the specified media item.
      *
-     * @param mediaItem The media item
+     * @param mediaItem The media item to be updated
      */
     public void updateMediaItem(MovieMediaItem mediaItem) {
         final String mediaItemId = mediaItem.getId();
@@ -795,7 +753,7 @@ public class MediaLinearLayout extends LinearLayout {
             final View childView = getChildAt(i);
             final Object tag = childView.getTag();
             if (tag != null && tag instanceof MovieMediaItem) {
-                final MovieMediaItem mi = (MovieMediaItem)tag;
+                final MovieMediaItem mi = (MovieMediaItem) tag;
                 if (mediaItemId.equals(mi.getId())) {
                     if (mediaItem != mi) {
                         // The media item is a new instance of the media item
@@ -904,7 +862,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Create a new transition
+     * Creates a new transition.
      *
      * @param afterMediaItemId Insert the transition after this media item id
      * @param transitionType The transition type
@@ -912,8 +870,7 @@ public class MediaLinearLayout extends LinearLayout {
      */
     public void addTransition(String afterMediaItemId, int transitionType,
             long transitionDurationMs) {
-        // Unselect the media item view
-        unselectAllViews();
+        unselectAllTimelineViews();
 
         final MovieMediaItem afterMediaItem;
         if (afterMediaItemId != null) {
@@ -992,7 +949,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Edit a transition
+     * Edits a transition.
      *
      * @param afterMediaItemId Insert the transition after this media item id
      * @param transitionId The transition id
@@ -1023,15 +980,13 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Add a new transition after the specified media id.
+     * Adds a new transition after the specified media id. This method assumes that a
+     * transition does not exist at the insertion point.
      *
-     * This method assumes that a transition does not exist at the insertion
-     *      point.
-     *
-     * @param transition The transition
+     * @param transition The transition to be added
      * @param afterMediaItemId After the specified media item id
      *
-     * @return The view that was added
+     * @return The transition view that was added, {@code null} upon errors.
      */
     public View addTransition(MovieTransition transition, String afterMediaItemId) {
         // Determine the insert position
@@ -1042,7 +997,7 @@ public class MediaLinearLayout extends LinearLayout {
             for (int i = 0; i < childrenCount; i++) {
                 final Object tag = getChildAt(i).getTag();
                 if (tag != null && tag instanceof MovieMediaItem) {
-                    final MovieMediaItem mi = (MovieMediaItem)tag;
+                    final MovieMediaItem mi = (MovieMediaItem) tag;
                     if (afterMediaItemId.equals(mi.getId())) {
                         index = i + 1;
                         break;
@@ -1059,9 +1014,8 @@ public class MediaLinearLayout extends LinearLayout {
         }
 
         final View transitionView = inflate(getContext(), R.layout.transition_view, null);
-        ((TransitionView)transitionView).setGestureListener(mTransitionGestureListener);
-        ((TransitionView)transitionView).setProjectPath(mProject.getPath());
-
+        ((TransitionView) transitionView).setGestureListener(mTransitionGestureListener);
+        ((TransitionView) transitionView).setProjectPath(mProject.getPath());
         transitionView.setTag(transition);
 
         final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -1080,7 +1034,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Update a  transition
+     * Updates a transition.
      *
      * @param transitionId The transition id
      */
@@ -1090,7 +1044,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Remove a transition
+     * Removes a transition with the specified id.
      *
      * @param transitionId The transition id
      */
@@ -1139,9 +1093,9 @@ public class MediaLinearLayout extends LinearLayout {
      */
     public void onGeneratePreviewMediaItemProgress(String mediaItemId, int action, int progress) {
         // Display the progress while generating the Ken Burns video clip
-        final MediaItemView view = (MediaItemView)getMediaItemView(mediaItemId);
+        final MediaItemView view = (MediaItemView) getMediaItemView(mediaItemId);
         if (view != null) {
-            view.setProgress(progress);
+            view.setGeneratingEffectProgress(progress);
 
             if (view.isSelected()) {
                 if (progress == 0) {
@@ -1156,7 +1110,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * A transition is being encoded
+     * A transition is being encoded.
      *
      * @param transitionId The transition id
      * @param action The action
@@ -1165,9 +1119,9 @@ public class MediaLinearLayout extends LinearLayout {
     public void onGeneratePreviewTransitionProgress(String transitionId, int action,
             int progress) {
         // Display the progress while generating the transition
-        final TransitionView view = (TransitionView)getTransitionView(transitionId);
+        final TransitionView view = (TransitionView) getTransitionView(transitionId);
         if (view != null) {
-            view.setProgress(progress);
+            view.setGeneratingTransitionProgress(progress);
 
             if (view.isSelected()) {
                 if (progress == 0) {
@@ -1285,148 +1239,95 @@ public class MediaLinearLayout extends LinearLayout {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        // Compute the total duration
+        // Compute the total duration of the project.
         final long totalDurationMs = mProject.computeDuration();
+
+        // Total available width for putting media items and transitions.
+        // We subtract 2 half screen widths from the width because we put
+        // 2 empty view at the beginning and end of the timeline, each with
+        // half screen width. We then layout each child view into the
+        // available width.
         final int viewWidth = getWidth() - (2 * mHalfParentWidth);
 
+        // If we are in trimming mode, the left view width might be different
+        // due to trimming; otherwise it equals half of screen width.
+        final int leftViewWidth = (mSelectedView != null) ?
+                (Integer) mScrollView.getTag(R.id.left_view_width) : mHalfParentWidth;
+
+        // Top and bottom position are fixed for media item views. For transition views,
+        // there is additional inset which makes them smaller. See below.
+        final int top = getPaddingTop();
+        final int bottom = b - t;
+
         long startMs = 0;
-        final int childrenCount = getChildCount();
-        final int paddingTop = getPaddingTop();
         int left = 0;
-        if (mDragMediaItemId != null) {
-            for (int i = 0; i < childrenCount; i++) {
-                final View view = getChildAt(i);
-                final Object tag = view.getTag();
-                if (tag != null) {
-                    final long durationMs = computeViewDuration(view);
 
-                    final int right = (int)((float)((startMs + durationMs) * viewWidth) /
-                            (float)totalDurationMs) + mHalfParentWidth;
+        final int childrenCount = getChildCount();
+        for (int i = 0; i < childrenCount; i++) {
+            final View view = getChildAt(i);
+            final Object tag = view.getTag();
+            if (tag != null) {
+                final long durationMs = computeViewDuration(view);
 
-                    if (tag instanceof MovieMediaItem) {
-                        if (left != view.getLeft() || right != view.getRight()) {
-                            final int oldLeft = view.getLeft();
-                            final int oldRight = view.getRight();
-                            view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).onLayoutPerformed(oldLeft, oldRight);
-                        } else {
-                            view.layout(left, paddingTop, right, b - t);
-                        }
-                    } else { // Transition
-                        view.layout(left, paddingTop + mTransitionVerticalInset, right,
-                                b - t - mTransitionVerticalInset);
+                final int right = (int)((float)((startMs + durationMs) * viewWidth) /
+                        (float)totalDurationMs) + leftViewWidth;
+
+                if (tag instanceof MovieMediaItem) {
+                    if (left != view.getLeft() || right != view.getRight()) {
+                        final int oldLeft = view.getLeft();
+                        final int oldRight = view.getRight();
+                        view.layout(left, top, right, bottom);
+                        ((MediaItemView) view).onLayoutPerformed(oldLeft, oldRight);
+                    } else {
+                        view.layout(left, top, right, bottom);
                     }
-
-                    startMs += durationMs;
-                    left = right;
-                } else if (view == mLeftHandle) {
-                } else if (view == mRightHandle) {
-                } else if (i == 0) { // Begin view
-                    view.layout(0, paddingTop, mHalfParentWidth, b - t);
-                    left += mHalfParentWidth;
-                } else { // End view
-                    view.layout(left, paddingTop, getWidth(), b - t);
+                } else {  // Transition view.
+                    // Note that we set additional inset so it looks smaller
+                    // than media item views on the timeline.
+                    view.layout(left,
+                            top + mTransitionVerticalInset,
+                            right,
+                            bottom - mTransitionVerticalInset);
                 }
-            }
-        } else if (mSelectedView != null) { // Trimming mode
-            final int leftViewWidth = (Integer)((View)getParent().getParent()).getTag(
-                    R.id.left_view_width);
 
-            for (int i = 0; i < childrenCount; i++) {
-                final View view = getChildAt(i);
-                final Object tag = view.getTag();
-                if (tag != null) {
-                    final long durationMs = computeViewDuration(view);
-
-                    final int right = (int)((float)((startMs + durationMs) * viewWidth) /
-                            (float)totalDurationMs) + leftViewWidth;
-
-                    if (tag instanceof MovieMediaItem) {
-                        if (left != view.getLeft() || right != view.getRight()) {
-                            final int oldLeft = view.getLeft();
-                            final int oldRight = view.getRight();
-                            view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).onLayoutPerformed(oldLeft, oldRight);
-                        } else {
-                            view.layout(left, paddingTop, right, b - t);
-                        }
-                    } else { // Transition
-                        view.layout(left, paddingTop + mTransitionVerticalInset, right,
-                                b - t - mTransitionVerticalInset);
-                    }
-
-                    startMs += durationMs;
-                    left = right;
-                } else if (view == mLeftHandle) {
-                    view.layout(mSelectedView.getLeft() - mHandleWidth,
-                            paddingTop + mSelectedView.getPaddingTop(),
-                            mSelectedView.getLeft(), b - t - mSelectedView.getPaddingBottom());
-                } else if (view == mRightHandle) {
-                    view.layout(mSelectedView.getRight(),
-                            paddingTop + mSelectedView.getPaddingTop(),
-                            mSelectedView.getRight() + mHandleWidth,
-                            b - t - mSelectedView.getPaddingBottom());
-                } else if (i == 0) { // Begin view
-                    view.layout(0, paddingTop, leftViewWidth, b - t);
-                    left += leftViewWidth;
-                } else { // End view
-                    view.layout(getWidth() - mHalfParentWidth - (mHalfParentWidth - leftViewWidth),
-                            paddingTop, getWidth(), b - t);
-                }
-            }
-        } else {
-            for (int i = 0; i < childrenCount; i++) {
-                final View view = getChildAt(i);
-                final Object tag = view.getTag();
-                if (tag != null) {
-                    final long durationMs = computeViewDuration(view);
-
-                    final int right = (int)((float)((startMs + durationMs) * viewWidth) /
-                            (float)totalDurationMs) + mHalfParentWidth;
-
-                    if (tag instanceof MovieMediaItem) {
-                        if (left != view.getLeft() || right != view.getRight()) {
-                            final int oldLeft = view.getLeft();
-                            final int oldRight = view.getRight();
-                            view.layout(left, paddingTop, right, b - t);
-                            ((MediaItemView)view).onLayoutPerformed(oldLeft, oldRight);
-                        } else {
-                            view.layout(left, paddingTop, right, b - t);
-                        }
-                    } else { // Transition
-                        view.layout(left, paddingTop + mTransitionVerticalInset, right,
-                                b - t - mTransitionVerticalInset);
-                    }
-
-                    startMs += durationMs;
-                    left = right;
-                } else if (view == mLeftHandle) {
-                } else if (view == mRightHandle) {
-                } else if (i == 0) { // Begin view
-                    view.layout(0, paddingTop, mHalfParentWidth, b - t);
-                    left += mHalfParentWidth;
-                } else { // End view
-                    view.layout(getWidth() - mHalfParentWidth, paddingTop, getWidth(), b - t);
-                }
+                startMs += durationMs;
+                left = right;
+            } else if (view == mLeftHandle && mSelectedView != null) {
+                // We are in trimming mode, the left handle must be shown.
+                view.layout(mSelectedView.getLeft() - mHandleWidth,
+                        top + mSelectedView.getPaddingTop(),
+                        mSelectedView.getLeft(),
+                        bottom - mSelectedView.getPaddingBottom());
+            } else if (view == mRightHandle && mSelectedView != null) {
+                // We are in trimming mode, the right handle must be shown.
+                view.layout(mSelectedView.getRight(),
+                        top + mSelectedView.getPaddingTop(),
+                        mSelectedView.getRight() + mHandleWidth,
+                        bottom - mSelectedView.getPaddingBottom());
+            } else if (i == 0) {  // Begin view
+                view.layout(0, top, leftViewWidth, bottom);
+                left += leftViewWidth;
+            } else {  // End view
+                view.layout(left, top, getWidth(), bottom);
             }
         }
-
         mMoveLayoutPending = false;
     }
 
     /**
-     * Compute the view width
+     * Computes the duration of the specified view.
      *
-     * @param view The view
+     * @param view The specified view
      *
-     * @return The duration
+     * @return The duration in milliseconds, 0 if the specified view is not a media item view
+     *         or a transition view
      */
     private long computeViewDuration(View view) {
         long durationMs;
         final Object tag = view.getTag();
         if (tag != null) {
             if (tag instanceof MovieMediaItem) {
-                final MovieMediaItem mediaItem = (MovieMediaItem)view.getTag();
+                final MovieMediaItem mediaItem = (MovieMediaItem) view.getTag();
                 durationMs = mediaItem.getAppTimelineDuration();
                 if (mediaItem.getBeginTransition() != null) {
                     durationMs -= mediaItem.getBeginTransition().getAppDuration();
@@ -1435,8 +1336,8 @@ public class MediaLinearLayout extends LinearLayout {
                 if (mediaItem.getEndTransition() != null) {
                     durationMs -= mediaItem.getEndTransition().getAppDuration();
                 }
-            } else { // Transition
-                final MovieTransition transition = (MovieTransition)tag;
+            } else {  // Transition
+                final MovieTransition transition = (MovieTransition) tag;
                 durationMs = transition.getAppDuration();
             }
         } else {
@@ -1482,7 +1383,7 @@ public class MediaLinearLayout extends LinearLayout {
                             mMediaItemActionMode.finish();
                             mMediaItemActionMode = null;
                         }
-                        unselectAllViews();
+                        unselectAllTimelineViews();
 
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_MEDIA_ITEM_ID);
 
@@ -1602,7 +1503,7 @@ public class MediaLinearLayout extends LinearLayout {
                             mTransitionActionMode.finish();
                             mTransitionActionMode = null;
                         }
-                        unselectAllViews();
+                        unselectAllTimelineViews();
                         activity.removeDialog(VideoEditorActivity.DIALOG_REMOVE_TRANSITION_ID);
 
                         ApiService.removeTransition(activity, mProject.getPath(),
@@ -1694,15 +1595,14 @@ public class MediaLinearLayout extends LinearLayout {
                     Log.v(TAG, "ACTION_DRAG_ENTERED: " + event);
                 }
 
-                final View scrollView = (View)getParent().getParent();
                 if (!mFirstEntered && mDropIndex >= 0) {
-                    scrollView.setTag(R.id.playhead_type,
+                    mScrollView.setTag(R.id.playhead_type,
                             TimelineHorizontalScrollView.PLAYHEAD_MOVE_OK);
                 } else {
-                    scrollView.setTag(R.id.playhead_type,
+                    mScrollView.setTag(R.id.playhead_type,
                             TimelineHorizontalScrollView.PLAYHEAD_MOVE_NOT_OK);
                 }
-                scrollView.invalidate();
+                mScrollView.invalidate();
 
                 mFirstEntered = false;
                 break;
@@ -1714,9 +1614,8 @@ public class MediaLinearLayout extends LinearLayout {
                 }
 
                 // Redraw the "normal playhead"
-                final View scrollView = (View)getParent().getParent();
-                scrollView.setTag(R.id.playhead_type, TimelineHorizontalScrollView.PLAYHEAD_NORMAL);
-                scrollView.invalidate();
+                mScrollView.setTag(R.id.playhead_type, TimelineHorizontalScrollView.PLAYHEAD_NORMAL);
+                mScrollView.invalidate();
                 break;
             }
 
@@ -1733,9 +1632,8 @@ public class MediaLinearLayout extends LinearLayout {
                 mRightHandle.setVisibility(View.VISIBLE);
 
                 // Redraw the "normal playhead"
-                final View scrollView = (View)getParent().getParent();
-                scrollView.setTag(R.id.playhead_type, TimelineHorizontalScrollView.PLAYHEAD_NORMAL);
-                scrollView.invalidate();
+                mScrollView.setTag(R.id.playhead_type, TimelineHorizontalScrollView.PLAYHEAD_NORMAL);
+                mScrollView.invalidate();
 
                 requestLayout();
                 break;
@@ -1789,24 +1687,23 @@ public class MediaLinearLayout extends LinearLayout {
      * @param eventX The event horizontal position
      */
     private void moveToPosition(float eventX) {
-        final View scrollView = (View)getParent().getParent();
-        final int x = (int)eventX - scrollView.getScrollX();
+        final int x = (int)eventX - mScrollView.getScrollX();
         final long now = System.currentTimeMillis();
         if (now - mPrevDragScrollTime > 300) {
             if (x < mPrevDragPosition - 42) { // Backwards
                 final long positionMs = getLeftDropPosition();
                 if (mDropIndex >= 0) {
                     // Redraw the "move ok playhead"
-                    scrollView.setTag(R.id.playhead_type,
+                    mScrollView.setTag(R.id.playhead_type,
                             TimelineHorizontalScrollView.PLAYHEAD_MOVE_OK);
                 } else {
                     // Redraw the "move not ok playhead"
-                    scrollView.setTag(R.id.playhead_type,
+                    mScrollView.setTag(R.id.playhead_type,
                             TimelineHorizontalScrollView.PLAYHEAD_MOVE_NOT_OK);
                 }
 
                 mListener.onRequestMovePlayhead(positionMs, true);
-                scrollView.invalidate();
+                mScrollView.invalidate();
 
                 mPrevDragPosition = x;
                 mPrevDragScrollTime = now;
@@ -1814,16 +1711,16 @@ public class MediaLinearLayout extends LinearLayout {
                 final long positionMs = getRightDropPosition();
                 if (mDropIndex >= 0) {
                     // Redraw the "move ok playhead"
-                    scrollView.setTag(R.id.playhead_type,
+                    mScrollView.setTag(R.id.playhead_type,
                             TimelineHorizontalScrollView.PLAYHEAD_MOVE_OK);
                 } else {
                     // Redraw the "move not ok playhead"
-                    scrollView.setTag(R.id.playhead_type,
+                    mScrollView.setTag(R.id.playhead_type,
                             TimelineHorizontalScrollView.PLAYHEAD_MOVE_NOT_OK);
                 }
 
                 mListener.onRequestMovePlayhead(positionMs, true);
-                scrollView.invalidate();
+                mScrollView.invalidate();
 
                 mPrevDragPosition = x;
                 mPrevDragScrollTime = now;
@@ -2027,10 +1924,10 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Find the media item view with the specified id
+     * Finds the media item view with the specified id.
      *
      * @param mediaItemId The media item id
-     * @return The media item view
+     * @return The found media item view; null if not found
      */
     private View getMediaItemView(String mediaItemId) {
         final int childrenCount = getChildCount();
@@ -2049,10 +1946,10 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Find the media item view index with the specified id
+     * Finds the media item view index with the specified id.
      *
      * @param mediaItemId The media item id
-     * @return The media item view index
+     * @return The media item view index; -1 if not found
      */
     private int getMediaItemViewIndex(String mediaItemId) {
         final int childrenCount = getChildCount();
@@ -2071,11 +1968,11 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Find the transition view with the specified id
+     * Finds the transition view with the specified id.
      *
      * @param transitionId The transition id
      *
-     * @return The media item view
+     * @return The found transition view; null if not found
      */
     private View getTransitionView(String transitionId) {
         final int childrenCount = getChildCount();
@@ -2094,9 +1991,9 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Remove a transition
+     * Removes a transition.
      *
-     * @param transitionId The transition id
+     * @param transitionId The id of the transition to be removed
      */
     public void removeTransitionView(String transitionId) {
         final int childrenCount = getChildCount();
@@ -2122,13 +2019,16 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Remove all media item and transition views (leave the beginning and end views)
+     * Removes all media item and transition views but leave the beginning, end views, and handles.
      */
-    private void removeViews() {
+    private void removeAllMediaItemAndTransitionViews() {
         int index = 0;
         while (index < getChildCount()) {
             final Object tag = getChildAt(index).getTag();
-            if (tag != null) { // Media item or transition view
+            // Media item view or transition view is associated with a media item or transition
+            // attached as a tag. We can thus check the nullity of the tag to determine if it is
+            // media item view or transition view.
+            if (tag != null) {
                 removeViewAt(index);
             } else {
                 index++;
@@ -2136,12 +2036,12 @@ public class MediaLinearLayout extends LinearLayout {
         }
         requestLayout();
 
-        // We cannot add clips by tapping the beginning view
+        // We cannot add clips by tapping the beginning view.
         mLeftAddClipButton.setVisibility(View.GONE);
     }
 
     /**
-     * Compute the transition duration
+     * Computes the transition duration.
      *
      * @param afterMediaItem The position of the transition
      *
@@ -2165,7 +2065,7 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Compute the maximum transition duration
+     * Computes the maximum transition duration.
      *
      * @param afterMediaItem The position of the transition
      *
@@ -2190,76 +2090,74 @@ public class MediaLinearLayout extends LinearLayout {
 
     @Override
     public void setSelected(boolean selected) {
-        // Close the contextual action bar
+        // We only care about when this layout is unselected, which means all children are
+        // unselected. Clients should never call setSelected(true) since it is no-op here.
         if (selected == false) {
-            if (mMediaItemActionMode != null) {
-                mMediaItemActionMode.finish();
-                mMediaItemActionMode = null;
-            }
-
-            if (mTransitionActionMode != null) {
-                mTransitionActionMode.finish();
-                mTransitionActionMode = null;
-            }
-
-            mLeftHandle.setVisibility(View.GONE);
-            mLeftHandle.setListener(null);
-            mRightHandle.setVisibility(View.GONE);
-            mRightHandle.setListener(null);
-
+            closeActionBars();
+            clearAndHideTrimHandles();
             mSelectedView = null;
-
-            // Show the "Add video clip buttons"
             showAddMediaItemButtons(true);
         }
+        dispatchSetSelected(false);
+    }
 
-        // Unselect all the children
-        final int childrenCount = getChildCount();
-        for (int i = 0; i < childrenCount; i++) {
-            final View childView = getChildAt(i);
-            childView.setSelected(false);
+    /**
+     * Closes all contextual action bars.
+     */
+    private void closeActionBars() {
+        if (mMediaItemActionMode != null) {
+            mMediaItemActionMode.finish();
+            mMediaItemActionMode = null;
+        }
+
+        if (mTransitionActionMode != null) {
+            mTransitionActionMode.finish();
+            mTransitionActionMode = null;
         }
     }
 
     /**
-     * Selects a view and un-selects any view that is selected.
-     *
-     * @param selectedView the view to select
-     * @param selected {@code true} if the view must be selected
+     * Hides left and right trim handles and unregisters their listeners.
      */
-    private void selectView(View selectedView, boolean selected) {
-        // Check if the selection has changed
-        if (selectedView.isSelected() == selected) {
+    private void clearAndHideTrimHandles() {
+        mLeftHandle.setVisibility(View.GONE);
+        mLeftHandle.setListener(null);
+        mRightHandle.setVisibility(View.GONE);
+        mRightHandle.setListener(null);
+    }
+
+    /**
+     * Unselects the specified view. No-op if the specified view is already unselected.
+     */
+    private void unSelect(View view) {
+        // Return early if the specifies view is already unselected.
+        if (!view.isSelected())
             return;
-        }
 
-        if (selected) {
-            // Unselect all other views
-            unselectAllViews();
+        mSelectedView = null;
+        view.setSelected(false);
+        clearAndHideTrimHandles();
+    }
 
-            // Hide the "Add video clip buttons"
-            showAddMediaItemButtons(false);
-        }
+    /**
+     * Selects the specified view and un-selects all others. No-op if the specified view is already
+     * selected.
+     */
+    private void select(View selectedView) {
+        // Return early if the view is already selected.
+        if (selectedView.isSelected())
+            return;
 
-        // Select the new view
-        selectedView.setSelected(selected);
+        unselectAllTimelineViews();
+        selectedView.setSelected(true);
+        showAddMediaItemButtons(false);
 
         final Object tag = selectedView.getTag();
-        if (selected == false) {
-            mSelectedView = null;
-            mLeftHandle.setVisibility(View.GONE);
-            mLeftHandle.setListener(null);
-            mRightHandle.setVisibility(View.GONE);
-            mRightHandle.setListener(null);
-            return;
-        }
-
         if (tag instanceof MovieMediaItem) {
             mSelectedView = selectedView;
 
-            final View scrollView = (View)getParent().getParent();
-            final MediaItemView mediaItemView = (MediaItemView)selectedView;
-            if (mediaItemView.isInProgress()) {
+            final MediaItemView mediaItemView = (MediaItemView) selectedView;
+            if (mediaItemView.isGeneratingEffect()) {
                 mLeftHandle.setEnabled(false);
                 mRightHandle.setEnabled(false);
             } else {
@@ -2267,7 +2165,7 @@ public class MediaLinearLayout extends LinearLayout {
                 mRightHandle.setEnabled(true);
             }
 
-            final MovieMediaItem mi = (MovieMediaItem)tag;
+            final MovieMediaItem mi = (MovieMediaItem) tag;
             if (mMediaItemActionMode == null) {
                 startActionMode(new MediaItemActionModeCallback(mi));
             }
@@ -2299,7 +2197,7 @@ public class MediaLinearLayout extends LinearLayout {
                         mOriginalEndMs = mMediaItem.getAppBoundaryEndTime();
                         mOriginalWidth = mediaItemView.getWidth();
                         mMinimumDurationMs = MediaItemUtils.getMinimumVideoItemDuration();
-                        setTrimState(mediaItemView, true);
+                        setTrimState(true);
                         mTrimmedView = mediaItemView;
 
                         mListener.onTrimMediaItemBegin(mMediaItem);
@@ -2310,8 +2208,8 @@ public class MediaLinearLayout extends LinearLayout {
                             mListener.onTrimMediaItem(mMediaItem, 0);
                         }
                         // Move the playhead
-                        scrollView.setTag(R.id.playhead_offset, view.getRight());
-                        scrollView.invalidate();
+                        mScrollView.setTag(R.id.playhead_offset, view.getRight());
+                        mScrollView.invalidate();
                     }
 
                     @Override
@@ -2351,7 +2249,8 @@ public class MediaLinearLayout extends LinearLayout {
                             position = mTrimmedView.getRight() - newWidth;
                         }
 
-                        // Check if the duration would change
+                        // Return early if the new duration has not changed. We don't have to
+                        // adjust the layout.
                         if (newDurationMs == mMediaItem.getAppTimelineDuration()) {
                             return false;
                         }
@@ -2363,9 +2262,9 @@ public class MediaLinearLayout extends LinearLayout {
                         mLeftHandle.setLimitReached(mMediaItem.getAppBoundaryBeginTime() <= 0,
                                 mMediaItem.getAppTimelineDuration() <= mMinimumDurationMs);
                         mMoveLayoutPending = true;
-                        scrollView.setTag(R.id.left_view_width,
+                        mScrollView.setTag(R.id.left_view_width,
                                 mHalfParentWidth - (newWidth - mOriginalWidth));
-                        scrollView.setTag(R.id.playhead_offset, position);
+                        mScrollView.setTag(R.id.playhead_offset, position);
                         requestLayout();
 
                         mListener.onTrimMediaItem(mMediaItem,
@@ -2402,17 +2301,16 @@ public class MediaLinearLayout extends LinearLayout {
                      * The move is complete
                      */
                     private void moveDone() {
-                        // Layout all the children to ensure that
-                        scrollView.setTag(R.id.left_view_width, mHalfParentWidth);
-                        scrollView.setTag(R.id.playhead_offset, -1);
-                        scrollView.invalidate();
-                        // Note: invalidate the parent does not invalidate the children
+                        mScrollView.setTag(R.id.left_view_width, mHalfParentWidth);
+                        mScrollView.setTag(R.id.playhead_offset, -1);
+                        mScrollView.invalidate();
+
                         invalidateAllChildren();
 
                         mListener.onTrimMediaItemEnd(mMediaItem,
                                 mMediaItem.getAppBoundaryBeginTime());
 
-                        setTrimState(mTrimmedView, false);
+                        setTrimState(false);
                         if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                                     TIME_TOLERANCE
                                 || Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >
@@ -2466,7 +2364,7 @@ public class MediaLinearLayout extends LinearLayout {
                     mOriginalBeginMs = mMediaItem.getAppBoundaryBeginTime();
                     mOriginalEndMs = mMediaItem.getAppBoundaryEndTime();
                     mMinimumItemDurationMs = MediaItemUtils.getMinimumMediaItemDuration(mMediaItem);
-                    setTrimState(mediaItemView, true);
+                    setTrimState(true);
                     mTrimmedView = mediaItemView;
 
                     mListener.onTrimMediaItemBegin(mMediaItem);
@@ -2477,8 +2375,8 @@ public class MediaLinearLayout extends LinearLayout {
                     }
 
                     // Move the playhead
-                    scrollView.setTag(R.id.playhead_offset, view.getLeft());
-                    scrollView.invalidate();
+                    mScrollView.setTag(R.id.playhead_offset, view.getLeft());
+                    mScrollView.invalidate();
                 }
 
                 @Override
@@ -2558,7 +2456,7 @@ public class MediaLinearLayout extends LinearLayout {
                         mListener.onTrimMediaItem(mMediaItem, 0);
                     }
 
-                    scrollView.setTag(R.id.playhead_offset, position);
+                    mScrollView.setTag(R.id.playhead_offset, position);
                     mRightHandle.setLimitReached(
                             newDurationMs <= mMinimumItemDurationMs,
                             videoClip ? (mMediaItem.getAppBoundaryEndTime() >=
@@ -2600,14 +2498,14 @@ public class MediaLinearLayout extends LinearLayout {
                  * The move is complete
                  */
                 private void moveDone() {
-                    scrollView.setTag(R.id.playhead_offset, -1);
-                    scrollView.invalidate();
+                    mScrollView.setTag(R.id.playhead_offset, -1);
+                    mScrollView.invalidate();
                     // Note: invalidate the parent does not invalidate the children
                     invalidateAllChildren();
 
                     mListener.onTrimMediaItemEnd(mMediaItem,
                             mMediaItem.getAppBoundaryEndTime());
-                    setTrimState(mTrimmedView, false);
+                    setTrimState(false);
                     if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                             TIME_TOLERANCE ||
                             Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >
@@ -2633,7 +2531,7 @@ public class MediaLinearLayout extends LinearLayout {
             });
         } else if (tag instanceof MovieTransition) {
             if (mTransitionActionMode == null) {
-                startActionMode(new TransitionActionModeCallback((MovieTransition)tag));
+                startActionMode(new TransitionActionModeCallback((MovieTransition) tag));
             }
         }
     }
@@ -2641,16 +2539,15 @@ public class MediaLinearLayout extends LinearLayout {
     /**
      * Sets the trimming state for all media item views.
      *
-     * @param trimmingView The view which enters/exists the trimming state
-     * @param trimming true if trimming
+     * @param trimming indicates if the trimming is ongoing
      */
-    private void setTrimState(View trimmingView, boolean trimming) {
+    private void setTrimState(boolean trimming) {
         final int childrenCount = getChildCount();
         for (int i = 0; i < childrenCount; i++) {
             final View childView = getChildAt(i);
             final Object tag = childView.getTag();
             if (tag != null && tag instanceof MovieMediaItem) {
-                ((MediaItemView)childView).setTrimMode(trimmingView, trimming);
+                ((MediaItemView) childView).setTrimMode(trimming);
             }
         }
     }
@@ -2658,7 +2555,7 @@ public class MediaLinearLayout extends LinearLayout {
     /**
      * Sets the playback state for all media item views.
      *
-     * @param playback true if trimming
+     * @param playback indicates if the playback is ongoing
      */
     private void setPlaybackState(boolean playback) {
         final int childrenCount = getChildCount();
@@ -2667,34 +2564,35 @@ public class MediaLinearLayout extends LinearLayout {
             final Object tag = childView.getTag();
             if (tag != null) {
                 if (tag instanceof MovieMediaItem) {
-                    ((MediaItemView)childView).setPlaybackMode(playback);
+                    ((MediaItemView) childView).setPlaybackMode(playback);
                 } else if (tag instanceof MovieTransition) {
-                    ((TransitionView)childView).setPlaybackMode(playback);
+                    ((TransitionView) childView).setPlaybackMode(playback);
                 }
             }
         }
     }
 
     /**
-     * Un-selects all views.
+     * Un-selects all views in the timeline relative layout, including playhead view and
+     * the ones in audio track layout and transition layout.
      */
-    private void unselectAllViews() {
-        ((RelativeLayout)getParent()).setSelected(false);
+    private void unselectAllTimelineViews() {
+        ((RelativeLayout) getParent()).setSelected(false);
     }
 
     /**
-     * Invalidates all children.
+     * Invalidates all children. Note that invalidating the parent does not invalidate its children.
      */
     private void invalidateAllChildren() {
         final int childrenCount = getChildCount();
         for (int i = 0; i < childrenCount; i++) {
             final View childView = getChildAt(i);
-            childView.invalidate();         
+            childView.invalidate();
         }
     }
 
     /**
-     * Shows or hides "add media buttons".
+     * Shows or hides "add media buttons" on both sides of the timeline.
      *
      * @param show {@code true} to show the "Add media item" buttons, {@code false} to hide them
      */
