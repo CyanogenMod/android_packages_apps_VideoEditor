@@ -5,8 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"Завантаження проекту..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Жодного проекту не знайдено"</string>
-    <!-- no translation found for editor_add (1728703558703319942) -->
-    <skip />
+    <string name="editor_add" msgid="1728703558703319942">"Додати"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Імпортувати відеоролик"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"Імпортувати зображення"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"Імпортувати музику"</string>
@@ -16,40 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Змінити співвідношення розмірів"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"Змінити назву проекту"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"Видалити проект"</string>
-    <!-- outdated translation 8062206918403182504 -->     <string name="editor_capture_video" msgid="7441727320975225967">"Новий відеоролик"</string>
-    <!-- outdated translation 7286273213965159369 -->     <string name="editor_capture_image" msgid="7243706032936431456">"Нове зображення"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"Записати відео"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"Зробити фотографію"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"Видалити цей проект?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Видалити цю аудіодоріжку?"</string>
-    <!-- no translation found for editor_title_menu_header (8042548112022118522) -->
-    <skip />
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"Заголовок"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"Додати заголовок"</string>
-    <!-- outdated translation 882498881948174496 -->     <string name="editor_edit_overlay" msgid="6425579635817051901">"Редагувати"</string>
-    <!-- no translation found for editor_remove_overlay (5027979271603770938) -->
-    <skip />
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"Редагувати заголовок"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"Видалити заголовок"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Видалити це накладання?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Змінити режим візуалізації"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"Видалити цей ефект переходу?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"Видалити цей ефект?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"Видалити цей відеоролик?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"Видалити це зображення?"</string>
-    <!-- no translation found for editor_effect_menu_header (7749812053746520420) -->
-    <skip />
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"ефект"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"Додати ефект"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Змінити ефект"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Видалити ефект"</string>
-    <!-- no translation found for editor_pan_zoom_effect (7040551005893392872) -->
-    <skip />
-    <!-- no translation found for editor_gradient_effect (7850306294518429709) -->
-    <skip />
-    <!-- no translation found for editor_sepia_effect (2862418961255160687) -->
-    <skip />
-    <!-- no translation found for editor_negative_effect (2768007868568598873) -->
-    <skip />
-    <!-- no translation found for editor_no_effect (960037351930077107) -->
-    <skip />
-    <!-- outdated translation 1195671095438906932 -->     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Додати ефект переходу на початку"</string>
-    <!-- outdated translation 6882194984917137730 -->     <string name="editor_add_end_transition" msgid="578791466048263129">"Додати ефект переходу в кінці"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Масштаб панорамування"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Перехід кольору"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"Сепія"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"Негатив"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"без ефекту"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Перехід у ролик"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Перехід із ролика"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Змінити ефект переходу"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"Розпочалося завантаження відеоролика. Вас буде повідомлено про його закінчення."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"Розпочалося завантаження зображення. Вас буде повідомлено про його закінчення."</string>
@@ -126,8 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"Виберіть шаблон заголовку"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Заголовок"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Субтитри"</string>
-    <!-- no translation found for overlay_change_title_template_button_text (5764969336814781829) -->
-    <skip />
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Змінити шаблон"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"Ефекти"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"Ефект панорамування та масштабування"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"Ефект градієнта"</string>
@@ -150,8 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"Так"</string>
     <string name="no" msgid="4303537392215476576">"Ні"</string>
     <string name="done" msgid="5693464841369633740">"Готово"</string>
-    <!-- no translation found for edit (8659197150838109875) -->
-    <skip />
+    <string name="edit" msgid="8659197150838109875">"Редагувати"</string>
     <string name="remove" msgid="7886072447916861923">"Видалити"</string>
     <string name="untitled" msgid="579236531346245199">"Без назви"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> год. <xliff:g id="MINUTES">%d</xliff:g> хв."</string>

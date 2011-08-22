@@ -5,8 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"אולפן סרטים של Android"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"טוען פרויקט..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"לא נמצא פרויקט"</string>
-    <!-- no translation found for editor_add (1728703558703319942) -->
-    <skip />
+    <string name="editor_add" msgid="1728703558703319942">"הוסף"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"ייבא קליפ"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"ייבא תמונה"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"ייבא מוסיקה"</string>
@@ -16,40 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"שנה יחס גובה-רוחב"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"שנה שם פרויקט"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"מחק פרויקט"</string>
-    <!-- outdated translation 8062206918403182504 -->     <string name="editor_capture_video" msgid="7441727320975225967">"קליפ חדש"</string>
-    <!-- outdated translation 7286273213965159369 -->     <string name="editor_capture_image" msgid="7243706032936431456">"תמונה חדשה"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"הקלט סרטון"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"צלם תמונה"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"האם ברצונך למחוק פרויקט זה?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"האם ברצונך להסיר רצועת אודיו זו?"</string>
-    <!-- no translation found for editor_title_menu_header (8042548112022118522) -->
-    <skip />
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"כותרת"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"הוסף כותרת"</string>
-    <!-- outdated translation 882498881948174496 -->     <string name="editor_edit_overlay" msgid="6425579635817051901">"ערוך"</string>
-    <!-- no translation found for editor_remove_overlay (5027979271603770938) -->
-    <skip />
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"ערוך כותרת"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"הסר כותרת"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"האם ברצונך להסיר שכבת על זו?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"שנה מצב עיבוד"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"האם ברצונך להסיר מעבר זה?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"האם ברצונך להסיר אפקט זה?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"האם ברצונך להסיר קליפ זה?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"האם ברצונך להסיר תמונה זו?"</string>
-    <!-- no translation found for editor_effect_menu_header (7749812053746520420) -->
-    <skip />
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"אפקט"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"הוסף אפקט"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"שנה אפקט"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"הסר אפקט"</string>
-    <!-- no translation found for editor_pan_zoom_effect (7040551005893392872) -->
-    <skip />
-    <!-- no translation found for editor_gradient_effect (7850306294518429709) -->
-    <skip />
-    <!-- no translation found for editor_sepia_effect (2862418961255160687) -->
-    <skip />
-    <!-- no translation found for editor_negative_effect (2768007868568598873) -->
-    <skip />
-    <!-- no translation found for editor_no_effect (960037351930077107) -->
-    <skip />
-    <!-- outdated translation 1195671095438906932 -->     <string name="editor_add_begin_transition" msgid="1797563833232547946">"הוסף מעבר בהתחלה"</string>
-    <!-- outdated translation 6882194984917137730 -->     <string name="editor_add_end_transition" msgid="578791466048263129">"הוסף מעבר סיום"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"מרחק פנורמי מתצוגה"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"הדרגה"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"חום-ספיה"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"שלילי"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"ללא אפקט"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"מעבר לתוך קליפ"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"מעבר מתוך קליפ"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"שנה מעבר"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"הורדת הקליפ החלה. נודיע לך כאשר ההורדה תסתיים."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"הורדת התמונה החלה. נודיע לך כאשר ההורדה תסתיים."</string>
@@ -126,8 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"בחר תבנית כותרת"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"כותרת"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"כתובית"</string>
-    <!-- no translation found for overlay_change_title_template_button_text (5764969336814781829) -->
-    <skip />
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"שנה תבנית"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"אפקטים"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"אפקט הגדלה ותנועה פנורמית"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"אפקט מעבר צבעים (גראדיאנט)"</string>
@@ -150,8 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"כן"</string>
     <string name="no" msgid="4303537392215476576">"לא"</string>
     <string name="done" msgid="5693464841369633740">"בוצע"</string>
-    <!-- no translation found for edit (8659197150838109875) -->
-    <skip />
+    <string name="edit" msgid="8659197150838109875">"ערוך"</string>
     <string name="remove" msgid="7886072447916861923">"הסר"</string>
     <string name="untitled" msgid="579236531346245199">"ללא כותרת"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> שעות <xliff:g id="MINUTES">%d</xliff:g> דקות"</string>

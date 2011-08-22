@@ -5,8 +5,7 @@
     <string name="full_app_name" msgid="5729546228978363869">"استودیوی فیلم Android"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"در حال بارگیری پروژه..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"هیچ پروژه ای یافت نشد"</string>
-    <!-- no translation found for editor_add (1728703558703319942) -->
-    <skip />
+    <string name="editor_add" msgid="1728703558703319942">"افزودن"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"وارد کردن کلیپ ویدیویی"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"ورارد کردن تصویر"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"وارد کردن موسیقی"</string>
@@ -16,40 +15,32 @@
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"تغییر نسبت ابعادی"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"تغییر نام پروژه"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"حذف پروژه"</string>
-    <!-- outdated translation 8062206918403182504 -->     <string name="editor_capture_video" msgid="7441727320975225967">"کلیپ ویدیویی جدید"</string>
-    <!-- outdated translation 7286273213965159369 -->     <string name="editor_capture_image" msgid="7243706032936431456">"تصویر جدید"</string>
+    <string name="editor_capture_video" msgid="7441727320975225967">"ضبط یک ویدیو"</string>
+    <string name="editor_capture_image" msgid="7243706032936431456">"عکس گرفتن"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"آیا می خواهید این پروژه را حذف کنید؟"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"آیا می خواهید این تراک صوتی را حذف کنید؟"</string>
-    <!-- no translation found for editor_title_menu_header (8042548112022118522) -->
-    <skip />
+    <string name="editor_title_menu_header" msgid="8042548112022118522">"عنوان"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"افزودن عنوان"</string>
-    <!-- outdated translation 882498881948174496 -->     <string name="editor_edit_overlay" msgid="6425579635817051901">"ویرایش"</string>
-    <!-- no translation found for editor_remove_overlay (5027979271603770938) -->
-    <skip />
+    <string name="editor_edit_overlay" msgid="6425579635817051901">"ویرایش عنوان"</string>
+    <string name="editor_remove_overlay" msgid="5027979271603770938">"حذف عنوان"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"آیا می خواهید این همپوشانی را حذف کنید؟"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"تغییر حالت اجرا"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"آیا می خواهید این انتقال را حذف کنید؟"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"آیا می خواهید این جلوه حذف شود؟"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"آیا می خواهید این کلیپ ویدیویی را حذف کنید؟"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"آیا می خواهید این تصویر را حذف کنید؟"</string>
-    <!-- no translation found for editor_effect_menu_header (7749812053746520420) -->
-    <skip />
+    <string name="editor_effect_menu_header" msgid="7749812053746520420">"جلوه"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"افزودن جلوه"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"تغییر جلوه"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"حذف جلوه"</string>
-    <!-- no translation found for editor_pan_zoom_effect (7040551005893392872) -->
-    <skip />
-    <!-- no translation found for editor_gradient_effect (7850306294518429709) -->
-    <skip />
-    <!-- no translation found for editor_sepia_effect (2862418961255160687) -->
-    <skip />
-    <!-- no translation found for editor_negative_effect (2768007868568598873) -->
-    <skip />
-    <!-- no translation found for editor_no_effect (960037351930077107) -->
-    <skip />
-    <!-- outdated translation 1195671095438906932 -->     <string name="editor_add_begin_transition" msgid="1797563833232547946">"افزودن جلوه انتقال شروع"</string>
-    <!-- outdated translation 6882194984917137730 -->     <string name="editor_add_end_transition" msgid="578791466048263129">"افزودن جلوه انتقال پایان"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"حرکت و بزرگنمایی"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"جلوه تدریجی"</string>
+    <string name="editor_sepia_effect" msgid="2862418961255160687">"سپیا"</string>
+    <string name="editor_negative_effect" msgid="2768007868568598873">"نگاتیو"</string>
+    <string name="editor_no_effect" msgid="960037351930077107">"بدون جلوه"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"انتقال به کلیپ"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"انتقال به خارج از کلیپ"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"تغییر جلوه انتقال"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"دانلود کلیپ ویدیویی شروع شد. پس از تکمیل آن به شما اطلاع داده می شود."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"دانلود تصویر شروع شد. پس از تکمیل آن به شما اطلاع داده می شود."</string>
@@ -126,8 +117,7 @@
     <string name="overlays_select_type" msgid="6409278066167032335">"انتخاب الگوی عنوان"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"عنوان"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"زیرنویس"</string>
-    <!-- no translation found for overlay_change_title_template_button_text (5764969336814781829) -->
-    <skip />
+    <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"تغییر قالب"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"جلوه ها"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"جلوه چرخش و بزرگنمايی"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"جلوه شیب دار"</string>
@@ -150,8 +140,7 @@
     <string name="yes" msgid="5627909733720577098">"بله"</string>
     <string name="no" msgid="4303537392215476576">"خیر"</string>
     <string name="done" msgid="5693464841369633740">"انجام شد"</string>
-    <!-- no translation found for edit (8659197150838109875) -->
-    <skip />
+    <string name="edit" msgid="8659197150838109875">"ویرایش"</string>
     <string name="remove" msgid="7886072447916861923">"حذف"</string>
     <string name="untitled" msgid="579236531346245199">"بدون عنوان"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> ساعت <xliff:g id="MINUTES">%d</xliff:g> دقیقه"</string>
