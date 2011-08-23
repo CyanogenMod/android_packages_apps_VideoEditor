@@ -22,6 +22,8 @@
     <dimen name="project_picker_item_height">325dip</dimen>
 
     <dimen name="media_layout_height">128dip</dimen>
+    <dimen name="timeline_add_media_button_height">48dip</dimen>
+    <dimen name="timeline_add_media_button_top_padding">24dip</dimen>
     <dimen name="overlay_layout_height">64dip</dimen>
     <dimen name="audio_layout_height">64dip</dimen>
     <dimen name="playhead_layout_height">32dip</dimen>
@@ -43,5 +45,4 @@
     <dimen name="timelime_item_horizontal_padding">4dip</dimen>
 
     <dimen name="timelime_transition_vertical_inset">12dip</dimen>
-
 </resources>

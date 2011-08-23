@@ -1894,7 +1894,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          */
         private void previewStarted(VideoEditorProject project) {
             // Change the button image back to a play icon
-            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_pause_selector);
+            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_pause);
+            mPreviewPlayButton.setBackgroundResource(R.drawable.background_selector);
 
             mTimelineScroller.enableUserScrolling(false);
             mMediaLayout.setPlaybackInProgress(true);
@@ -2008,7 +2009,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             }
 
             // Change the button image back to a play icon
-            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_play_selector);
+            mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_play);
+            mPreviewPlayButton.setBackgroundResource(R.drawable.background_selector);
 
             if (error == false) {
                 // Set the playhead position at the position where the playback stopped

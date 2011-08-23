@@ -22,7 +22,8 @@
         android:id="@+id/add_right_media_item_button"
         android:layout_gravity="left"
         android:layout_width="56dip"
-        android:layout_height="96dip"
-        android:src="@drawable/add_clip_selector"
-        android:background="@null"/>
+        android:layout_height="@dimen/timeline_add_media_button_height"
+        android:layout_marginTop="@dimen/timeline_add_media_button_top_padding"
+        android:src="@drawable/add_clip_big"
+        android:background="@drawable/background_selector"/>
 </FrameLayout>

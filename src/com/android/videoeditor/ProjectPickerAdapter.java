@@ -192,7 +192,7 @@ public class ProjectPickerAdapter extends BaseAdapter {
         paint.setTextSize(18.0f);
         paint.setAlpha(255);
         final Bitmap newProjectIcon = BitmapFactory.decodeResource(mResources,
-                R.drawable.ic_menu_add_video);
+                R.drawable.add_video_project_big);
         final int x = (mItemWidth - newProjectIcon.getWidth()) / 2;
         final int y = (mItemHeight - newProjectIcon.getHeight()) / 2;
         canvas.drawBitmap(newProjectIcon, x, y, paint);

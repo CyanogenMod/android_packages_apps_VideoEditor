@@ -29,7 +29,7 @@
 
     <item android:id="@+id/media_item_effect_menu"
         android:title="@string/editor_effect_menu_header"
-        android:icon="@drawable/ic_menu_add_effects"
+        android:icon="@drawable/ic_menu_add_effect_selector"
         android:showAsAction="always|withText" >
         <menu>
             <!-- Menu items for adding transitions -->

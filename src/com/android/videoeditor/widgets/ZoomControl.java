@@ -29,7 +29,7 @@ import android.view.View;
  * The zoom control
  */
 public class ZoomControl extends View {
-    
+
     private static final double MAX_ANGLE = Math.PI / 3;
     private static final double THUMB_RADIUS_CONTAINER_SIZE_RATIO = 0.432;
     private static final double THUMB_INTERNAL_RADIUS_CONTAINER_SIZE_RATIO = 0.24;

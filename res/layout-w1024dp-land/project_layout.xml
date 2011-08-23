@@ -46,16 +46,16 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="8dip"
             android:layout_marginLeft="90dip"
-            android:src="@drawable/btn_playback_prev_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_prev"
+            android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_rewind"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="90dip"
             android:layout_marginLeft="5dip"
-            android:src="@drawable/btn_playback_rew_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_rev"
+            android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_play"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
@@ -63,8 +63,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dip"
             android:layout_below="@id/editor_prev"
-            android:src="@drawable/btn_playback_play_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_play"
+            android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_next"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
@@ -72,8 +72,8 @@
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="90dip"
             android:layout_marginBottom="8dip"
-            android:src="@drawable/btn_playback_next_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_next"
+            android:background="@drawable/background_selector"/>
     </RelativeLayout>
 
     <TextView android:id="@+id/editor_time"

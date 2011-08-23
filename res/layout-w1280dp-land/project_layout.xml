@@ -46,16 +46,16 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="18dip"
             android:layout_marginLeft="115dip"
-            android:src="@drawable/btn_playback_prev_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_prev"
+            android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_rewind"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="120dip"
             android:layout_marginLeft="20dip"
-            android:src="@drawable/btn_playback_rew_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_rev"
+            android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_play"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
@@ -63,8 +63,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="17dip"
             android:layout_below="@id/editor_prev"
-            android:src="@drawable/btn_playback_play_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_play"
+            android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_next"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
@@ -72,8 +72,8 @@
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="115dip"
             android:layout_marginBottom="18dip"
-            android:src="@drawable/btn_playback_next_selector"
-            android:background="@null"/>
+            android:src="@drawable/btn_playback_ic_next"
+            android:background="@drawable/background_selector"/>
     </RelativeLayout>
 
     <TextView android:id="@+id/editor_time"
