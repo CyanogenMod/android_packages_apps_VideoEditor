@@ -289,7 +289,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             // Instance variables
             private int mActiveWidth;
             private long mDurationMs;
-            private int mLastScrollX;
 
             @Override
             public void onScrollBegin(View view, int scrollX, int scrollY, boolean appScroll) {
@@ -299,34 +298,17 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 } else {
                     mActiveWidth = 0;
                 }
-
-                mLastScrollX = scrollX;
             }
 
             @Override
             public void onScrollProgress(View view, int scrollX, int scrollY, boolean appScroll) {
-                // We check if the project is valid since the project may
-                // close while scrolling
-                if (!appScroll && mActiveWidth > 0 && mProject != null) {
-                    final int deltaScrollX = Math.abs(mLastScrollX - scrollX);
-
-                    if (deltaScrollX < 100) {
-                        mLastScrollX = scrollX;
-                        // When scrolling at high speed do not display the
-                        // preview frame
-                        final long timeMs = (scrollX * mDurationMs) / mActiveWidth;
-                        if (setPlayhead(timeMs < 0 ? 0 : timeMs)) {
-                            showPreviewFrame();
-                        }
-                    }
-                }
             }
 
             @Override
             public void onScrollEnd(View view, int scrollX, int scrollY, boolean appScroll) {
                 // We check if the project is valid since the project may
                 // close while scrolling
-                if (!appScroll && mActiveWidth > 0 && mProject != null && scrollX != mLastScrollX) {
+                if (!appScroll && mActiveWidth > 0 && mProject != null) {
                     final long timeMs = (scrollX * mDurationMs) / mActiveWidth;
                     if (setPlayhead(timeMs < 0 ? 0 : timeMs)) {
                         showPreviewFrame();
