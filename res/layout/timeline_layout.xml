@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<com.android.videoeditor.widgets.TimelineHorizontalScrollView 
+<com.android.videoeditor.widgets.TimelineHorizontalScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/timeline_scroller"
     android:layout_width="match_parent"
@@ -23,7 +23,7 @@
     android:layout_alignParentBottom="true"
     android:fillViewport="true"
     android:scrollbars="none">
-    <com.android.videoeditor.widgets.TimelineRelativeLayout 
+    <com.android.videoeditor.widgets.TimelineRelativeLayout
         android:id="@+id/timeline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

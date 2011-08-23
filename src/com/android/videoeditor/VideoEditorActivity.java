@@ -215,6 +215,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mOverlayLayout = (OverlayLinearLayout)findViewById(R.id.timeline_overlays);
         mAudioTrackLayout = (AudioTrackLinearLayout)findViewById(R.id.timeline_audio_tracks);
         mPlayheadView = (PlayheadView)findViewById(R.id.timeline_playhead);
+
         mPreviewPlayButton = (ImageButton)findViewById(R.id.editor_play);
         mPreviewRewindButton = (ImageButton)findViewById(R.id.editor_rewind);
         mPreviewNextButton = (ImageButton)findViewById(R.id.editor_next);
@@ -1418,6 +1419,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             // Clear the media related to the previous project and
             // add the media for the current project.
+            mMediaLayout.setParentTimelineScrollView(mTimelineScroller);
             mMediaLayout.setProject(mProject);
             mOverlayLayout.setProject(mProject);
             mAudioTrackLayout.setProject(mProject);
