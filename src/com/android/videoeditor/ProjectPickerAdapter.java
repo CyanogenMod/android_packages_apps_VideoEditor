@@ -22,13 +22,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Typeface;
 import android.media.videoeditor.VideoEditor;
+import android.os.AsyncTask;
 import android.text.format.DateUtils;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +41,7 @@ import com.android.videoeditor.util.ImageUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimeZone;
 
 
 public class ProjectPickerAdapter extends BaseAdapter {
@@ -53,6 +51,7 @@ public class ProjectPickerAdapter extends BaseAdapter {
     private List<VideoEditorProject> mProjects;
     private int mItemWidth;
     private int mItemHeight;
+    private LruCache<String, Bitmap> mPreviewBitmapCache;
 
     public ProjectPickerAdapter(Context context, LayoutInflater inflater,
             List<VideoEditorProject> projects) {
@@ -62,6 +61,9 @@ public class ProjectPickerAdapter extends BaseAdapter {
         mProjects = projects;
         mItemWidth = (int) mResources.getDimension(R.dimen.project_picker_item_width);
         mItemHeight = (int) mResources.getDimension(R.dimen.project_picker_item_height);
+
+        // Limit the cache size to 15 thumbnails.
+        mPreviewBitmapCache = new LruCache<String, Bitmap>(15);
     }
 
     /**
@@ -115,16 +117,13 @@ public class ProjectPickerAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v;
-        if (convertView != null) {
-            v = convertView;
-        } else {
-            v = mInflater.inflate(R.layout.project_picker_item, null);
-        }
-
-        // Inflate the view with project thumbnail and information.
+        // Inflate a new view with project thumbnail and information.
+        // We never reuse convertView because we load thumbnails asynchronously
+        // and hook an async task with the new view. If the new view is reused
+        // as a convertView, the async task might put a wrong thumbnail on it.
+        View v = mInflater.inflate(R.layout.project_picker_item, null);
         ImageView iv = (ImageView) v.findViewById(R.id.thumbnail);
-        Drawable thumbnail;
+        Bitmap thumbnail;
         TextView titleView = (TextView) v.findViewById(R.id.title);
         TextView durationView = (TextView) v.findViewById(R.id.duration);
         if (position == mProjects.size()) {
@@ -134,49 +133,33 @@ public class ProjectPickerAdapter extends BaseAdapter {
             durationView.setText("");
         } else {
             VideoEditorProject project = mProjects.get(position);
-            thumbnail = getThumbnail(project.getPath());
+            thumbnail = getThumbnail(project.getPath(), iv);
             titleView.setText(project.getName());
             durationView.setText(millisecondsToTimeString(project.getProjectDuration()));
         }
-        iv.setImageDrawable(thumbnail);
+
+        if (thumbnail != null) {
+            iv.setImageBitmap(thumbnail);
+        }
 
         return v;
     }
 
-    private Drawable getThumbnail(String projectPath) {
-        final File thumbnail = new File(projectPath, VideoEditor.THUMBNAIL_FILENAME);
-        final Bitmap bitmap = Bitmap.createBitmap(mItemWidth, mItemHeight,
-                Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(bitmap);
-        final Paint paint = new Paint();
-        paint.setAntiAlias(true);
-
-        if (thumbnail.exists()) {
-            try {
-                final Bitmap previewBitmap = ImageUtils.scaleImage(
-                        thumbnail.getAbsolutePath(),
-                        mItemWidth - 10,
-                        mItemHeight - 10,
-                        ImageUtils.MATCH_SMALLER_DIMENSION);
-                if (previewBitmap != null) {
-                    paint.setAlpha(255);
-                    // Draw the thumbnail at the center of the canvas in case scaled preview
-                    // bitmap is smaller than the container.
-                    canvas.drawBitmap(previewBitmap,
-                            (mItemWidth - previewBitmap.getWidth()) / 2,
-                            (mItemHeight - previewBitmap.getHeight()) / 2,
-                            paint);
-                    previewBitmap.recycle();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    private Bitmap getThumbnail(String projectPath, ImageView imageView) {
+        Bitmap previewBitmap = mPreviewBitmapCache.get(projectPath);
+        if (previewBitmap == null) {
+            // Cache miss: asynchronously load bitmap to avoid scroll stuttering
+            // in the project picker.
+            new LoadPreviewBitmapTask(projectPath, imageView, mItemWidth, mItemHeight,
+                    mPreviewBitmapCache).execute();
+        } else {
+            return previewBitmap;
         }
 
-        return new BitmapDrawable(bitmap);
+        return null;
     }
 
-    private Drawable renderNewProjectThumbnail() {
+    private Bitmap renderNewProjectThumbnail() {
         final Bitmap bitmap = Bitmap.createBitmap(mItemWidth, mItemHeight,
                 Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
@@ -198,7 +181,7 @@ public class ProjectPickerAdapter extends BaseAdapter {
         canvas.drawBitmap(newProjectIcon, x, y, paint);
         newProjectIcon.recycle();
 
-        return new BitmapDrawable(bitmap);
+        return bitmap;
     }
 
     /**
@@ -206,5 +189,68 @@ public class ProjectPickerAdapter extends BaseAdapter {
      */
     private String millisecondsToTimeString(long milliseconds) {
         return DateUtils.formatElapsedTime(milliseconds / 1000);
+    }
+}
+
+/**
+ * Worker that loads preview bitmap for a project,
+ */
+class LoadPreviewBitmapTask extends AsyncTask<Void, Void, Bitmap> {
+    private String mProjectPath;
+    // Handle to the image view we should update when the preview bitmap is loaded.
+    private ImageView mImageView;
+    private int mWidth;
+    private int mHeight;
+    private LruCache<String, Bitmap> mPreviewBitmapCache;
+
+    public LoadPreviewBitmapTask(String projectPath, ImageView imageView,
+            int width, int height, LruCache<String, Bitmap> previewBitmapCache) {
+        mProjectPath = projectPath;
+        mImageView = imageView;
+        mWidth = width;
+        mHeight = height;
+        mPreviewBitmapCache = previewBitmapCache;
+    }
+
+    @Override
+    protected Bitmap doInBackground(Void... param) {
+        final File thumbnail = new File(mProjectPath, VideoEditor.THUMBNAIL_FILENAME);
+        // Return early if thumbnail does not exist.
+        if (!thumbnail.exists()) {
+            return null;
+        }
+
+        try {
+            final Bitmap previewBitmap = ImageUtils.scaleImage(
+                    thumbnail.getAbsolutePath(),
+                    mWidth - 10,
+                    mHeight - 10,
+                    ImageUtils.MATCH_SMALLER_DIMENSION);
+            if (previewBitmap != null) {
+                final Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight,
+                        Bitmap.Config.ARGB_8888);
+                final Canvas canvas = new Canvas(bitmap);
+                final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+
+                // Draw bitmap at the center of the canvas.
+                canvas.drawBitmap(previewBitmap,
+                        (mWidth - previewBitmap.getWidth()) / 2,
+                        (mHeight - previewBitmap.getHeight()) / 2,
+                        paint);
+                return bitmap;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap result) {
+        // If we successfully load the preview bitmap, update the image view.
+        if (result != null) {
+            mPreviewBitmapCache.put(mProjectPath, result);
+            mImageView.setImageBitmap(result);
+        }
     }
 }
