@@ -31,7 +31,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -81,7 +80,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
      * The audio track action mode handler
      */
     private class AudioTrackActionModeCallback implements ActionMode.Callback,
-            View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+            SeekBar.OnSeekBarChangeListener {
         // Instance variables
         private final MovieAudioTrack mAudioTrack;
 
@@ -98,6 +97,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mAudioTrackActionMode = mode;
 
+            mode.getMenuInflater().inflate(R.menu.audio_mode_menu, menu);
+
             final View titleBarView = inflate(getContext(), R.layout.audio_track_action_bar, null);
 
             mode.setCustomView(titleBarView);
@@ -105,8 +106,6 @@ public class AudioTrackLinearLayout extends LinearLayout {
             final TextView titleView = (TextView)titleBarView.findViewById(R.id.action_bar_title);
             titleView.setText(FileUtils.getSimpleName(mAudioTrack.getFilename()));
 
-            titleBarView.findViewById(R.id.action_duck).setOnClickListener(this);
-            titleBarView.findViewById(R.id.action_remove).setOnClickListener(this);
             final SeekBar seekBar =
                 ((SeekBar)titleBarView.findViewById(R.id.action_volume));
             seekBar.setOnSeekBarChangeListener(this);
@@ -117,49 +116,32 @@ public class AudioTrackLinearLayout extends LinearLayout {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            final View view = mode.getCustomView();
-
-            final ImageButton duckBtn = (ImageButton)view.findViewById(R.id.action_duck);
-            if (mAudioTrack.isAppDuckingEnabled()) {
-                duckBtn.setImageResource(R.drawable.ic_menu_noduck);
-            } else {
-                duckBtn.setImageResource(R.drawable.ic_menu_duck);
-            }
-
+            MenuItem duckItem = menu.findItem(R.id.action_duck);
+            duckItem.setChecked(mAudioTrack.isAppDuckingEnabled());
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return true;
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
+            switch (item.getItemId()) {
                 case R.id.action_duck: {
                     final boolean duck = !mAudioTrack.isAppDuckingEnabled();
                     mAudioTrack.enableAppDucking(duck);
-                    if (mAudioTrackActionMode != null) {
-                        mAudioTrackActionMode.invalidate();
-                    }
                     ApiService.setAudioTrackDuck(getContext(), mProject.getPath(),
                             mAudioTrack.getId(), duck);
+                    item.setChecked(duck);
                     break;
                 }
 
-                case R.id.action_remove: {
+                case R.id.action_remove_audio_track: {
                     final Bundle bundle = new Bundle();
                     bundle.putString(PARAM_DIALOG_AUDIO_TRACK_ID, mAudioTrack.getId());
                     ((Activity)getContext()).showDialog(
                             VideoEditorActivity.DIALOG_REMOVE_AUDIO_TRACK_ID, bundle);
                     break;
                 }
-
-                default: {
-                    break;
-                }
             }
+            return true;
         }
 
         @Override
