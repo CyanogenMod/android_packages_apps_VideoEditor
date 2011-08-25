@@ -1730,6 +1730,58 @@ public class MediaLinearLayout extends LinearLayout {
         }
     }
 
+    // Returns the begin time of a media item (exclude transition).
+    private long getBeginTime(MovieMediaItem item) {
+        final List<MovieMediaItem> mediaItems = mProject.getMediaItems();
+        long beginMs = 0;
+        final int mediaItemsCount = mediaItems.size();
+        for (int i = 0; i < mediaItemsCount; i++) {
+            final MovieMediaItem mediaItem = mediaItems.get(i);
+            final MovieTransition beginTransition = mediaItem.getBeginTransition();
+            final MovieTransition endTransition = mediaItem.getEndTransition();
+
+            if (item.getId().equals(mediaItem.getId())) {
+                if (beginTransition != null) {
+                    beginMs += beginTransition.getAppDuration();
+                }
+                return beginMs;
+            }
+
+            beginMs += mediaItem.getAppTimelineDuration();
+
+            if (endTransition != null) {
+                beginMs -= endTransition.getAppDuration();
+            }
+        }
+
+        return 0;
+    }
+
+    // Returns the end time of a media item (exclude transition)
+    private long getEndTime(MovieMediaItem item) {
+        final List<MovieMediaItem> mediaItems = mProject.getMediaItems();
+        long endMs = 0;
+        final int mediaItemsCount = mediaItems.size();
+        for (int i = 0; i < mediaItemsCount; i++) {
+            final MovieMediaItem mediaItem = mediaItems.get(i);
+            final MovieTransition beginTransition = mediaItem.getBeginTransition();
+            final MovieTransition endTransition = mediaItem.getEndTransition();
+
+            endMs += mediaItem.getAppTimelineDuration();
+
+            if (endTransition != null) {
+                endMs -= endTransition.getAppDuration();
+            }
+
+            if (item.getId().equals(mediaItem.getId())) {
+                return endMs;
+            }
+
+        }
+
+        return 0;
+    }
+
     /**
      * @return The valid time location of the drop (-1 if none)
      */
@@ -2309,6 +2361,7 @@ public class MediaLinearLayout extends LinearLayout {
 
                         mListener.onTrimMediaItemEnd(mMediaItem,
                                 mMediaItem.getAppBoundaryBeginTime());
+                        mListener.onRequestMovePlayhead(getBeginTime(mMediaItem), false);
 
                         setTrimState(false);
                         if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
@@ -2505,6 +2558,8 @@ public class MediaLinearLayout extends LinearLayout {
 
                     mListener.onTrimMediaItemEnd(mMediaItem,
                             mMediaItem.getAppBoundaryEndTime());
+                    mListener.onRequestMovePlayhead(getEndTime(mMediaItem), false);
+
                     setTrimState(false);
                     if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                             TIME_TOLERANCE ||
