@@ -97,6 +97,7 @@ public class MediaLinearLayout extends LinearLayout {
     private VideoEditorProject mProject;
     private boolean mPlaybackInProgress;
     private HandleView mLeftHandle, mRightHandle;
+    private boolean mIsTrimming;  // Indicates if some media item is being trimmed.
     private boolean mMoveLayoutPending;
     private View mScrollView;  // Convenient handle to the parent scroll view.
     private View mSelectedView;
@@ -270,14 +271,9 @@ public class MediaLinearLayout extends LinearLayout {
                 mLeftHandle.endMove();
                 mRightHandle.endMove();
             }
-
-            if (mediaItemView != null) {
-                unSelect(mediaItemView);
-            }
-
-            mMediaItemActionMode = null;
-
+            unSelect(mediaItemView);
             showAddMediaItemButtons(true);
+            mMediaItemActionMode = null;
         }
 
         private void applyEffect(MenuItem clickedItem) {
@@ -382,13 +378,9 @@ public class MediaLinearLayout extends LinearLayout {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             final View transitionView = getTransitionView(mTransition.getId());
-            if (transitionView != null) {
-                unSelect(transitionView);
-            }
-
-            mTransitionActionMode = null;
-
+            unSelect(transitionView);
             showAddMediaItemButtons(true);
+            mTransitionActionMode = null;
         }
     }
 
@@ -2154,6 +2146,20 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
+     * Returns true if some view item on the timeline is selected.
+     */
+    public boolean hasItemSelected() {
+        return (mSelectedView != null);
+    }
+
+    /**
+     * Returns true if some media item is being trimmed by user.
+     */
+    public boolean isTrimming() {
+        return mIsTrimming;
+    }
+
+    /**
      * Closes all contextual action bars.
      */
     private void closeActionBars() {
@@ -2182,33 +2188,38 @@ public class MediaLinearLayout extends LinearLayout {
      * Unselects the specified view. No-op if the specified view is already unselected.
      */
     private void unSelect(View view) {
-        // Return early if the specifies view is already unselected.
-        if (!view.isSelected())
+        // Return early if the specified view is already unselected or null.
+        if (view == null || !view.isSelected()) {
             return;
+        }
 
         mSelectedView = null;
         view.setSelected(false);
+        // Need to redraw other children as well because they had dimmed themselves.
+        invalidateAllChildren();
         clearAndHideTrimHandles();
     }
 
     /**
-     * Selects the specified view and un-selects all others. No-op if the specified view is already
-     * selected.
+     * Selects the specified view and un-selects all others.
+     * No-op if the specified view is already selected.
+     * The selected view will stand out and all other views on the
+     * timeline are dimmed.
      */
     private void select(View selectedView) {
         // Return early if the view is already selected.
-        if (selectedView.isSelected())
+        if (selectedView.isSelected()) {
             return;
+        }
 
         unselectAllTimelineViews();
-        selectedView.setSelected(true);
+        mSelectedView = selectedView;
+        mSelectedView.setSelected(true);
         showAddMediaItemButtons(false);
 
-        final Object tag = selectedView.getTag();
+        final Object tag = mSelectedView.getTag();
         if (tag instanceof MovieMediaItem) {
-            mSelectedView = selectedView;
-
-            final MediaItemView mediaItemView = (MediaItemView) selectedView;
+            final MediaItemView mediaItemView = (MediaItemView) mSelectedView;
             if (mediaItemView.isGeneratingEffect()) {
                 mLeftHandle.setEnabled(false);
                 mRightHandle.setEnabled(false);
@@ -2249,7 +2260,8 @@ public class MediaLinearLayout extends LinearLayout {
                         mOriginalEndMs = mMediaItem.getAppBoundaryEndTime();
                         mOriginalWidth = mediaItemView.getWidth();
                         mMinimumDurationMs = MediaItemUtils.getMinimumVideoItemDuration();
-                        setTrimState(true);
+                        setIsTrimming(true);
+                        invalidateAllChildren();
                         mTrimmedView = mediaItemView;
 
                         mListener.onTrimMediaItemBegin(mMediaItem);
@@ -2355,15 +2367,11 @@ public class MediaLinearLayout extends LinearLayout {
                     private void moveDone() {
                         mScrollView.setTag(R.id.left_view_width, mHalfParentWidth);
                         mScrollView.setTag(R.id.playhead_offset, -1);
-                        mScrollView.invalidate();
-
-                        invalidateAllChildren();
 
                         mListener.onTrimMediaItemEnd(mMediaItem,
                                 mMediaItem.getAppBoundaryBeginTime());
                         mListener.onRequestMovePlayhead(getBeginTime(mMediaItem), false);
 
-                        setTrimState(false);
                         if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                                     TIME_TOLERANCE
                                 || Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >
@@ -2388,6 +2396,9 @@ public class MediaLinearLayout extends LinearLayout {
                             mLeftHandle.setEnabled(false);
                             mRightHandle.setEnabled(false);
                         }
+                        setIsTrimming(false);
+                        mScrollView.invalidate();
+                        invalidateAllChildren();
                     }
                 });
             }
@@ -2417,7 +2428,8 @@ public class MediaLinearLayout extends LinearLayout {
                     mOriginalBeginMs = mMediaItem.getAppBoundaryBeginTime();
                     mOriginalEndMs = mMediaItem.getAppBoundaryEndTime();
                     mMinimumItemDurationMs = MediaItemUtils.getMinimumMediaItemDuration(mMediaItem);
-                    setTrimState(true);
+                    setIsTrimming(true);
+                    invalidateAllChildren();
                     mTrimmedView = mediaItemView;
 
                     mListener.onTrimMediaItemBegin(mMediaItem);
@@ -2552,15 +2564,11 @@ public class MediaLinearLayout extends LinearLayout {
                  */
                 private void moveDone() {
                     mScrollView.setTag(R.id.playhead_offset, -1);
-                    mScrollView.invalidate();
-                    // Note: invalidate the parent does not invalidate the children
-                    invalidateAllChildren();
 
                     mListener.onTrimMediaItemEnd(mMediaItem,
                             mMediaItem.getAppBoundaryEndTime());
                     mListener.onRequestMovePlayhead(getEndTime(mMediaItem), false);
 
-                    setTrimState(false);
                     if (Math.abs(mOriginalBeginMs - mMediaItem.getAppBoundaryBeginTime()) >
                             TIME_TOLERANCE ||
                             Math.abs(mOriginalEndMs - mMediaItem.getAppBoundaryEndTime()) >
@@ -2582,6 +2590,9 @@ public class MediaLinearLayout extends LinearLayout {
                         mLeftHandle.setEnabled(false);
                         mRightHandle.setEnabled(false);
                     }
+                    setIsTrimming(false);
+                    mScrollView.invalidate();
+                    invalidateAllChildren();
                 }
             });
         } else if (tag instanceof MovieTransition) {
@@ -2592,19 +2603,10 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
-     * Sets the trimming state for all media item views.
-     *
-     * @param trimming indicates if the trimming is ongoing
+     * Indicates if any media item is being trimmed or no.
      */
-    private void setTrimState(boolean trimming) {
-        final int childrenCount = getChildCount();
-        for (int i = 0; i < childrenCount; i++) {
-            final View childView = getChildAt(i);
-            final Object tag = childView.getTag();
-            if (tag != null && tag instanceof MovieMediaItem) {
-                ((MediaItemView) childView).setTrimMode(trimming);
-            }
-        }
+    private void setIsTrimming(boolean isTrimming) {
+        mIsTrimming = isTrimming;
     }
 
     /**
@@ -2633,6 +2635,7 @@ public class MediaLinearLayout extends LinearLayout {
      */
     private void unselectAllTimelineViews() {
         ((RelativeLayout) getParent()).setSelected(false);
+        invalidateAllChildren();
     }
 
     /**
