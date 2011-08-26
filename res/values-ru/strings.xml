@@ -34,13 +34,13 @@
     <string name="editor_add_effect" msgid="7598526041207561912">"Добавить эффект"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Изменить эффект"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Удалить эффект"</string>
-    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Панорамирование и масштабирование"</string>
+    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Панорама+масштаб"</string>
     <string name="editor_gradient_effect" msgid="7850306294518429709">"Градиент"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Сепия"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Негатив"</string>
     <string name="editor_no_effect" msgid="960037351930077107">"без эффектов"</string>
-    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Добавить переход в начале видеоклипа"</string>
-    <string name="editor_add_end_transition" msgid="578791466048263129">"Добавить переход в конце видеоклипа"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"Добавить переход в начале"</string>
+    <string name="editor_add_end_transition" msgid="578791466048263129">"Добавить переход в конце"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Изменить переход"</string>
     <string name="editor_video_load" msgid="1982994058443715056">"Загрузка видеоклипа началась. Вы получите уведомление об окончании загрузки."</string>
     <string name="editor_image_load" msgid="4485265196685081793">"Загрузка изображения началась. Вы получите уведомление об окончании загрузки."</string>
