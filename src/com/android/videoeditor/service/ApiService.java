@@ -131,6 +131,7 @@ public class ApiService extends Service {
     private static final String PARAM_COUNT = "count";
     private static final String PARAM_TOKEN = "token";
     private static final String PARAM_INDICES = "indices";
+    private static final String PARAM_CANCELLED = "cancelled";
 
     // Operations
     private static final int OP_VIDEO_EDITOR_CREATE = 1;
@@ -3045,18 +3046,9 @@ public class ApiService extends Service {
             }
 
             case OP_VIDEO_EDITOR_EXPORT: {
-                if (ex != null) {
-                    if (finalize) {
-                        finalizeRequest(intent);
-                    }
-
-                    final String filename = intent.getStringExtra(PARAM_FILENAME);
-                    for (ApiServiceListener listener : mListeners) {
-                        listener.onVideoEditorExportComplete(projectPath, filename, ex);
-                    }
-                } else {
-                    // The request is still pending
-                }
+                // The finalizeRequest() call and listener callbacks are done in
+                // OP_VIDEO_EDITOR_EXPORT_STATUS intent handling (where we are
+                // called originalIntent).
                 break;
             }
 
@@ -3087,13 +3079,15 @@ public class ApiService extends Service {
                     final Exception exception =
                         (Exception)intent.getSerializableExtra(PARAM_EXCEPTION);
                     final VideoEditorProject videoProject = getProject(projectPath);
-                    if (videoProject != null && exception == null) {
+                    final boolean cancelled = intent.getBooleanExtra(PARAM_CANCELLED, false);
+                    if (!cancelled && videoProject != null && exception == null) {
                         final Uri uri = (Uri)intent.getParcelableExtra(PARAM_MOVIE_URI);
                         videoProject.addExportedMovieUri(uri);
                     }
 
                     for (ApiServiceListener listener : mListeners) {
-                        listener.onVideoEditorExportComplete(projectPath, filename, exception);
+                        listener.onVideoEditorExportComplete(
+                                projectPath, filename, exception, cancelled);
                     }
                 } else { // Progress
                     for (ApiServiceListener listener : mListeners) {
@@ -4168,6 +4162,7 @@ public class ApiService extends Service {
                         PARAM_PROJECT_PATH));
                 statusIntent.putExtra(PARAM_FILENAME, filename);
                 statusIntent.putExtra(PARAM_INTENT, intent);
+                Exception resultException = null;
 
                 try {
                     videoEditor.export(filename, height, bitrate, new ExportProgressListener() {
@@ -4186,28 +4181,25 @@ public class ApiService extends Service {
                         }
                     });
 
-                    // TODO: this is a quick fix to the problem that when export operation is
-                    // canceled by user, no further operations such as adding the video to the
-                    // media provider should proceed. The above export method should return a
-                    // boolean value to indicate whether the export op is successful so that we
-                    // can remove this flag.
+                    statusIntent.putExtra(PARAM_CANCELLED, mExportCancelled);
                     if (!mExportCancelled) {
-                        // Complete the request
-                        statusIntent.putExtra(PARAM_EXCEPTION, (Exception)null);
                         if (new File(filename).exists()) {
                             statusIntent.putExtra(PARAM_MOVIE_URI, exportToGallery(filename));
                         } else {
-                            throw new IllegalStateException("Export file does not exist: " + filename);
+                            resultException = new IllegalStateException("Export file does not exist: " + filename);
                         }
                         logv("Export complete for: " + filename);
                     } else {
                         logv("Export cancelled by user, file name: " + filename);
                     }
                 } catch (Exception ex) {
-                    statusIntent.putExtra(PARAM_EXCEPTION, ex);
                     logv("Export error for: " + filename);
                     ex.printStackTrace();
+                    resultException = ex;
                 }
+
+                // Complete the request
+                statusIntent.putExtra(PARAM_EXCEPTION, resultException);
                 mVideoThread.submit(statusIntent);
             }
         }.start();

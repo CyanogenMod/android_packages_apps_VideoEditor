@@ -234,7 +234,7 @@ public abstract class VideoEditorBaseActivity extends Activity {
 
         @Override
         public void onVideoEditorExportComplete(String projectPath, String filename,
-                Exception exception) {
+                Exception exception, boolean cancelled) {
             // Check if the VideoEditor is the one we are expecting
             if (!projectPath.equals(mProjectPath)) {
                 return;

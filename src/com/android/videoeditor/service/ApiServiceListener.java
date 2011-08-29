@@ -116,9 +116,10 @@ public class ApiServiceListener {
      * @param projectPath The project path
      * @param filename The name of the file to export
      * @param exception null if no exception has occurred (export succeeded)
+     * @param cancelled if the export is cancelled by the user
      */
     public void onVideoEditorExportComplete(String projectPath, String filename,
-            Exception exception) {}
+            Exception exception, boolean cancelled) {}
 
     /**
      * Export canceled callback
