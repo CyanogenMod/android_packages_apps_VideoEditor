@@ -31,10 +31,39 @@
         android:background="@drawable/surface_background">
         <com.android.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
-            android:layout_height="200dip"/>
+            android:layout_height="225dip"/>
         <ImageView android:id="@+id/overlay_layer"
             android:layout_width="0dip"
-            android:layout_height="200dip"/>
+            android:layout_height="225dip"/>
+        <LinearLayout android:id="@+id/playback_buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/editor_prev"
+                android:onClick="onClickHandler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_playback_ic_prev"
+                android:background="@drawable/background_selector"/>
+            <ImageButton android:id="@+id/editor_play"
+                android:onClick="onClickHandler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_playback_ic_play"
+                android:background="@drawable/background_selector"/>
+            <ImageButton android:id="@+id/editor_next"
+                android:onClick="onClickHandler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_playback_ic_next"
+                android:background="@drawable/background_selector"/>
+            <ImageButton android:id="@+id/editor_rewind"
+                android:visibility="gone"
+                android:onClick="onClickHandler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_playback_ic_rev"
+                android:background="@drawable/background_selector"/>
+        </LinearLayout>
     </FrameLayout>
 
     <RelativeLayout
@@ -52,43 +81,11 @@
             android:clickable="true"/>
     </RelativeLayout>
 
-    <LinearLayout android:id="@+id/playback_buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/video_frame_view">
-        <ImageButton android:id="@+id/editor_prev"
-            android:onClick="onClickHandler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_playback_ic_prev"
-            android:background="@drawable/background_selector"/>
-        <ImageButton android:id="@+id/editor_play"
-            android:onClick="onClickHandler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-10dip"
-            android:src="@drawable/btn_playback_ic_play"
-            android:background="@drawable/background_selector"/>
-        <ImageButton android:id="@+id/editor_next"
-            android:onClick="onClickHandler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_playback_ic_next"
-            android:background="@drawable/background_selector"/>
-        <ImageButton android:id="@+id/editor_rewind"
-            android:visibility="gone"
-            android:onClick="onClickHandler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_playback_ic_rev"
-            android:background="@drawable/background_selector"/>
-    </LinearLayout>
-
     <TextView android:id="@+id/editor_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-7dip"
         android:layout_marginRight="28dip"
-        android:layout_marginTop="7dip"
         android:layout_alignParentRight="true"
         android:layout_below="@id/video_frame_view"
         android:singleLine="true"
