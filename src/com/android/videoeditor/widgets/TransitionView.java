@@ -38,7 +38,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 /**
- * Transition view.
+ * Transition view. This class assumes transition is always put on a MediaLinearLayout and is
+ * wrapped with a timeline scroll view.
  */
 public class TransitionView extends ImageView {
     // Logging
@@ -50,6 +51,10 @@ public class TransitionView extends ImageView {
     private final Rect mGeneratingTransitionProgressDestRect;
     private final Paint mSeparatorPaint;
     private boolean mIsScrolling;
+    // Convenient handle to the parent timeline scroll view.
+    private TimelineHorizontalScrollView mScrollView;
+    // Convenient handle to the parent timeline linear layout.
+    private MediaLinearLayout mTimeline;
     private int mScrollX;
     private int mScreenWidth;
     private String mProjectPath;
@@ -141,18 +146,18 @@ public class TransitionView extends ImageView {
     @Override
     protected void onAttachedToWindow() {
         // Add the horizontal scroll view listener
-        final TimelineHorizontalScrollView scrollView =
-                (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
-        mScrollX = scrollView.getScrollX();
-        scrollView.addScrollListener(mScrollListener);
+        mScrollView = (TimelineHorizontalScrollView) getRootView().findViewById(
+                R.id.timeline_scroller);
+        mScrollView.addScrollListener(mScrollListener);
+        mScrollX = mScrollView.getScrollX();
+
+        mTimeline = (MediaLinearLayout) getRootView().findViewById(R.id.timeline_media);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         // Remove the horizontal scroll listener
-        final TimelineHorizontalScrollView scrollView =
-            (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
-        scrollView.removeScrollListener(mScrollListener);
+        mScrollView.removeScrollListener(mScrollListener);
 
         // Release the current set of bitmaps
         if (mBitmaps != null) {
@@ -247,7 +252,7 @@ public class TransitionView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // If the view is too small don't draw anything
+        // If the view is too small, don't draw anything.
         if (getWidth() <= getPaddingLeft() + getPaddingRight()) {
             return;
         }
@@ -286,6 +291,15 @@ public class TransitionView extends ImageView {
 
             canvas.drawLine(halfWidth, getPaddingTop(), halfWidth,
                     getHeight() - getPaddingBottom(), mSeparatorPaint);
+
+            // Dim myself if some view on the timeline is selected but not me
+            // by drawing a transparent black overlay.
+            if (!isSelected() && mTimeline.hasItemSelected()) {
+                final Paint paint = new Paint();
+                paint.setColor(Color.BLACK);
+                paint.setAlpha(192);
+                canvas.drawPaint(paint);
+            }
         } else if (mIsPlaying) { // Playing
         } else if (mIsScrolling) { // Scrolling
         } else { // Not scrolling and not playing

@@ -1,4 +1,5 @@
 /*
+
  * Copyright (C) 2011 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +24,8 @@ import com.android.videoeditor.R;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -41,7 +44,8 @@ import java.util.HashSet;
 import java.util.Map;
 
 /**
- * Media item preview view on the timeline.
+ * Media item preview view on the timeline. This class assumes the media item is always put on a
+ * MediaLinearLayout and is wrapped with a timeline scroll view.
  */
 public class MediaItemView extends View {
     private static final String TAG = "MediaItemView";
@@ -57,7 +61,6 @@ public class MediaItemView extends View {
     private final Rect mGeneratingEffectProgressDestRect;
 
     private boolean mIsScrolling;
-    private boolean mIsTrimming;
     private boolean mIsPlaying;
 
     // Progress of generation of the effect applied on this media item view.
@@ -71,6 +74,10 @@ public class MediaItemView extends View {
 
     private String mProjectPath;
     private MovieMediaItem mMediaItem;
+    // Convenient handle to the parent timeline scroll view.
+    private TimelineHorizontalScrollView mScrollView;
+    // Convenient handle to the parent timeline linear layout.
+    private MediaLinearLayout mTimeline;
     private ItemSimpleGestureListener mGestureListener;
     private int[] mLeftState, mRightState;
 
@@ -193,20 +200,20 @@ public class MediaItemView extends View {
 
     @Override
     protected void onAttachedToWindow() {
-        mMediaItem = (MovieMediaItem)getTag();
+        mMediaItem = (MovieMediaItem) getTag();
+
+        mScrollView = (TimelineHorizontalScrollView) getRootView().findViewById(
+                R.id.timeline_scroller);
+        mScrollView.addScrollListener(mScrollListener);
         // Add the horizontal scroll view listener
-        final TimelineHorizontalScrollView scrollView =
-                (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
-        mScrollX = scrollView.getScrollX();
-        scrollView.addScrollListener(mScrollListener);
+        mScrollX = mScrollView.getScrollX();
+
+        mTimeline = (MediaLinearLayout) getRootView().findViewById(R.id.timeline_media);
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        final TimelineHorizontalScrollView scrollView =
-                (TimelineHorizontalScrollView)((View)((View)getParent()).getParent()).getParent();
-        scrollView.removeScrollListener(mScrollListener);
-
+        mScrollView.removeScrollListener(mScrollListener);
         // Release the cached bitmaps
         releaseBitmapsAndClear();
     }
@@ -308,17 +315,6 @@ public class MediaItemView extends View {
     }
 
     /**
-     * A view enters or exits the trimming mode.
-     *
-     * @param trimming true if trimming
-     */
-    public void setTrimMode(boolean trimming) {
-        mIsTrimming = trimming;
-        // Redraw the control to hide the "Add transition" areas
-        invalidate();
-    }
-
-    /**
      * Resets the effect generation progress status.
      */
     public void resetGeneratingEffectProgress() {
@@ -411,10 +407,17 @@ public class MediaItemView extends View {
             // Draw the "Add transition" indicators
             if (isSelected()) {
                 drawAddTransitionIcons(canvas);
+            } else if (mTimeline.hasItemSelected()) {
+                // Dim myself if some view on the timeline is selected but not me
+                // by drawing a transparent black overlay.
+                final Paint paint = new Paint();
+                paint.setColor(Color.BLACK);
+                paint.setAlpha(192);
+                canvas.drawPaint(paint);
             }
 
             // Request thumbnails if things are not moving
-            boolean isBusy = mIsPlaying || mIsTrimming || mIsScrolling;
+            boolean isBusy = mIsPlaying || mTimeline.isTrimming() || mIsScrolling;
             if (!isBusy && !mWantThumbnails.isEmpty()) {
                 requestThumbnails();
             }
@@ -499,7 +502,7 @@ public class MediaItemView extends View {
      *      "add transition" icons on both sides; false otherwise.
      */
     private boolean hasSpaceForAddTransitionIcons() {
-        if (mIsTrimming) {
+        if (mTimeline.isTrimming()) {
             return false;
         }
 
