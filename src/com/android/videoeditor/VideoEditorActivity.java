@@ -91,6 +91,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private static final String STATE_INSERT_AFTER_MEDIA_ITEM_ID = "insert_after_media_item_id";
     private static final String STATE_PLAYING = "playing";
     private static final String STATE_CAPTURE_URI = "capture_uri";
+    private static final String STATE_SELECTED_POS_ID = "selected_pos_id";
 
     // Dialog ids
     private static final int DIALOG_DELETE_PROJECT_ID = 1;
@@ -151,6 +152,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private OverlayLinearLayout mOverlayLayout;
     private AudioTrackLinearLayout mAudioTrackLayout;
     private MediaLinearLayout mMediaLayout;
+    private int mMediaLayoutSelectedPos;
     private PlayheadView mPlayheadView;
     private TextView mTimeView;
     private ImageButton mPreviewPlayButton;
@@ -373,8 +375,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     STATE_INSERT_AFTER_MEDIA_ITEM_ID);
             mRestartPreview = savedInstanceState.getBoolean(STATE_PLAYING);
             mCaptureMediaUri = savedInstanceState.getParcelable(STATE_CAPTURE_URI);
+            mMediaLayoutSelectedPos = savedInstanceState.getInt(STATE_SELECTED_POS_ID, -1);
         } else {
             mRestartPreview = false;
+            mMediaLayoutSelectedPos = -1;
         }
 
         // Compute the activity width
@@ -451,6 +455,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         outState.putString(STATE_INSERT_AFTER_MEDIA_ITEM_ID, mInsertMediaItemAfterMediaItemId);
         outState.putBoolean(STATE_PLAYING, isPreviewPlaying());
         outState.putParcelable(STATE_CAPTURE_URI, mCaptureMediaUri);
+        outState.putInt(STATE_SELECTED_POS_ID, mMediaLayout.getSelectedViewPos());
     }
 
     @Override
@@ -1427,6 +1432,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             // Add the media items to the media item layout
             mMediaLayout.addMediaItems(mProject.getMediaItems());
+            mMediaLayout.setSelectedView(mMediaLayoutSelectedPos);
 
             // Add the media items to the overlay layout
             mOverlayLayout.addMediaItems(mProject.getMediaItems());
