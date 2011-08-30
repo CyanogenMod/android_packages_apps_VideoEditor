@@ -97,6 +97,9 @@
     <string name="editor_mute">Mute</string>
     <!-- Unmute the audio track. -->
     <string name="editor_unmute">Unmute</string>
+    <!-- Text displayed in menu for ducking (lower background music volume
+         if there is sound in foreground) [CHAR LIMIT = 20]-->
+    <string name="audio_track_menu_duck">Ducking</string>
 
     <!-- Project picker -->
     <!-- Text displayed in the project picker new project option [CHAR_LIMIT=18]-->
