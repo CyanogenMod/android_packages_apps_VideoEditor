@@ -31,11 +31,12 @@
         android:background="@drawable/surface_background">
         <com.android.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
-            android:layout_height="210dip"/>
+            android:layout_height="200dip"/>
         <ImageView android:id="@+id/overlay_layer"
             android:layout_width="0dip"
-            android:layout_height="210dip"/>
+            android:layout_height="200dip"/>
         <LinearLayout android:id="@+id/playback_buttons"
+            android:layout_gravity="bottom|center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton android:id="@+id/editor_prev"

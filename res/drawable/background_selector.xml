@@ -19,6 +19,5 @@
         android:drawable="@drawable/list_pressed_holo_dark" />
     <item android:state_selected="true"
         android:drawable="@drawable/list_selected_holo_dark" />
-    <!-- default background -->
-    <item android:drawable="@drawable/list_selector_background_default" />
+    <!-- no default background -->
 </selector>
