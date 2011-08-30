@@ -594,6 +594,26 @@ public class MediaLinearLayout extends LinearLayout {
     }
 
     /**
+     * Returns selected view's position on the timeline; -1 if none.
+     */
+    public int getSelectedViewPos() {
+        return indexOfChild(mSelectedView);
+    }
+
+    /**
+     * Selects the view at the specified position; null if it does not exist.
+     */
+    public void setSelectedView(int pos) {
+        if (pos < 0) {
+            return;
+        }
+        mSelectedView = getChildAt(pos);
+        if (mSelectedView != null) {
+            select(mSelectedView);
+        }
+    }
+
+    /**
      * Clears existing media or transition items and adds all given media items.
      *
      * @param mediaItems The list of media items
