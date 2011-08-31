@@ -31,7 +31,7 @@
 
     <dimen name="media_layout_padding">5dip</dimen>
     <dimen name="add_audio_track_button_width">19dip</dimen>
-    <dimen name="handle_width">12dip</dimen>
+    <dimen name="handle_width">36dip</dimen>
 
     <dimen name="timeline_separator_height">2dip</dimen>
 
@@ -41,7 +41,7 @@
     <dimen name="playhead_margin_bottom">22dip</dimen>
     <dimen name="playhead_tick_height">3dip</dimen>
 
-    <dimen name="timelime_item_vertical_padding">1dip</dimen>
+    <dimen name="timelime_item_vertical_padding">3dip</dimen>
     <dimen name="timelime_item_horizontal_padding">3dip</dimen>
 
     <dimen name="timelime_transition_vertical_inset">12dip</dimen>

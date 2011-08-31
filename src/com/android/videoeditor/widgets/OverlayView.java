@@ -88,8 +88,8 @@ public class OverlayView extends ImageView {
 
         // Prepare the handle arrows
         final Resources resources = getResources();
-        mArrowLeft = resources.getDrawable(R.drawable.handle_left_arrow);
-        mArrowRight = resources.getDrawable(R.drawable.handle_right_arrow);
+        mArrowLeft = resources.getDrawable(R.drawable.ic_drag_clip_left);
+        mArrowRight = resources.getDrawable(R.drawable.ic_drag_clip_right);
 
         mState = STATE_STUB;
     }

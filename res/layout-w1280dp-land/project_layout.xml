@@ -82,7 +82,7 @@
         android:layout_marginRight="40dip"
         android:layout_below="@id/playback_buttons"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="-10dip"
         android:singleLine="true"
         android:text="@string/editor_zero_time_stamp"
         android:textSize="24sp"
@@ -101,9 +101,9 @@
         android:background="@drawable/surface_background">
         <com.android.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
-            android:layout_height="400dip"/>
+            android:layout_height="370dip"/>
         <ImageView android:id="@+id/overlay_layer"
             android:layout_width="0dip"
-            android:layout_height="400dip"/>
+            android:layout_height="370dip"/>
     </FrameLayout>
 </com.android.videoeditor.widgets.EditorRelativeLayout>

@@ -31,8 +31,8 @@ import android.widget.ImageView;
  */
 public class HandleView extends ImageView {
     // Instance variables
-    private final Drawable mArrowLeft;
-    private final Drawable mArrowRight;
+    private final Drawable mIconDragClipLeft;
+    private final Drawable mIconDragClipRight;
     private MoveListener mListener;
     private float mStartMoveX, mLastMoveX;
     private boolean mMoveStarted;
@@ -69,28 +69,19 @@ public class HandleView extends ImageView {
         public void onMoveEnd(HandleView view, int left, int delta);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public HandleView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         // Prepare the handle arrows
         final Resources resources = getResources();
-        mArrowLeft = resources.getDrawable(R.drawable.handle_left_arrow);
-        mArrowRight = resources.getDrawable(R.drawable.handle_right_arrow);
+        mIconDragClipLeft = resources.getDrawable(R.drawable.ic_drag_clip_left);
+        mIconDragClipRight = resources.getDrawable(R.drawable.ic_drag_clip_right);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public HandleView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public HandleView(Context context) {
         this(context, null, 0);
     }
@@ -129,9 +120,6 @@ public class HandleView extends ImageView {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         super.onTouchEvent(ev);
@@ -209,23 +197,26 @@ public class HandleView extends ImageView {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        final int top = (getHeight() - mIconDragClipLeft.getIntrinsicHeight()) / 2;
         if (!mBeginLimitReached) {
-            mArrowLeft.setBounds(0, 0, mArrowLeft.getIntrinsicWidth(),
-                    mArrowLeft.getIntrinsicHeight());
-            mArrowLeft.draw(canvas);
+            mIconDragClipLeft.setBounds(0,
+                    top,
+                    mIconDragClipLeft.getIntrinsicWidth(),
+                    top + mIconDragClipLeft.getIntrinsicHeight());
+            mIconDragClipLeft.draw(canvas);
         }
 
         if (!mEndLimitReached) {
-            mArrowRight.setBounds(getWidth() - mArrowRight.getIntrinsicWidth(), 0, getWidth(),
-                    mArrowRight.getIntrinsicHeight());
-            mArrowRight.draw(canvas);
+            mIconDragClipRight.setBounds(
+                    mIconDragClipRight.getIntrinsicWidth(),
+                    top,
+                    2 * mIconDragClipRight.getIntrinsicWidth(),
+                    top + mIconDragClipRight.getIntrinsicHeight());
+            mIconDragClipRight.draw(canvas);
         }
     }
 }
