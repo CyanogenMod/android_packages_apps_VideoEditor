@@ -21,28 +21,28 @@
     <dimen name="project_picker_item_width">325dip</dimen>
     <dimen name="project_picker_item_height">325dip</dimen>
 
-    <dimen name="media_layout_height">192dip</dimen>
+    <dimen name="media_layout_height">128dip</dimen>
     <dimen name="timeline_add_media_button_height">48dip</dimen>
-    <dimen name="timeline_add_media_button_top_padding">72dip</dimen>
-    <dimen name="overlay_layout_height">96dip</dimen>
+    <dimen name="timeline_add_media_button_top_padding">24dip</dimen>
+    <dimen name="overlay_layout_height">64dip</dimen>
     <dimen name="audio_layout_height">64dip</dimen>
     <dimen name="playhead_layout_height">32dip</dimen>
     <dimen name="playhead_layout_text_size">18sp</dimen>
 
-    <dimen name="media_layout_padding">5dip</dimen>
+    <dimen name="media_layout_padding">32dip</dimen>
     <dimen name="add_audio_track_button_width">56dip</dimen>
     <dimen name="handle_width">38dip</dimen>
 
     <dimen name="timeline_separator_height">3dip</dimen>
 
-    <dimen name="playhead_margin_top">2dip</dimen>
+    <dimen name="playhead_margin_top">22dip</dimen>
     <dimen name="playhead_margin_top_ok">22dip</dimen>
     <dimen name="playhead_margin_top_not_ok">22dip</dimen>
-    <dimen name="playhead_margin_bottom">24dip</dimen>
+    <dimen name="playhead_margin_bottom">22dip</dimen>
     <dimen name="playhead_tick_height">5dip</dimen>
 
-    <dimen name="timelime_item_vertical_padding">3dip</dimen>
-    <dimen name="timelime_item_horizontal_padding">3dip</dimen>
+    <dimen name="timelime_item_vertical_padding">2dip</dimen>
+    <dimen name="timelime_item_horizontal_padding">4dip</dimen>
 
     <dimen name="timelime_transition_vertical_inset">12dip</dimen>
 </resources>

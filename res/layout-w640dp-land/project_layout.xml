@@ -23,8 +23,8 @@
     <!-- Don't show zoom control for small screens. -->
     <RelativeLayout
         android:visibility="gone"
-        android:layout_width="230dip"
-        android:layout_height="230dip"
+        android:layout_width="250dip"
+        android:layout_height="250dip"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="33dip"
         android:layout_marginLeft="-50dip"
@@ -38,13 +38,13 @@
     <LinearLayout android:id="@+id/playback_buttons"
         android:layout_width="200dip"
         android:layout_height="200dip"
-        android:layout_marginLeft="30dip"
-        android:layout_marginTop="115dip">
+        android:layout_marginTop="110dip">
          <ImageButton android:id="@+id/editor_prev"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dip"
+            android:layout_marginTop="8dip"
+            android:layout_marginLeft="10dip"
             android:src="@drawable/btn_playback_ic_prev"
             android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_play"
@@ -57,7 +57,8 @@
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
+            android:layout_marginLeft="0dip"
+            android:layout_marginTop="8dip"
             android:src="@drawable/btn_playback_ic_next"
             android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_rewind"
@@ -94,9 +95,9 @@
         android:background="@drawable/surface_background">
         <com.android.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
-            android:layout_height="148dip"/>
+            android:layout_height="165dip"/>
         <ImageView android:id="@+id/overlay_layer"
             android:layout_width="0dip"
-            android:layout_height="148dip"/>
+            android:layout_height="165dip"/>
     </FrameLayout>
 </com.android.videoeditor.widgets.EditorRelativeLayout>

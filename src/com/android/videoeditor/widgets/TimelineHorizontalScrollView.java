@@ -100,7 +100,7 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
         mPlayheadMarginTopNotOk = (int)resources.getDimension(R.dimen.playhead_margin_top_not_ok);
 
         // Prepare the playhead drawable
-        mNormalPlayheadDrawable = resources.getDrawable(R.drawable.ic_playhead);
+        mNormalPlayheadDrawable = resources.getDrawable(R.drawable.playhead);
         mMoveOkPlayheadDrawable = resources.getDrawable(R.drawable.playhead_move_ok);
         mMoveNotOkPlayheadDrawable = resources.getDrawable(R.drawable.playhead_move_not_ok);
     }
