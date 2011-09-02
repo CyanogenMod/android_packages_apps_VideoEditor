@@ -51,6 +51,9 @@ public class ProjectPickerAdapter extends BaseAdapter {
     private List<VideoEditorProject> mProjects;
     private int mItemWidth;
     private int mItemHeight;
+    private int mOverlayHeight;
+    private int mOverlayVerticalInset;
+    private int mOverlayHorizontalInset;
     private LruCache<String, Bitmap> mPreviewBitmapCache;
 
     public ProjectPickerAdapter(Context context, LayoutInflater inflater,
@@ -61,7 +64,12 @@ public class ProjectPickerAdapter extends BaseAdapter {
         mProjects = projects;
         mItemWidth = (int) mResources.getDimension(R.dimen.project_picker_item_width);
         mItemHeight = (int) mResources.getDimension(R.dimen.project_picker_item_height);
-
+        mOverlayHeight = (int) mResources.getDimension(
+                R.dimen.project_picker_item_overlay_height);
+        mOverlayVerticalInset = (int) mResources.getDimension(
+                R.dimen.project_picker_item_overlay_vertical_inset);
+        mOverlayHorizontalInset = (int) mResources.getDimension(
+                R.dimen.project_picker_item_overlay_horizontal_inset);
         // Limit the cache size to 15 thumbnails.
         mPreviewBitmapCache = new LruCache<String, Bitmap>(15);
     }
@@ -79,8 +87,8 @@ public class ProjectPickerAdapter extends BaseAdapter {
      * display.
      *
      * @param projectPath The project path of the to-be-removed project
-     * @return {code true} if the project is successfully removed,
-     *      {code false} if no removal happened
+     * @return {@code true} if the project is successfully removed,
+     *      {@code false} if no removal happened
      */
     public boolean remove(String projectPath) {
         for (VideoEditorProject project : mProjects) {
@@ -124,34 +132,63 @@ public class ProjectPickerAdapter extends BaseAdapter {
         View v = mInflater.inflate(R.layout.project_picker_item, null);
         ImageView iv = (ImageView) v.findViewById(R.id.thumbnail);
         Bitmap thumbnail;
-        TextView titleView = (TextView) v.findViewById(R.id.title);
-        TextView durationView = (TextView) v.findViewById(R.id.duration);
+        String title;
+        String duration;
         if (position == mProjects.size()) {
+            title = mContext.getString(R.string.projects_new_project);
+            duration = "";
             thumbnail = renderNewProjectThumbnail();
-            titleView.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
-            titleView.setText(mContext.getString(R.string.projects_new_project));
-            durationView.setText("");
         } else {
             VideoEditorProject project = mProjects.get(position);
-            thumbnail = getThumbnail(project.getPath(), iv);
-            titleView.setText(project.getName());
-            durationView.setText(millisecondsToTimeString(project.getProjectDuration()));
+            title = project.getName();
+            duration = millisecondsToTimeString(project.getProjectDuration());
+            thumbnail = getThumbnail(project.getPath(), iv, title, duration);
         }
 
         if (thumbnail != null) {
+            drawBottomOverlay(thumbnail, title, duration);
             iv.setImageBitmap(thumbnail);
         }
 
         return v;
     }
 
-    private Bitmap getThumbnail(String projectPath, ImageView imageView) {
+    /**
+     * Draws transparent black bottom overlay with movie title and duration on the bitmap.
+     */
+    public void drawBottomOverlay(Bitmap bitmap, String title, String duration) {
+        // Draw overlay at the bottom of the canvas.
+        final Canvas canvas = new Canvas(bitmap);
+        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(Color.BLACK);
+        paint.setAlpha(128);
+        final int left = 0, top = bitmap.getHeight() - mOverlayHeight,
+                right = bitmap.getWidth(), bottom = bitmap.getHeight();
+        canvas.drawRect(left, top, right, bottom, paint);
+
+        // Draw movie title at the left of the overlay.
+        paint.setColor(Color.WHITE);
+        paint.setTextSize((int) mResources.getDimension(
+                R.dimen.project_picker_item_font_size));
+        canvas.drawText(title, mOverlayHorizontalInset,
+                bitmap.getHeight() - mOverlayHeight + mOverlayVerticalInset,
+                paint);
+
+        // Draw movie duration at the right of the overlay.
+        canvas.drawText(duration,
+                bitmap.getWidth() - paint.measureText(duration) - mOverlayHorizontalInset,
+                bitmap.getHeight() - mOverlayHeight + mOverlayVerticalInset,
+                paint);
+    }
+
+    private Bitmap getThumbnail(String projectPath, ImageView imageView, String title,
+            String duration) {
         Bitmap previewBitmap = mPreviewBitmapCache.get(projectPath);
         if (previewBitmap == null) {
             // Cache miss: asynchronously load bitmap to avoid scroll stuttering
             // in the project picker.
-            new LoadPreviewBitmapTask(projectPath, imageView, mItemWidth, mItemHeight,
-                    mPreviewBitmapCache).execute();
+            new LoadPreviewBitmapTask(this, projectPath, imageView, mItemWidth, mItemHeight,
+                    title, duration, mPreviewBitmapCache).execute();
         } else {
             return previewBitmap;
         }
@@ -164,13 +201,7 @@ public class ProjectPickerAdapter extends BaseAdapter {
                 Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
         final Paint paint = new Paint();
-
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Style.STROKE);
-        // Hairline mode, 1 pixel wide.
-        paint.setStrokeWidth(0);
-
-        canvas.drawRect(0, 0, mItemWidth-1, mItemHeight-1, paint);
+        canvas.drawRect(0, 0, mItemWidth, mItemHeight, paint);
 
         paint.setTextSize(18.0f);
         paint.setAlpha(255);
@@ -196,19 +227,27 @@ public class ProjectPickerAdapter extends BaseAdapter {
  * Worker that loads preview bitmap for a project,
  */
 class LoadPreviewBitmapTask extends AsyncTask<Void, Void, Bitmap> {
+    // Handle to the adapter that initiates this async task.
+    private ProjectPickerAdapter mContextAdapter;
     private String mProjectPath;
     // Handle to the image view we should update when the preview bitmap is loaded.
     private ImageView mImageView;
     private int mWidth;
     private int mHeight;
+    private String mTitle;
+    private String mDuration;
     private LruCache<String, Bitmap> mPreviewBitmapCache;
 
-    public LoadPreviewBitmapTask(String projectPath, ImageView imageView,
-            int width, int height, LruCache<String, Bitmap> previewBitmapCache) {
+    public LoadPreviewBitmapTask(ProjectPickerAdapter contextAdapter, String projectPath,
+            ImageView imageView, int width, int height, String title, String duration,
+            LruCache<String, Bitmap> previewBitmapCache) {
+        mContextAdapter = contextAdapter;
         mProjectPath = projectPath;
         mImageView = imageView;
         mWidth = width;
         mHeight = height;
+        mTitle = title;
+        mDuration = duration;
         mPreviewBitmapCache = previewBitmapCache;
     }
 
@@ -223,9 +262,9 @@ class LoadPreviewBitmapTask extends AsyncTask<Void, Void, Bitmap> {
         try {
             final Bitmap previewBitmap = ImageUtils.scaleImage(
                     thumbnail.getAbsolutePath(),
-                    mWidth - 10,
-                    mHeight - 10,
-                    ImageUtils.MATCH_SMALLER_DIMENSION);
+                    mWidth,
+                    mHeight,
+                    ImageUtils.MATCH_LARGER_DIMENSION);
             if (previewBitmap != null) {
                 final Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight,
                         Bitmap.Config.ARGB_8888);
@@ -250,6 +289,7 @@ class LoadPreviewBitmapTask extends AsyncTask<Void, Void, Bitmap> {
         // If we successfully load the preview bitmap, update the image view.
         if (result != null) {
             mPreviewBitmapCache.put(mProjectPath, result);
+            mContextAdapter.drawBottomOverlay(result, mTitle, mDuration);
             mImageView.setImageBitmap(result);
         }
     }

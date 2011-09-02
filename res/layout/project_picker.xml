@@ -22,12 +22,9 @@
         android:id="@+id/projects"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="15dip"
+        android:paddingTop="17dip"
         android:numColumns="auto_fit"
         android:columnWidth="@dimen/project_picker_column_width"
         android:stretchMode="spacingWidthUniform"
-        android:drawSelectorOnTop="false"
-        android:cacheColorHint="#000000"
-        android:background="#000000"
-        android:listSelector="#000000"/>
+        android:drawSelectorOnTop="false"/>
 </RelativeLayout>
