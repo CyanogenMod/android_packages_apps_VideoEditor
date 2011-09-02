@@ -19,7 +19,7 @@
     <string name="editor_capture_image" msgid="7243706032936431456">"Сделать снимок"</string>
     <string name="editor_delete_project_question" msgid="1453862802788814277">"Удалить этот проект?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
-    <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Удалить эту звуковую дорожку?"</string>
+    <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Удалить этот трек?"</string>
     <string name="editor_title_menu_header" msgid="8042548112022118522">"Заголовок"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"Добавить название"</string>
     <string name="editor_edit_overlay" msgid="6425579635817051901">"Изменить заголовок"</string>
@@ -49,6 +49,8 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Не повторять"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Без звука"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Со звуком"</string>
+    <!-- no translation found for audio_track_menu_duck (3521940598902152451) -->
+    <skip />
     <string name="projects_new_project" msgid="7515160975627001972">"Создание проекта"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Название проекта"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11x9"</string>
@@ -82,9 +84,9 @@
     <string name="editor_set_user_attributes_overlay_error" msgid="2738824949937821156">"Невозможно установить параметры наложения."</string>
     <string name="editor_add_effect_error" msgid="3887316140333037866">"Невозможно добавить эффект."</string>
     <string name="editor_remove_effect_error" msgid="3999717994912943400">"Невозможно удалить эффект."</string>
-    <string name="editor_add_audio_track_error" msgid="6946541201857209876">"Невозможно добавить звуковую дорожку"</string>
-    <string name="editor_remove_audio_track_error" msgid="3432665721794329909">"Невозможно удалить звуковую дорожку."</string>
-    <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"Невозможно обрезать звуковую дорожку."</string>
+    <string name="editor_add_audio_track_error" msgid="6946541201857209876">"Невозможно добавить трек."</string>
+    <string name="editor_remove_audio_track_error" msgid="3432665721794329909">"Невозможно удалить трек."</string>
+    <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"Невозможно обрезать трек."</string>
     <string name="editor_transition_too_short" msgid="3956089619553629988">"Невозможно добавить переход. Переход слишком короткий."</string>
     <string name="editor_media_load_error" msgid="2421624042826573589">"Невозможно загрузить файл."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Экспорт"</string>

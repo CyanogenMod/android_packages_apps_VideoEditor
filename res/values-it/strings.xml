@@ -49,6 +49,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Non riprodurre in loop"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Disattiva audio"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Attiva audio"</string>
+    <string name="audio_track_menu_duck" msgid="3521940598902152451">"attenuazione autom."</string>
     <string name="projects_new_project" msgid="7515160975627001972">"Crea nuovo progetto"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Nome progetto"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
