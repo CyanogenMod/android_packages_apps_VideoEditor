@@ -38,7 +38,8 @@
     <LinearLayout android:id="@+id/playback_buttons"
         android:layout_width="200dip"
         android:layout_height="200dip"
-        android:layout_marginTop="75dip">
+        android:layout_marginTop="75dip"
+        android:layout_marginRight="5dip">
          <ImageButton android:id="@+id/editor_prev"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
@@ -88,7 +89,7 @@
     <FrameLayout android:id="@+id/video_frame_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="160dip"
+        android:layout_marginLeft="150dip"
         android:layout_alignParentTop="true"
         android:padding="1dip"
         android:background="@drawable/surface_background">
