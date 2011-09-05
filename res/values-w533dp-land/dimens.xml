@@ -16,10 +16,10 @@
 -->
 
 <resources>
-    <dimen name="project_picker_column_width">150dip</dimen>
-    <dimen name="project_picker_item_container_width">148dip</dimen>
-    <dimen name="project_picker_item_width">130dip</dimen>
-    <dimen name="project_picker_item_height">130dip</dimen>
+    <dimen name="project_picker_column_width">240dip</dimen>
+    <dimen name="project_picker_item_container_width">240dip</dimen>
+    <dimen name="project_picker_item_width">240dip</dimen>
+    <dimen name="project_picker_item_height">120dip</dimen>
 
     <dimen name="media_layout_height">40dip</dimen>
     <dimen name="timeline_add_media_button_height">15dip</dimen>
