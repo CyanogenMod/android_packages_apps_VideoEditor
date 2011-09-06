@@ -453,7 +453,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         super.onSaveInstanceState(outState);
 
         outState.putString(STATE_INSERT_AFTER_MEDIA_ITEM_ID, mInsertMediaItemAfterMediaItemId);
-        outState.putBoolean(STATE_PLAYING, isPreviewPlaying());
+        outState.putBoolean(STATE_PLAYING, isPreviewPlaying() || mRestartPreview);
         outState.putParcelable(STATE_CAPTURE_URI, mCaptureMediaUri);
         outState.putInt(STATE_SELECTED_POS_ID, mMediaLayout.getSelectedViewPos());
     }
@@ -1874,7 +1874,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         // This exception may occur when trying to play frames
                         // at the end of the timeline
                         // (e.g. when fromMs == clip duration)
-                        logd("Cannot start preview at: " + fromMs + "\n" + ex);
+                        Log.w(TAG, "Cannot start preview at: " + fromMs + "\n" + ex);
 
                         mMainHandler.post(new Runnable() {
                             @Override
@@ -1939,12 +1939,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                     mMainHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (isFinishing() || isChangingConfigurations()) {
-                                // The activity is shutting down. Force stopping now.
-                                logd("stopPreviewPlayback: Activity is shutting down");
-                                mPreviewState = PREVIEW_STATE_STARTED;
-                                previewStopped(true);
-                            } else if (mPreviewState == PREVIEW_STATE_STARTED) {
+                            if (mPreviewState == PREVIEW_STATE_STARTED) {
                                 logd("stopPreviewPlayback: Now PREVIEW_STATE_STARTED");
                                 previewStopped(false);
                             } else if (mPreviewState == PREVIEW_STATE_STOPPING) {
@@ -2062,13 +2057,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             mThreadHandler = new Handler();
 
             // Ensure that the queued items are processed
-            mMainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    // Start processing the queue of runnables
-                    mThreadHandler.post(mProcessQueueRunnable);
-                }
-            });
+            mThreadHandler.post(mProcessQueueRunnable);
 
             // Run the loop
             Looper.loop();
