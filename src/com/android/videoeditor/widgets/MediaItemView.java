@@ -55,6 +55,12 @@ public class MediaItemView extends View {
     private static Drawable sEmptyFrameDrawable;
     private static ThumbnailCache sThumbnailCache;
 
+    // Because MediaItemView may be recreated for the same MediaItem (it happens
+    // when the device orientation is changed), we use a globally unique
+    // generation counter to reject thumbnail results (passed to setBitmap())
+    // requested by a previous incarnation of MediaItemView.
+    private static int sGenerationCounter;
+
     // Instance variables
     private final GestureDetector mGestureDetector;
     private final ScrollViewListener mScrollListener;
@@ -144,6 +150,9 @@ public class MediaItemView extends View {
 
         // Initialize the set of indices we are waiting
         mPending = new HashSet<Integer>();
+
+        // Initialize the generation number
+        mGeneration = sGenerationCounter++;
     }
 
     private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -582,7 +591,7 @@ public class MediaItemView extends View {
     private void releaseBitmapsAndClear() {
         sThumbnailCache.clearForMediaItemId(mMediaItem.getId());
         mPending.clear();
-        mGeneration++;
+        mGeneration = sGenerationCounter++;
     }
 }
 
