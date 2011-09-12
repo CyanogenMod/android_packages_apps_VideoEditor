@@ -83,8 +83,7 @@
     <skip />
     <!-- no translation found for editor_unmute (905024676961016538) -->
     <skip />
-    <!-- no translation found for audio_track_menu_duck (3521940598902152451) -->
-    <skip />
+    <string name="audio_track_menu_duck" msgid="3521940598902152451">"i-Ducking"</string>
     <!-- no translation found for projects_new_project (7515160975627001972) -->
     <skip />
     <!-- no translation found for projects_project_name (9077511317849923976) -->

@@ -49,8 +49,7 @@
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Να μην πραγματοποιείται επανάληψη"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Σίγαση"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Κατάργηση σίγασης"</string>
-    <!-- no translation found for audio_track_menu_duck (3521940598902152451) -->
-    <skip />
+    <string name="audio_track_menu_duck" msgid="3521940598902152451">"Μείωση"</string>
     <string name="projects_new_project" msgid="7515160975627001972">"Δημιουργία νέου έργου"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Όνομα έργου"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
