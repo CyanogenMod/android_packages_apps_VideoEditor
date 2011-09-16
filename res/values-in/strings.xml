@@ -47,7 +47,7 @@
     <string name="editor_transition_title" msgid="4340622816798792302">"Transisi"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Kitaran"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Jangan kitari"</string>
-    <string name="editor_mute" msgid="4901844675777155179">"Bisukan"</string>
+    <string name="editor_mute" msgid="4901844675777155179">"Bungkam"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Suarakan"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"Pengecilan suara"</string>
     <string name="projects_new_project" msgid="7515160975627001972">"Buat Proyek Baru"</string>
