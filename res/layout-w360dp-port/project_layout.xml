@@ -37,7 +37,9 @@
             android:layout_height="195dip"/>
         <LinearLayout android:id="@+id/playback_buttons"
             android:layout_gravity="bottom|center"
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/overlay_background_1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageButton android:id="@+id/editor_prev"
                 android:onClick="onClickHandler"
