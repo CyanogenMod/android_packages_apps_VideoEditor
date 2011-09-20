@@ -78,6 +78,7 @@ public class ProjectPickerAdapter extends BaseAdapter {
      * Clears project list and update display.
      */
     public void clear() {
+        mPreviewBitmapCache.evictAll();
         mProjects.clear();
         notifyDataSetChanged();
     }
