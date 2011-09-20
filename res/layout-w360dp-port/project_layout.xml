@@ -78,8 +78,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@id/video_frame_view"
         android:layout_marginTop="21dip"
-        android:layout_marginLeft="-42dip"
-        android:background="@drawable/buttons_background_zoom">
+        android:layout_marginLeft="-42dip">
         <com.android.videoeditor.widgets.ZoomControl android:id="@+id/editor_zoom"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

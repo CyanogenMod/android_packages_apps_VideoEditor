@@ -160,9 +160,7 @@ public class ProjectsActivity extends NoSearchActivity {
     public void onPause() {
         super.onPause();
         ApiService.unregisterListener(mProjectsLoadedListener);
-        if (mAdapter != null) {
-            mAdapter.clear();
-        }
+        mAdapter = null;
         mGridView.setAdapter(null);
     }
 
