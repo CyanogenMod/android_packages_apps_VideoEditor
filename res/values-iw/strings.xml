@@ -60,7 +60,7 @@
     <string name="editor_storage_not_available" msgid="1766787433930459119">"לא ניתן ליצור את הפרויקט. האחסון אינו נגיש."</string>
     <string name="editor_create_error" msgid="4400962470820741140">"אירעה שגיאה. לא ניתן ליצור את הפרויקט."</string>
     <string name="editor_load_error" msgid="6187178948889981589">"אירעה שגיאה. לא ניתן לטעון את הפרויקט. האם ברצונך למחוק את הפרויקט?"</string>
-    <string name="editor_aspect_ratio_error" msgid="7490797134786829807">"לא ניתן לשנות את יחס הגובה-רוחב."</string>
+    <string name="editor_aspect_ratio_error" msgid="7490797134786829807">"לא ניתן לשנות את היחס של גובה-רוחב."</string>
     <string name="editor_apply_theme_error" msgid="4099539447056163679">"לא ניתן ליישם את העיצוב."</string>
     <string name="editor_export_error" msgid="4936990440394275855">"אירעה שגיאה. לא ניתן לייצא את הסרט."</string>
     <string name="editor_saved_error" msgid="9164923264525454828">"לא ניתן לשמור את הפרויקט."</string>
@@ -94,10 +94,10 @@
     <string name="export_dialog_movie_quality_low" msgid="5453423100969821309">"נמוכה"</string>
     <string name="export_dialog_movie_quality_medium" msgid="4907951890148318364">"בינונית"</string>
     <string name="export_dialog_movie_quality_high" msgid="4622241978022000159">"גבוהה"</string>
-    <string name="pan_zoom_title" msgid="5962535722026848255">"אפקט מבט פנורמי ושינוי גודל תצוגה"</string>
+    <string name="pan_zoom_title" msgid="5962535722026848255">"אפקט של הזזה ושינוי גודל תצוגה"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"התחל"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"סיום"</string>
-    <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"לא ניתן להחיל על התמונה הזו את אפקט מבט פנורמי ושינוי גודל תצוגה. התמונה קטנה מדי."</string>
+    <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"לא ניתן להחיל על התמונה הזו את האפקט של הזזה ושינוי גודל תצוגה. התמונה קטנה מדי."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"נסיעות"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"הטיול שלי בקליפורניה"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"סן פרנסיסקו"</string>
@@ -120,7 +120,7 @@
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"כתובית"</string>
     <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"שנה תבנית"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"אפקטים"</string>
-    <string name="effect_pan_zoom" msgid="569977803331838206">"אפקט מבט פנורמי ושינוי גודל תצוגה"</string>
+    <string name="effect_pan_zoom" msgid="569977803331838206">"אפקט של הזזה ושינוי גודל תצוגה"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"אפקט שינוי גוון הדרגתי (Gradient)"</string>
     <string name="effect_sepia" msgid="674793199333159952">"אפקט חום (ספיה)"</string>
     <string name="effect_negative" msgid="4266435358235859136">"אפקט שלילי"</string>
