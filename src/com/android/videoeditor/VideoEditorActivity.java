@@ -430,6 +430,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public void onPause() {
         super.onPause();
 
+        // Stop the preview now (we will stop it in surfaceDestroyed(), but
+        // that may be too late for releasing resources to other activities)
+        stopPreviewThread();
+
         // Dismiss the export progress dialog. If the export will still be pending
         // when we return to this activity, we will display this dialog again.
         if (mExportProgressDialog != null) {
@@ -1166,8 +1170,11 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         logd("surfaceDestroyed");
+        stopPreviewThread();
+    }
 
-        // Stop the preview playback if pending and quit the preview thread
+    // Stop the preview playback if pending and quit the preview thread
+    private void stopPreviewThread() {
         if (mPreviewThread != null) {
             mPreviewThread.stopPreviewPlayback();
             mPreviewThread.quit();
