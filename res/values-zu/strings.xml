@@ -81,7 +81,7 @@
     <string name="editor_set_duration_overlay_error" msgid="5345900654170991799">"Isikhathi sembondela asihlelwanga"</string>
     <string name="editor_set_start_time_overlay_error" msgid="4550804633600757861">"Isikhathi sokuqalisa imbondela sihleliwe"</string>
     <string name="editor_set_user_attributes_overlay_error" msgid="2738824949937821156">"Ayikwazi ukuhlela ama-attribute"</string>
-    <string name="editor_add_effect_error" msgid="3887316140333037866">"Umphumel awukwazi ukwengezwa"</string>
+    <string name="editor_add_effect_error" msgid="3887316140333037866">"Umphumelo awukwazi ukwengezwa"</string>
     <string name="editor_remove_effect_error" msgid="3999717994912943400">"Umphumelo awukwazi ukususwa"</string>
     <string name="editor_add_audio_track_error" msgid="6946541201857209876">"I-trekhi yomsindo ayikwazi ukwengezwa"</string>
     <string name="editor_remove_audio_track_error" msgid="3432665721794329909">"Ilandela ngomkhondo yomsindo ayisuseki"</string>
@@ -100,10 +100,10 @@
     <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"i-pan &amp; yomphumela wokusondeza awukwazi ukufakiwa kulesithombe. Isithombe sincane kakhulu."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Ukuvakasha"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Uhambo lwami lokuya-California"</string>
-    <string name="theme_travel_subtitle" msgid="5861186449934194608">"i-San Francisco"</string>
+    <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>
     <string name="theme_name_surfing" msgid="2471612497551183476">"Ukusefa"</string>
     <string name="theme_surfing_title" msgid="1920259292079171251">"Isigigaba sami sokusefa"</string>
-    <string name="theme_surfing_subtitle" msgid="1393064778029517696">"i-SF Bay"</string>
+    <string name="theme_surfing_subtitle" msgid="1393064778029517696">"SF Bay"</string>
     <string name="theme_name_film" msgid="1892661451040100151">"Ifilimu"</string>
     <string name="theme_film_title" msgid="1947686292272656661">"I-movie yami emfishane"</string>
     <string name="theme_film_subtitle" msgid="7643987171132687629">"Ubumnandi ku-Bay"</string>
@@ -114,7 +114,7 @@
     <string name="overlay_preview_bottom" msgid="251307616509818157">"Isihloko esingezansi"</string>
     <string name="overlay_title" msgid="4956934604656932207">"Isihloko"</string>
     <string name="overlay_title_sample" msgid="8273092953382736653">"Uhambo lwami"</string>
-    <string name="overlay_subtitle_sample" msgid="3780261169507563826">"i-San Francisco"</string>
+    <string name="overlay_subtitle_sample" msgid="3780261169507563826">"San Francisco"</string>
     <string name="overlays_select_type" msgid="6409278066167032335">"Khetha isihloko sesifanekiso"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Isihloko"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Umbhalo ongezansi"</string>
@@ -126,8 +126,8 @@
     <string name="effect_negative" msgid="4266435358235859136">"Umphemelo ongalungile"</string>
     <string name="effect_fifties" msgid="8481127912713456758">"Umphumelo wama-fifties"</string>
     <string name="transitions_select_transition" msgid="4967975803733317444">"Khetha inguquko"</string>
-    <string name="transitions_alpha_countour" msgid="8172271436629067722">"i-Contour alpha"</string>
-    <string name="transitions_alpha_diagonal" msgid="41249798064809453">"I-diagonal alpha"</string>
+    <string name="transitions_alpha_countour" msgid="8172271436629067722">"Contour alpha"</string>
+    <string name="transitions_alpha_diagonal" msgid="41249798064809453">"Diagonal alpha"</string>
     <string name="transitions_crossfade" msgid="8675768530446018936">"Ukuthelelana"</string>
     <string name="transitions_fade_black" msgid="4660683008630768277">"Phelelisa umbala kuya kusuka komnyana"</string>
     <string name="transitions_sliding_right_out_left_in" msgid="1389887781046015922">"Ukuslayida kusuka kwesokudla kuya kwesobunxele e-"</string>
