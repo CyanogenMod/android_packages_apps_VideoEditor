@@ -143,6 +143,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     // Instance variables
     private PreviewSurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
+    private boolean mHaveSurface;
+    private boolean mResumed;
     private ImageView mOverlayView;
     private PreviewThread mPreviewThread;
     private View mEditorProjectView;
@@ -429,6 +431,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     @Override
     public void onPause() {
         super.onPause();
+        mResumed = false;
 
         // Stop the preview now (we will stop it in surfaceDestroyed(), but
         // that may be too late for releasing resources to other activities)
@@ -445,10 +448,22 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     @Override
     public void onResume() {
         super.onResume();
+        mResumed = true;
 
         if (mProject != null) {
             mMediaLayout.onResume();
             mAudioTrackLayout.onResume();
+        }
+
+        createPreviewThreadIfNeeded();
+    }
+
+    private void createPreviewThreadIfNeeded() {
+        // We want to have the preview thread if and only if (1) we have a
+        // surface, and (2) we are resumed.
+        if (mHaveSurface && mResumed && mPreviewThread == null) {
+            mPreviewThread = new PreviewThread(mSurfaceHolder);
+            restartPreview();
         }
     }
 
@@ -1154,8 +1169,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     public void surfaceCreated(SurfaceHolder holder) {
         logd("surfaceCreated");
 
-        mPreviewThread = new PreviewThread(mSurfaceHolder);
-        restartPreview();
+        mHaveSurface = true;
+        createPreviewThreadIfNeeded();
     }
 
     @Override
@@ -1170,6 +1185,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         logd("surfaceDestroyed");
+        mHaveSurface = false;
         stopPreviewThread();
     }
 
