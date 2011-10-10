@@ -17,19 +17,19 @@
     <string name="editor_delete_project" msgid="2521676016183608234">"Susa iphrojekthi"</string>
     <string name="editor_capture_video" msgid="7441727320975225967">"Rekhoda ividiyo"</string>
     <string name="editor_capture_image" msgid="7243706032936431456">"Thatha isithombe"</string>
-    <string name="editor_delete_project_question" msgid="1453862802788814277">"Ingabe ufuna ukususa lephrojekthi?"</string>
+    <string name="editor_delete_project_question" msgid="1453862802788814277">"Ingabe ufuna ukususa le phrojekthi?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
-    <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Uyafuna ukususa lelandela ngomkhondo yomsindo?"</string>
+    <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Uyafuna ukususa  le threkhi yomsindo?"</string>
     <string name="editor_title_menu_header" msgid="8042548112022118522">"Isihloko"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"Engeza isihloko"</string>
     <string name="editor_edit_overlay" msgid="6425579635817051901">"Hlela isihloko"</string>
     <string name="editor_remove_overlay" msgid="5027979271603770938">"Khipha isihloko"</string>
-    <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Uyafuna ukususa lembondela?"</string>
+    <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Uyafuna ukususa le mbondela?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Shintsha imodi yokulinda"</string>
-    <string name="editor_remove_transition_question" msgid="2679033947203081687">"Uyafuna ukususa lenguquko?"</string>
-    <string name="editor_remove_effect_question" msgid="8346475525473044890">"Uyafuna ukususa lomphumela?"</string>
-    <string name="editor_remove_video_question" msgid="2503609249297907900">"Uyafuna ukususa lesiqeshana sevidiyo?"</string>
-    <string name="editor_remove_image_question" msgid="1785701428761756119">"Uyafuna ukususa lesithombe?"</string>
+    <string name="editor_remove_transition_question" msgid="2679033947203081687">"Uyafuna ukususa le nguquko?"</string>
+    <string name="editor_remove_effect_question" msgid="8346475525473044890">"Uyafuna ukususa lo mphumelo?"</string>
+    <string name="editor_remove_video_question" msgid="2503609249297907900">"Uyafuna ukususa lesi siqeshana sevidiyo?"</string>
+    <string name="editor_remove_image_question" msgid="1785701428761756119">"Uyafuna ukususa lesi sithombe?"</string>
     <string name="editor_effect_menu_header" msgid="7749812053746520420">"inguquko"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"Engeza umphumelo"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Shintsha umphumelo"</string>
@@ -57,19 +57,19 @@
     <string name="aspect_ratio_3_2" msgid="507963433914879558">"3 x 2"</string>
     <string name="aspect_ratio_4_3" msgid="3697255322178944937">"4 x 3"</string>
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"5 x 3"</string>
-    <string name="editor_storage_not_available" msgid="1766787433930459119">"Lephrojekthi ayikwazi ukwakhiwa. Isigcini asifinyeleleki"</string>
+    <string name="editor_storage_not_available" msgid="1766787433930459119">"Le phrojekthi ayikwazi ukwakhiwa. Isigcini asifinyeleleki"</string>
     <string name="editor_create_error" msgid="4400962470820741140">"Iphutha livelile. Iphrojekthi ayikwazi ukwakhiwa"</string>
-    <string name="editor_load_error" msgid="6187178948889981589">"Iphutha livelile. Iphrojekhti ayikwazi ukulayishwa. Uyafuna ukususa lephrojekthi?"</string>
+    <string name="editor_load_error" msgid="6187178948889981589">"Iphutha livelile. Iphrojekhti ayikwazi ukulayishwa. Uyafuna ukususa le phrojekthi?"</string>
     <string name="editor_aspect_ratio_error" msgid="7490797134786829807">"I-aspect ratio ayikwazi ukushintshwa"</string>
     <string name="editor_apply_theme_error" msgid="4099539447056163679">"Umfaniso awukwazi ukufakiwa."</string>
     <string name="editor_export_error" msgid="4936990440394275855">"Iphutha livelile. I-movie ayikwazi ukuthunyelwa"</string>
     <string name="editor_saved_error" msgid="9164923264525454828">"Iphrojekthi ayikwazi ukulondolozwa"</string>
-    <string name="editor_release_error" msgid="7441115096973424601">"Iphutha livelile njengoba kudedelwa lephrojekthi."</string>
+    <string name="editor_release_error" msgid="7441115096973424601">"Iphutha livelile njengoba kudedelwa le phrojekthi."</string>
     <string name="editor_delete_error" msgid="2764342215256765694">"Kuvele iphutha ngenkathi kususwa iphrojekthi."</string>
     <string name="editor_add_video_clip_error" msgid="3158142971877933056">"Isiqeshana sevidiyo asikwazi ukwengezwa kuphrojekthi yakho."</string>
     <string name="editor_add_image_error" msgid="3347574514977406648">"Isithombe asikwazi ukwengezwa kuphrojekthi yakho"</string>
     <string name="editor_move_media_item_error" msgid="1557186534117805335">"Intwana ayikwazi ukuhanjiswa"</string>
-    <string name="editor_remove_media_item_error" msgid="5704496024782526459">"Lentwana ayikwazi ukususwa."</string>
+    <string name="editor_remove_media_item_error" msgid="5704496024782526459">"Le ntwana ayikwazi ukususwa."</string>
     <string name="editor_set_rendering_mode_error" msgid="7149393157853651241">"Imodi erendayo ayikwazi ukuhlelwa"</string>
     <string name="editor_set_media_item_duration_error" msgid="7062880519480750655">"Ayikwazi ukuhlela ubude besithombe."</string>
     <string name="editor_set_media_item_boundaries_error" msgid="5583425478931274112">"Ayikwazi ukuhlela imikhawulo yesiqeshana sevidiyo"</string>
@@ -80,7 +80,7 @@
     <string name="editor_remove_overlay_error" msgid="2779204496931287337">"Imbondela ayikwazi ukususwa"</string>
     <string name="editor_set_duration_overlay_error" msgid="5345900654170991799">"Isikhathi sembondela asihlelwanga"</string>
     <string name="editor_set_start_time_overlay_error" msgid="4550804633600757861">"Isikhathi sokuqalisa imbondela sihleliwe"</string>
-    <string name="editor_set_user_attributes_overlay_error" msgid="2738824949937821156">"Ayikwazi ukuhlela ama-attribute"</string>
+    <string name="editor_set_user_attributes_overlay_error" msgid="2738824949937821156">"Ayikwazi ukuhlela izici"</string>
     <string name="editor_add_effect_error" msgid="3887316140333037866">"Umphumelo awukwazi ukwengezwa"</string>
     <string name="editor_remove_effect_error" msgid="3999717994912943400">"Umphumelo awukwazi ukususwa"</string>
     <string name="editor_add_audio_track_error" msgid="6946541201857209876">"I-trekhi yomsindo ayikwazi ukwengezwa"</string>
@@ -96,7 +96,7 @@
     <string name="export_dialog_movie_quality_high" msgid="4622241978022000159">"Phezulu"</string>
     <string name="pan_zoom_title" msgid="5962535722026848255">"i-Pan &amp; umphumela wokusondeza"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Qala"</string>
-    <string name="pan_zoom_end" msgid="8577364516174049589">"Ekupheleni"</string>
+    <string name="pan_zoom_end" msgid="8577364516174049589">"Qeda"</string>
     <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"i-pan &amp; yomphumela wokusondeza awukwazi ukufakiwa kulesithombe. Isithombe sincane kakhulu."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Ukuvakasha"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Uhambo lwami lokuya-California"</string>
@@ -122,7 +122,7 @@
     <string name="effects_select_effect" msgid="236707968441680914">"Imiphumela"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"i-Pan &amp; umphemelo wokusondeza"</string>
     <string name="effect_gradient" msgid="3375636253347853008">"Umphumelo wesilinganiso"</string>
-    <string name="effect_sepia" msgid="674793199333159952">"Umphumela we-sepia"</string>
+    <string name="effect_sepia" msgid="674793199333159952">"Umphumelo we-sepia"</string>
     <string name="effect_negative" msgid="4266435358235859136">"Umphemelo ongalungile"</string>
     <string name="effect_fifties" msgid="8481127912713456758">"Umphumelo wama-fifties"</string>
     <string name="transitions_select_transition" msgid="4967975803733317444">"Khetha inguquko"</string>
