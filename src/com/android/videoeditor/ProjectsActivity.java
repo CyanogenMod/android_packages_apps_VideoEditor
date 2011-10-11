@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -257,6 +258,23 @@ public class ProjectsActivity extends NoSearchActivity {
             default: {
                 return null;
             }
+        }
+    }
+
+    @Override
+    protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
+        switch (id) {
+            // A workaround to handle the OK button. We can't access the button with getButton()
+            // when building the dialog in AlertDialogs, hence we postpone the enabling/disabling
+            // of the positive button until the dialog is to be shown here.
+            case DIALOG_NEW_PROJECT_ID:
+                final AlertDialog newProjectDialog = (AlertDialog) dialog;
+                Button positiveButton = newProjectDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                final TextView inputField =
+                        (TextView) newProjectDialog.findViewById(R.id.text_1);
+                positiveButton.setEnabled(inputField.getText().toString().trim().length() > 0);
+            default:
+                return;
         }
     }
 
