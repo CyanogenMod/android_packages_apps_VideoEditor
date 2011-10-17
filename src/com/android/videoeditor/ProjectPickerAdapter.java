@@ -28,6 +28,9 @@ import android.graphics.Typeface;
 import android.media.videoeditor.VideoEditor;
 import android.os.AsyncTask;
 import android.text.format.DateUtils;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,10 +170,14 @@ public class ProjectPickerAdapter extends BaseAdapter {
                 right = bitmap.getWidth(), bottom = bitmap.getHeight();
         canvas.drawRect(left, top, right, bottom, paint);
 
-        // Draw movie title at the left of the overlay.
         paint.setColor(Color.WHITE);
-        paint.setTextSize((int) mResources.getDimension(
-                R.dimen.project_picker_item_font_size));
+        paint.setTextSize((int) mResources.getDimension(R.dimen.project_picker_item_font_size));
+
+        // Draw movie title at the left of the overlay. Trim title if it is going to overlap with
+        // duration text.
+        final int availableTitleWidth = bitmap.getWidth() - (int) paint.measureText(duration);
+        title = TextUtils.ellipsize(title, new TextPaint(paint), availableTitleWidth,
+                TextUtils.TruncateAt.END).toString();
         canvas.drawText(title, mOverlayHorizontalInset,
                 bitmap.getHeight() - mOverlayHeight + mOverlayVerticalInset,
                 paint);
