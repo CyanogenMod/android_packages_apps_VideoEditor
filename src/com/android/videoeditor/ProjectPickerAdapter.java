@@ -282,16 +282,22 @@ class LoadPreviewBitmapTask extends AsyncTask<Void, Void, Bitmap> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
     @Override
     protected void onPostExecute(Bitmap result) {
-        // If we successfully load the preview bitmap, update the image view.
-        if (result != null) {
+        if (result == null) {
+            // If we don't have thumbnail, default to a black canvas.
+            result = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
+            result.eraseColor(Color.BLACK);
+        } else {
             mPreviewBitmapCache.put(mProjectPath, result);
-            mContextAdapter.drawBottomOverlay(result, mTitle, mDuration);
-            mImageView.setImageBitmap(result);
         }
+
+        // Update the image view.
+        mContextAdapter.drawBottomOverlay(result, mTitle, mDuration);
+        mImageView.setImageBitmap(result);
     }
 }
