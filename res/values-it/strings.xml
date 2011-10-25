@@ -3,7 +3,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
     <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
-    <string name="editor_loading_project" msgid="3510642162166476100">"Caricamento progetto in corso..."</string>
+    <string name="editor_loading_project" msgid="3510642162166476100">"Caricamento progetto..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Nessun progetto trovato"</string>
     <string name="editor_add" msgid="1728703558703319942">"Aggiungi"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Importa video clip"</string>
