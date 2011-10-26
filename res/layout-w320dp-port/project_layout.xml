@@ -51,7 +51,8 @@
                 android:onClick="onClickHandler"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-10dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
                 android:src="@drawable/btn_playback_ic_play"
                 android:background="@drawable/background_selector"/>
             <ImageButton android:id="@+id/editor_next"
