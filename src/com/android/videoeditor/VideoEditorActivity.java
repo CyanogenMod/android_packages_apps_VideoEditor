@@ -1572,7 +1572,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     }
 
     /**
-     * Restart preview
+     * Restarts preview.
      */
     private void restartPreview() {
         if (mRestartPreview == false) {
@@ -1824,7 +1824,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         }
 
         /**
-         * Start the preview playback
+         * Starts the preview playback.
          *
          * @param project The video editor project
          * @param fromMs Start playing from the specified position
@@ -1922,9 +1922,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
          * @param project The project
          */
         private void previewStarted(VideoEditorProject project) {
-            // Change the button image back to a play icon
+            // Change the button image back to a pause icon
             mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_pause);
-            mPreviewPlayButton.setBackgroundResource(R.drawable.background_selector);
 
             mTimelineScroller.enableUserScrolling(false);
             mMediaLayout.setPlaybackInProgress(true);
@@ -2034,7 +2033,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             // Change the button image back to a play icon
             mPreviewPlayButton.setImageResource(R.drawable.btn_playback_ic_play);
-            mPreviewPlayButton.setBackgroundResource(R.drawable.background_selector);
 
             if (error == false) {
                 // Set the playhead position at the position where the playback stopped
