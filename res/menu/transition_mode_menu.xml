@@ -17,8 +17,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_change_transition"
         android:title="@string/editor_change_transition"
-        android:icon="@drawable/ic_menu_edit"/>
+        android:icon="@drawable/ic_menu_edit_selector"/>
     <item android:id="@+id/action_remove_transition"
         android:title="@string/remove"
-        android:icon="@drawable/ic_menu_delete"/>
+        android:icon="@drawable/ic_menu_delete_selector"/>
 </menu>
