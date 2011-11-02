@@ -136,7 +136,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         public void onLayoutComplete() {
             // Scroll the timeline such that the specified position
             // is in the center of the screen.
-            mTimelineScroller.appScrollTo(timeToDimension(mProject.getPlayheadPos()), false);
+            movePlayhead(mProject.getPlayheadPos(), false);
         }
     };
 
@@ -1313,6 +1313,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
     @Override
     protected void movePlayhead(long timeMs) {
+        movePlayhead(timeMs, true);
+    }
+
+    private void movePlayhead(long timeMs, boolean smooth) {
         if (mProject == null) {
             return;
         }
@@ -1320,7 +1324,7 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         if (setPlayhead(timeMs)) {
             // Scroll the timeline such that the specified position
             // is in the center of the screen
-            mTimelineScroller.appScrollTo(timeToDimension(timeMs), true);
+            mTimelineScroller.appScrollTo(timeToDimension(timeMs), smooth);
         }
     }
 
@@ -1479,10 +1483,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             @Override
             public void run() {
-                if (mAttempts == ATTEMPTS) { // Only scroll once
-                    movePlayhead(mProject.getPlayheadPos());
-                }
-
                 // If the surface is not yet created (showPreviewFrame()
                 // returns false) wait for a while (DELAY * ATTEMPTS).
                 if (showPreviewFrame() == false && mAttempts >= 0) {
