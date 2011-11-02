@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * The transitions activity
+ * Activity that lists all transition effects for user to choose.
  */
 public class TransitionsActivity extends ListActivity {
     // Input transition category
@@ -50,9 +50,6 @@ public class TransitionsActivity extends ListActivity {
     private TransitionsAdapter mAdapter;
     private long mMinTransitionDurationMs, mMaxTransitionDurationMs, mTransitionDurationMs;
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,9 +95,6 @@ public class TransitionsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onPause() {
         super.onPause();
@@ -110,21 +104,16 @@ public class TransitionsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
 
         if (mAdapter != null) {
             mAdapter.onDestroy();
+            mAdapter = null;
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -132,9 +121,6 @@ public class TransitionsActivity extends ListActivity {
         outState.putLong(STATE_KEY_TRANSITION_DURATION, mTransitionDurationMs);
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         final Intent extras = new Intent();
@@ -146,17 +132,10 @@ public class TransitionsActivity extends ListActivity {
                 getIntent().getStringExtra(PARAM_TRANSITION_ID));
         extras.putExtra(PARAM_TRANSITION_DURATION, mTransitionDurationMs);
 
-        // Release the adapter now
-        mAdapter.onDestroy();
-        mAdapter = null;
-
         setResult(RESULT_OK, extras);
         finish();
     }
 
-    /*
-     * {@inheritDoc}
-     */
     public void onClickHandler(View target) {
         switch (target.getId()) {
             case R.id.duration_left: {
@@ -181,16 +160,13 @@ public class TransitionsActivity extends ListActivity {
         }
     }
 
-    /*
-     * {@inheritDoc}
-     */
     @Override
     public boolean onSearchRequested() {
         return false;
     }
 
     /**
-     * Update the transition duration and the state of the buttons
+     * Updates the transition duration and the state of the buttons.
      */
     private void updateTransitionDuration() {
         mTransitionDurationView.setText(getString(R.string.transitions_duration,
