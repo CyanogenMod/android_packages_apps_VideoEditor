@@ -17,9 +17,11 @@
 package com.android.videoeditor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.text.SimpleDateFormat;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -38,6 +40,7 @@ import android.media.videoeditor.MediaProperties;
 import android.media.videoeditor.VideoEditor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -92,6 +95,10 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
     private static final String STATE_PLAYING = "playing";
     private static final String STATE_CAPTURE_URI = "capture_uri";
     private static final String STATE_SELECTED_POS_ID = "selected_pos_id";
+
+    private static final String DCIM =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString();
+    private static final String DIRECTORY = DCIM + "/Camera";
 
     // Dialog ids
     private static final int DIALOG_DELETE_PROJECT_ID = 1;
@@ -534,6 +541,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
                 // Create parameters for Intent with filename
                 final ContentValues values = new ContentValues();
+                String videoFilename = DIRECTORY + '/' + getVideoOutputMediaFileTitle() + ".mp4";
+                values.put(MediaStore.Video.Media.DATA, videoFilename);
                 mCaptureMediaUri = getContentResolver().insert(
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
                 final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -644,6 +653,14 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                 return false;
             }
         }
+    }
+
+    private String getVideoOutputMediaFileTitle() {
+        long dateTaken = System.currentTimeMillis();
+        Date date = new Date(dateTaken);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'VID'_yyyyMMdd_HHmmss");
+
+        return dateFormat.format(date);
     }
 
     @Override
