@@ -178,19 +178,19 @@ public class MediaLinearLayout extends LinearLayout {
 
             final MenuItem romi = menu.findItem(R.id.action_remove_overlay);
             romi.setVisible(mMediaItem.getOverlay() != null);
-            romi.setEnabled(enable);
+            romi.setEnabled(enable && mMediaItem.getOverlay() != null);
 
             final MenuItem btmi = menu.findItem(R.id.action_add_begin_transition);
             btmi.setVisible(mMediaItem.getBeginTransition() == null);
-            btmi.setEnabled(enable);
+            btmi.setEnabled(enable && mMediaItem.getBeginTransition() == null);
 
             final MenuItem etmi = menu.findItem(R.id.action_add_end_transition);
             etmi.setVisible(mMediaItem.getEndTransition() == null);
-            etmi.setEnabled(enable);
+            etmi.setEnabled(enable && mMediaItem.getEndTransition() == null);
 
             final MenuItem rmmi = menu.findItem(R.id.action_rendering_mode);
             rmmi.setVisible(mProject.hasMultipleAspectRatios());
-            rmmi.setEnabled(enable);
+            rmmi.setEnabled(enable && mProject.hasMultipleAspectRatios());
 
             return true;
         }
