@@ -145,6 +145,9 @@ public class ProjectPickerAdapter extends BaseAdapter {
         } else {
             VideoEditorProject project = mProjects.get(position);
             title = project.getName();
+            if (title == null) {
+                title = "";
+            }
             duration = millisecondsToTimeString(project.getProjectDuration());
             thumbnail = getThumbnail(project.getPath(), iv, title, duration);
         }
