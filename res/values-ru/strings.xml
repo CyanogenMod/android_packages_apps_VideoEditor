@@ -13,7 +13,7 @@
     <string name="editor_export_movie" msgid="6179595763732596532">"Экспортировать фильм"</string>
     <string name="editor_play_exported_movie" msgid="4312100359380734615">"Воспроизвести экспортированный фильм"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Изменить соотношение сторон"</string>
-    <string name="editor_edit_project_name" msgid="1910357904276802782">"Изменить название проекта"</string>
+    <string name="editor_edit_project_name" msgid="1910357904276802782">"Изменить название"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"Удалить проект"</string>
     <string name="editor_capture_video" msgid="7441727320975225967">"Записать видео"</string>
     <string name="editor_capture_image" msgid="7243706032936431456">"Сделать снимок"</string>
