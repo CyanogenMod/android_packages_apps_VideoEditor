@@ -358,6 +358,12 @@ public class MediaItemView extends View {
         mThumbnailHeight = getHeight() - getPaddingTop() - getPaddingBottom();
         mThumbnailWidth = (mThumbnailHeight * mMediaItem.getWidth()) / mMediaItem.getHeight();
 
+        // We are not able to display a bitmap with width or height > 2048.
+        while (mThumbnailWidth > 2048 || mThumbnailHeight > 2048) {
+            mThumbnailHeight /= 2;
+            mThumbnailWidth /= 2;
+        }
+
         int usableWidth = getWidth() - getPaddingLeft() - getPaddingRight();
         // Compute the ceiling of (usableWidth / mThumbnailWidth).
         mNumberOfThumbnails = (usableWidth + mThumbnailWidth - 1) / mThumbnailWidth;
@@ -459,6 +465,11 @@ public class MediaItemView extends View {
         key.mediaItemId = mMediaItem.getId();
         int x = getPaddingLeft() + startIdx * mThumbnailWidth;
         int y = getPaddingTop();
+
+        // Center the thumbnail vertically
+        int spacing = (getHeight() - getPaddingTop() - getPaddingBottom() -
+                mThumbnailHeight) / 2;
+        y += spacing;
 
         // Loop through the thumbnails on screen and draw it
         for (int i = startIdx; i <= endIdx; i++) {
