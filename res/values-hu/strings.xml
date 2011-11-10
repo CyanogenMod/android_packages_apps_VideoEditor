@@ -3,8 +3,8 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
     <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
-    <string name="editor_loading_project" msgid="3510642162166476100">"Projekt betöltése..."</string>
-    <string name="editor_no_project" msgid="3873338552933049950">"Nem található projekt"</string>
+    <string name="editor_loading_project" msgid="4425794204325511857">"Projekt betöltése..."</string>
+    <string name="editor_no_project" msgid="7878678429340266635">"Nem található projekt."</string>
     <string name="editor_add" msgid="1728703558703319942">"Hozzáadás"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Videoklip importálása"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"Kép importálása"</string>
@@ -30,64 +30,64 @@
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"Eltávolítja ezt az effektet?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"Eltávolítja ezt a videoklipet?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"Eltávolítja ezt a képet?"</string>
-    <string name="editor_effect_menu_header" msgid="7749812053746520420">"effekt"</string>
+    <string name="editor_effect_menu_header" msgid="7596259319584812532">"Effekt"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"Effekt hozzáadása"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Effekt módosítása"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Effekt eltávolítása"</string>
-    <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Pásztázás és nagyítás/kicsinyítés"</string>
+    <string name="editor_pan_zoom_effect" msgid="4430230779587987690">"Pásztázás és nagyítás/kicsinyítés"</string>
     <string name="editor_gradient_effect" msgid="7850306294518429709">"Gradiens"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Szépia"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Negatív"</string>
-    <string name="editor_no_effect" msgid="960037351930077107">"nincs effekt"</string>
+    <string name="editor_no_effect" msgid="382362560484492238">"Nincs effekt"</string>
     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Áttűnés a videó elején"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"Áttűnés a videó végén"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Átmenet módosítása"</string>
-    <string name="editor_video_load" msgid="1982994058443715056">"A videoklip letöltése elkezdődött. Befejeztéről értesítést kap."</string>
-    <string name="editor_image_load" msgid="4485265196685081793">"A kép letöltése elkezdődött. Befejeztéről értesítést kap."</string>
+    <string name="editor_video_load" msgid="195098585816541585">"A videoklip letöltése elindult. Amikor elkészült, értesíteni fogjuk."</string>
+    <string name="editor_image_load" msgid="5271735501748316661">"A kép letöltése elindult. Amikor elkészült, értesíteni fogjuk."</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"Átmenet"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Ismétlés"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Ne ismételjen"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Némítás"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Némítás feloldása"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"Automatikus halkítás"</string>
-    <string name="projects_new_project" msgid="7515160975627001972">"Új projekt létrehozása"</string>
+    <string name="projects_new_project" msgid="835981505260510697">"Új projekt létrehoz."</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Projekt neve"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
     <string name="aspect_ratio_3_2" msgid="507963433914879558">"3 x 2"</string>
     <string name="aspect_ratio_4_3" msgid="3697255322178944937">"4 x 3"</string>
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"5 x 3"</string>
-    <string name="editor_storage_not_available" msgid="1766787433930459119">"A projekt nem hozható létre. A tárhely nem érhető el."</string>
-    <string name="editor_create_error" msgid="4400962470820741140">"Hiba történt. A projekt nem hozható létre."</string>
-    <string name="editor_load_error" msgid="6187178948889981589">"Hiba történt. A projekt nem tölthető be. Törli a projektet?"</string>
-    <string name="editor_aspect_ratio_error" msgid="7490797134786829807">"A méretarány nem módosítható."</string>
-    <string name="editor_apply_theme_error" msgid="4099539447056163679">"A téma nem alkalmazható."</string>
-    <string name="editor_export_error" msgid="4936990440394275855">"Hiba történt. A film nem exportálható."</string>
-    <string name="editor_saved_error" msgid="9164923264525454828">"A projektet nem lehet menteni."</string>
-    <string name="editor_release_error" msgid="7441115096973424601">"Hiba történt a projekt kiadásakor."</string>
-    <string name="editor_delete_error" msgid="2764342215256765694">"Hiba történt a projekt törlése közben."</string>
-    <string name="editor_add_video_clip_error" msgid="3158142971877933056">"A videoklip nem adható hozzá a projekthez."</string>
-    <string name="editor_add_image_error" msgid="3347574514977406648">"A kép nem adható hozzá a projekthez."</string>
-    <string name="editor_move_media_item_error" msgid="1557186534117805335">"Ez az elem nem mozgatható."</string>
-    <string name="editor_remove_media_item_error" msgid="5704496024782526459">"Az elem nem távolítható el."</string>
-    <string name="editor_set_rendering_mode_error" msgid="7149393157853651241">"Megjelenítési mód nem adható meg."</string>
-    <string name="editor_set_media_item_duration_error" msgid="7062880519480750655">"A kép időtartama nem adható meg."</string>
-    <string name="editor_set_media_item_boundaries_error" msgid="5583425478931274112">"A videoklip szegélyei nem adhatók meg."</string>
-    <string name="editor_add_transition_error" msgid="2536143807482160807">"Az átmenet nem adható hozzá."</string>
-    <string name="editor_remove_transition_error" msgid="1368159023884546005">"Az átmenet nem távolítható el."</string>
-    <string name="editor_set_transition_duration_error" msgid="2689703633926044264">"Az átmenet időtartama nem adható meg."</string>
-    <string name="editor_add_overlay_error" msgid="5455180707661310901">"A fedvény nem adható hozzá."</string>
-    <string name="editor_remove_overlay_error" msgid="2779204496931287337">"A fedvény nem távolítható el."</string>
-    <string name="editor_set_duration_overlay_error" msgid="5345900654170991799">"A fedvény időtartama nem volt megadva."</string>
-    <string name="editor_set_start_time_overlay_error" msgid="4550804633600757861">"A fedvény kezdő időpontja nem volt megadva."</string>
-    <string name="editor_set_user_attributes_overlay_error" msgid="2738824949937821156">"A fedvény tulajdonságai nem adhatók meg."</string>
-    <string name="editor_add_effect_error" msgid="3887316140333037866">"Az effekt nem adható hozzá."</string>
-    <string name="editor_remove_effect_error" msgid="3999717994912943400">"Az effekt nem távolítható el."</string>
-    <string name="editor_add_audio_track_error" msgid="6946541201857209876">"Hangfelvétel nem adható hozzá"</string>
-    <string name="editor_remove_audio_track_error" msgid="3432665721794329909">"A hangfelvétel nem távolítható el."</string>
-    <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"A hangfelvétel hossza nem módosítható."</string>
-    <string name="editor_transition_too_short" msgid="3956089619553629988">"Átmenet nem adható hozzá. Az átmenet túl rövid lenne."</string>
-    <string name="editor_media_load_error" msgid="2421624042826573589">"A fájl nem tölthető le."</string>
+    <string name="editor_storage_not_available" msgid="5030416644629630761">"Nem lehet létrehozni a projektet, mert a tárhely nem érhető el."</string>
+    <string name="editor_create_error" msgid="6104899467848074373">"A projekt egy hiba miatt nem hozható létre."</string>
+    <string name="editor_load_error" msgid="8168726329719423779">"A projekt egy hiba miatt nem tölthető be. Szeretné törölni ezt a projektet?"</string>
+    <string name="editor_aspect_ratio_error" msgid="887361517540628159">"A képarány nem változtatható meg."</string>
+    <string name="editor_apply_theme_error" msgid="3079581810200707936">"A téma nem alkalmazható."</string>
+    <string name="editor_export_error" msgid="382400675648706944">"A film egy hiba miatt nem exportálható."</string>
+    <string name="editor_saved_error" msgid="5347778960945973388">"A projekt nem menthető."</string>
+    <string name="editor_release_error" msgid="8784979625100950327">"Hiba történt a projekt kiadása közben."</string>
+    <string name="editor_delete_error" msgid="3558147455809883972">"Hiba történt a projekt törlése közben."</string>
+    <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Nem lehet hozzáadni a videoklipet a projekthez."</string>
+    <string name="editor_add_image_error" msgid="537642460372324704">"Nem lehet hozzáadni a képet a projekthez."</string>
+    <string name="editor_move_media_item_error" msgid="3370835930609505642">"Az elem nem helyezhető át."</string>
+    <string name="editor_remove_media_item_error" msgid="2913555471288806841">"Nem lehet eltávolítani az elemet."</string>
+    <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"Nem lehet beállítani a megjelenítési módot."</string>
+    <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"Nem lehet beállítani a kép időtartamát."</string>
+    <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"Nem lehet beállítani a videoklip határait."</string>
+    <string name="editor_add_transition_error" msgid="6471979516727265318">"Nem lehet hozzáadni az átmenetet."</string>
+    <string name="editor_remove_transition_error" msgid="7995113177965011103">"Nem lehet eltávolítani az átmenetet."</string>
+    <string name="editor_set_transition_duration_error" msgid="3773102565195022670">"Nem lehet beállítani az átmenet időtartamát."</string>
+    <string name="editor_add_overlay_error" msgid="6315983638203833916">"Nem lehet hozzáadni a fedvényt."</string>
+    <string name="editor_remove_overlay_error" msgid="4404087798919441977">"Nem lehet eltávolítani a fedvényt."</string>
+    <string name="editor_set_duration_overlay_error" msgid="1239098080272531324">"Nem sikerült beállítani a fedvény időtartamát."</string>
+    <string name="editor_set_start_time_overlay_error" msgid="1586320960100883573">"Nem sikerült beállítani a fedvény kezdési időpontját."</string>
+    <string name="editor_set_user_attributes_overlay_error" msgid="1084389378842530649">"Nem lehet beállítani a fedvény attribútumait"</string>
+    <string name="editor_add_effect_error" msgid="5341811634896566708">"Nem lehet hozzáadni az effektet."</string>
+    <string name="editor_remove_effect_error" msgid="220855978011216681">"Nem lehet eltávolítani az effektet."</string>
+    <string name="editor_add_audio_track_error" msgid="595137916691596584">"A hangsáv nem adható hozzá."</string>
+    <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"A hangsáv nem távolítható el."</string>
+    <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"A hangsáv nem vágható meg."</string>
+    <string name="editor_transition_too_short" msgid="6861692504557642278">"Nem lehet hozzáadni átmenetet, mert az túl rövid lenne."</string>
+    <string name="editor_media_load_error" msgid="458634098279249971">"Nem lehet letölteni a fájlt."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportálás"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Film mérete"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Filmminőség"</string>
@@ -97,7 +97,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Pásztázás és közelítés effekt"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Indítás"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Befejezés"</string>
-    <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"A pásztázás és közelítés effekt nem alkalmazható erre a képre. A kép túl kicsi."</string>
+    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Ezen a képen nem alkalmazható a mozgatás és nagyítás effekt. A kép túl kicsi."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Utazás"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Utazásom Kaliforniába"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>
@@ -115,7 +115,7 @@
     <string name="overlay_title" msgid="4956934604656932207">"Cím"</string>
     <string name="overlay_title_sample" msgid="8273092953382736653">"Utazásom"</string>
     <string name="overlay_subtitle_sample" msgid="3780261169507563826">"San Francisco"</string>
-    <string name="overlays_select_type" msgid="6409278066167032335">"Címsablon kiválasztása"</string>
+    <string name="overlays_select_type" msgid="2636156650882536003">"Címsablon kiválasztása"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Cím"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Felirat"</string>
     <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Sablon módosítása"</string>
@@ -125,7 +125,7 @@
     <string name="effect_sepia" msgid="674793199333159952">"Szépia effekt"</string>
     <string name="effect_negative" msgid="4266435358235859136">"Negatív hatás"</string>
     <string name="effect_fifties" msgid="8481127912713456758">"Ötvenes évek effekt"</string>
-    <string name="transitions_select_transition" msgid="4967975803733317444">"Átmenet kiválasztása"</string>
+    <string name="transitions_select_transition" msgid="2078853282860045900">"Átmenet kiválasztása"</string>
     <string name="transitions_alpha_countour" msgid="8172271436629067722">"Kontúr alpha"</string>
     <string name="transitions_alpha_diagonal" msgid="41249798064809453">"Átlós alpha"</string>
     <string name="transitions_crossfade" msgid="8675768530446018936">"Átúszás"</string>
