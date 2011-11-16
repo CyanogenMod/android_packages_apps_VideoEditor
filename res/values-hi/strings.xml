@@ -100,7 +100,7 @@
     <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"पैन और ज़ूम प्रभाव इस छवि पर लागू नहीं किया जा सकता. छवि बहुत छोटी है."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"यात्रा"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"मेरा कैलिफ़ोर्निया भ्रमण"</string>
-    <string name="theme_travel_subtitle" msgid="5861186449934194608">"सैन फ़्रांसिस्को"</string>
+    <string name="theme_travel_subtitle" msgid="5861186449934194608">"सैन फ़्रांसिस्को"</string>
     <string name="theme_name_surfing" msgid="2471612497551183476">"सर्फ़िंग"</string>
     <string name="theme_surfing_title" msgid="1920259292079171251">"सर्फिंग का मेरा साहसिक कार्य"</string>
     <string name="theme_surfing_subtitle" msgid="1393064778029517696">"एसएफ़ खाड़ी"</string>
@@ -114,7 +114,7 @@
     <string name="overlay_preview_bottom" msgid="251307616509818157">"निचला शीर्षक"</string>
     <string name="overlay_title" msgid="4956934604656932207">"शीर्षक"</string>
     <string name="overlay_title_sample" msgid="8273092953382736653">"मेरा भ्रमण"</string>
-    <string name="overlay_subtitle_sample" msgid="3780261169507563826">"सैन फ़्रांसिस्को"</string>
+    <string name="overlay_subtitle_sample" msgid="3780261169507563826">"सैन फ़्रांसिस्को"</string>
     <string name="overlays_select_type" msgid="6409278066167032335">"शीर्षक टेम्पलेट का चयन करें"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"शीर्षक"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"उपशीर्षक"</string>
