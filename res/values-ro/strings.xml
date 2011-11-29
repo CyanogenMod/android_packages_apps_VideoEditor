@@ -42,8 +42,8 @@
     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Tranziţie la începutul videoclipului"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"Tranziţie la finalul videoclipului"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Modificaţi tranziţia"</string>
-    <string name="editor_video_load" msgid="195098585816541585">"Descărcarea videoclipului a început şi veţi fi notificat(ă) la finalizare."</string>
-    <string name="editor_image_load" msgid="5271735501748316661">"Descărcarea imaginii a început şi veţi fi notificat(ă) la finalizare."</string>
+    <string name="editor_video_load" msgid="195098585816541585">"Descărcarea videoclipului a început şi veţi primi notificare la finalizare."</string>
+    <string name="editor_image_load" msgid="5271735501748316661">"Descărcarea imaginii a început şi veţi primi notificare la finalizare."</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"Tranziţie"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Buclă"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Nu creaţi o buclă"</string>

@@ -3,8 +3,8 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"電影工作室"</string>
     <string name="full_app_name" msgid="5729546228978363869">"Android 電影工作室"</string>
-    <!-- outdated translation 3510642162166476100 -->     <string name="editor_loading_project" msgid="4425794204325511857">"正在載入專案..."</string>
-    <!-- outdated translation 3873338552933049950 -->     <string name="editor_no_project" msgid="7878678429340266635">"找不到專案"</string>
+    <string name="editor_loading_project" msgid="4425794204325511857">"正在載入專案..."</string>
+    <string name="editor_no_project" msgid="7878678429340266635">"找不到專案。"</string>
     <string name="editor_add" msgid="1728703558703319942">"新增"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"匯入影片剪輯"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"匯入圖片"</string>
@@ -30,64 +30,64 @@
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"您要移除這個效果嗎？"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"您要移除這個影片剪輯嗎？"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"您要移除這個圖片嗎？"</string>
-    <!-- outdated translation 7749812053746520420 -->     <string name="editor_effect_menu_header" msgid="7596259319584812532">"效果"</string>
+    <string name="editor_effect_menu_header" msgid="7596259319584812532">"效果"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"新增效果"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"變更效果"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"移除效果"</string>
-    <!-- outdated translation 7040551005893392872 -->     <string name="editor_pan_zoom_effect" msgid="4430230779587987690">"平移縮放"</string>
+    <string name="editor_pan_zoom_effect" msgid="4430230779587987690">"平移縮放"</string>
     <string name="editor_gradient_effect" msgid="7850306294518429709">"漸層"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"懷舊色調"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"負片效果"</string>
-    <!-- outdated translation 960037351930077107 -->     <string name="editor_no_effect" msgid="382362560484492238">"沒有效果"</string>
+    <string name="editor_no_effect" msgid="382362560484492238">"沒有效果"</string>
     <string name="editor_add_begin_transition" msgid="1797563833232547946">"在片段開頭添加轉場特效"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"在片段結尾添加轉場特效"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"變更轉場效果"</string>
-    <!-- outdated translation 1982994058443715056 -->     <string name="editor_video_load" msgid="195098585816541585">"影片剪輯已開始下載，下載完畢時會通知您。"</string>
-    <!-- outdated translation 4485265196685081793 -->     <string name="editor_image_load" msgid="5271735501748316661">"圖片已開始下載，下載完畢時會通知您。"</string>
+    <string name="editor_video_load" msgid="195098585816541585">"已開始下載影片剪輯，完成時將會通知您。"</string>
+    <string name="editor_image_load" msgid="5271735501748316661">"已開始下載圖片，完成時將會通知您。"</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"轉場效果"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"循環播放"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"停止循環播放"</string>
     <string name="editor_mute" msgid="4901844675777155179">"靜音"</string>
     <string name="editor_unmute" msgid="905024676961016538">"解除靜音"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"降低背景音樂音量"</string>
-    <!-- outdated translation 7515160975627001972 -->     <string name="projects_new_project" msgid="835981505260510697">"建立新專案"</string>
+    <string name="projects_new_project" msgid="835981505260510697">"建立新專案"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"專案名稱"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
     <string name="aspect_ratio_3_2" msgid="507963433914879558">"3 x 2"</string>
     <string name="aspect_ratio_4_3" msgid="3697255322178944937">"4 x 3"</string>
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"5 x 3"</string>
-    <!-- outdated translation 1766787433930459119 -->     <string name="editor_storage_not_available" msgid="5030416644629630761">"無法存取儲存空間，因此無法建立專案。"</string>
-    <!-- outdated translation 4400962470820741140 -->     <string name="editor_create_error" msgid="6104899467848074373">"發生錯誤，無法建立專案。"</string>
-    <!-- outdated translation 6187178948889981589 -->     <string name="editor_load_error" msgid="8168726329719423779">"發生錯誤，無法載入專案，您要刪除這個專案嗎？"</string>
-    <!-- outdated translation 7490797134786829807 -->     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"無法變更長寬比。"</string>
-    <!-- outdated translation 4099539447056163679 -->     <string name="editor_apply_theme_error" msgid="3079581810200707936">"無法套用主題。"</string>
-    <!-- outdated translation 4936990440394275855 -->     <string name="editor_export_error" msgid="382400675648706944">"發生錯誤，無法匯出電影。"</string>
-    <!-- outdated translation 9164923264525454828 -->     <string name="editor_saved_error" msgid="5347778960945973388">"無法儲存專案。"</string>
-    <!-- outdated translation 7441115096973424601 -->     <string name="editor_release_error" msgid="8784979625100950327">"發佈專案時發生錯誤。"</string>
-    <!-- outdated translation 2764342215256765694 -->     <string name="editor_delete_error" msgid="3558147455809883972">"刪除專案時發生錯誤。"</string>
-    <!-- outdated translation 3158142971877933056 -->     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"無法將影片剪輯新增至您的專案。"</string>
-    <!-- outdated translation 3347574514977406648 -->     <string name="editor_add_image_error" msgid="537642460372324704">"無法將圖片新增至您的專案。"</string>
-    <!-- outdated translation 1557186534117805335 -->     <string name="editor_move_media_item_error" msgid="3370835930609505642">"無法移動項目。"</string>
-    <!-- outdated translation 5704496024782526459 -->     <string name="editor_remove_media_item_error" msgid="2913555471288806841">"無法移除項目。"</string>
-    <!-- outdated translation 7149393157853651241 -->     <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"無法設定轉譯模式。"</string>
-    <!-- outdated translation 7062880519480750655 -->     <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"無法設定圖片持續時間。"</string>
-    <!-- outdated translation 5583425478931274112 -->     <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"無法設定影片剪輯範圍。"</string>
-    <!-- outdated translation 2536143807482160807 -->     <string name="editor_add_transition_error" msgid="6471979516727265318">"無法新增轉場效果。"</string>
-    <!-- outdated translation 1368159023884546005 -->     <string name="editor_remove_transition_error" msgid="7995113177965011103">"無法移除轉場效果。"</string>
-    <!-- outdated translation 2689703633926044264 -->     <string name="editor_set_transition_duration_error" msgid="3773102565195022670">"無法設定轉場效果持續時間。"</string>
-    <!-- outdated translation 5455180707661310901 -->     <string name="editor_add_overlay_error" msgid="6315983638203833916">"無法新增重疊效果。"</string>
-    <!-- outdated translation 2779204496931287337 -->     <string name="editor_remove_overlay_error" msgid="4404087798919441977">"無法移除重疊效果。"</string>
-    <!-- outdated translation 5345900654170991799 -->     <string name="editor_set_duration_overlay_error" msgid="1239098080272531324">"尚未設定重疊效果持續時間。"</string>
-    <!-- outdated translation 4550804633600757861 -->     <string name="editor_set_start_time_overlay_error" msgid="1586320960100883573">"尚未設定重疊效果開始時間。"</string>
-    <!-- outdated translation 2738824949937821156 -->     <string name="editor_set_user_attributes_overlay_error" msgid="1084389378842530649">"無法設定重疊效果屬性。"</string>
-    <!-- outdated translation 3887316140333037866 -->     <string name="editor_add_effect_error" msgid="5341811634896566708">"無法新增效果。"</string>
-    <!-- outdated translation 3999717994912943400 -->     <string name="editor_remove_effect_error" msgid="220855978011216681">"無法移除效果。"</string>
-    <!-- outdated translation 6946541201857209876 -->     <string name="editor_add_audio_track_error" msgid="595137916691596584">"無法新增音軌"</string>
-    <!-- outdated translation 3432665721794329909 -->     <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"無法移除音軌。"</string>
-    <!-- outdated translation 5850938851754227439 -->     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"無法修剪音軌。"</string>
-    <!-- outdated translation 3956089619553629988 -->     <string name="editor_transition_too_short" msgid="6861692504557642278">"轉場時間過短，因此無法新增轉場效果。"</string>
-    <!-- outdated translation 2421624042826573589 -->     <string name="editor_media_load_error" msgid="458634098279249971">"無法下載檔案。"</string>
+    <string name="editor_storage_not_available" msgid="5030416644629630761">"儲存裝置無法使用，無法建立專案。"</string>
+    <string name="editor_create_error" msgid="6104899467848074373">"發生錯誤，無法建立專案。"</string>
+    <string name="editor_load_error" msgid="8168726329719423779">"發生錯誤，無法載入專案。您要刪除這個專案嗎？"</string>
+    <string name="editor_aspect_ratio_error" msgid="887361517540628159">"無法變更長寬比。"</string>
+    <string name="editor_apply_theme_error" msgid="3079581810200707936">"無法套用主題。"</string>
+    <string name="editor_export_error" msgid="382400675648706944">"發生錯誤，無法匯出電影。"</string>
+    <string name="editor_saved_error" msgid="5347778960945973388">"無法儲存專案。"</string>
+    <string name="editor_release_error" msgid="8784979625100950327">"發佈專案時發生錯誤。"</string>
+    <string name="editor_delete_error" msgid="3558147455809883972">"刪除專案時發生錯誤。"</string>
+    <string name="editor_add_video_clip_error" msgid="3361429454748783356">"無法將影片剪輯新增至您的專案。"</string>
+    <string name="editor_add_image_error" msgid="537642460372324704">"無法將圖片新增至您的專案。"</string>
+    <string name="editor_move_media_item_error" msgid="3370835930609505642">"無法移動項目。"</string>
+    <string name="editor_remove_media_item_error" msgid="2913555471288806841">"無法移除項目。"</string>
+    <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"無法設定成像模式。"</string>
+    <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"無法設定圖片持續時間。"</string>
+    <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"無法設定影片剪輯範圍。"</string>
+    <string name="editor_add_transition_error" msgid="6471979516727265318">"無法新增轉場效果。"</string>
+    <string name="editor_remove_transition_error" msgid="7995113177965011103">"無法移除轉場效果。"</string>
+    <string name="editor_set_transition_duration_error" msgid="3773102565195022670">"無法設定轉場效果持續時間。"</string>
+    <string name="editor_add_overlay_error" msgid="6315983638203833916">"無法新增重疊效果。"</string>
+    <string name="editor_remove_overlay_error" msgid="4404087798919441977">"無法移除重疊效果。"</string>
+    <string name="editor_set_duration_overlay_error" msgid="1239098080272531324">"無法設定重疊效果持續時間。"</string>
+    <string name="editor_set_start_time_overlay_error" msgid="1586320960100883573">"無法設定重疊效果開始時間。"</string>
+    <string name="editor_set_user_attributes_overlay_error" msgid="1084389378842530649">"無法設定重疊效果屬性。"</string>
+    <string name="editor_add_effect_error" msgid="5341811634896566708">"無法新增效果。"</string>
+    <string name="editor_remove_effect_error" msgid="220855978011216681">"無法移除效果。"</string>
+    <string name="editor_add_audio_track_error" msgid="595137916691596584">"無法新增音軌。"</string>
+    <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"無法移除音軌。"</string>
+    <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"無法修剪音軌。"</string>
+    <string name="editor_transition_too_short" msgid="6861692504557642278">"轉場時間過短，因此無法新增轉場效果。"</string>
+    <string name="editor_media_load_error" msgid="458634098279249971">"無法下載檔案。"</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"匯出"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"電影大小"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"電影畫質"</string>
@@ -97,7 +97,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"平移和縮放效果"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"開始"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"結束"</string>
-    <!-- outdated translation 4250616742809088660 -->     <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"這個圖片過小，因此無法套用平移和縮放效果。"</string>
+    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"這個圖片過小，因此無法套用平移和縮放效果。"</string>
     <string name="theme_name_travel" msgid="667328014375405107">"旅遊"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"我的加州遊"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"舊金山"</string>
@@ -115,7 +115,7 @@
     <string name="overlay_title" msgid="4956934604656932207">"標題"</string>
     <string name="overlay_title_sample" msgid="8273092953382736653">"我的旅行"</string>
     <string name="overlay_subtitle_sample" msgid="3780261169507563826">"舊金山"</string>
-    <!-- outdated translation 6409278066167032335 -->     <string name="overlays_select_type" msgid="2636156650882536003">"選取標題範本"</string>
+    <string name="overlays_select_type" msgid="2636156650882536003">"選擇標題範本"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"標題"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"字幕"</string>
     <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"變更範本"</string>
@@ -125,7 +125,7 @@
     <string name="effect_sepia" msgid="674793199333159952">"復古效果"</string>
     <string name="effect_negative" msgid="4266435358235859136">"負片效果"</string>
     <string name="effect_fifties" msgid="8481127912713456758">"懷舊效果"</string>
-    <!-- outdated translation 4967975803733317444 -->     <string name="transitions_select_transition" msgid="2078853282860045900">"選取轉場效果"</string>
+    <string name="transitions_select_transition" msgid="2078853282860045900">"選擇轉場效果"</string>
     <string name="transitions_alpha_countour" msgid="8172271436629067722">"輪廓線 Alpha 遮罩"</string>
     <string name="transitions_alpha_diagonal" msgid="41249798064809453">"對角線 Alpha 遮罩"</string>
     <string name="transitions_crossfade" msgid="8675768530446018936">"交叉漸變"</string>

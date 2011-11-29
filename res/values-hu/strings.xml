@@ -42,7 +42,7 @@
     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Áttűnés a videó elején"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"Áttűnés a videó végén"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Átmenet módosítása"</string>
-    <string name="editor_video_load" msgid="195098585816541585">"A videoklip letöltése elindult. Amikor elkészült, értesíteni fogjuk."</string>
+    <string name="editor_video_load" msgid="195098585816541585">"A videó letöltése elindult. Amikor elkészült, értesíteni fogjuk."</string>
     <string name="editor_image_load" msgid="5271735501748316661">"A kép letöltése elindult. Amikor elkészült, értesíteni fogjuk."</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"Átmenet"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Ismétlés"</string>
@@ -66,13 +66,13 @@
     <string name="editor_saved_error" msgid="5347778960945973388">"A projekt nem menthető."</string>
     <string name="editor_release_error" msgid="8784979625100950327">"Hiba történt a projekt kiadása közben."</string>
     <string name="editor_delete_error" msgid="3558147455809883972">"Hiba történt a projekt törlése közben."</string>
-    <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Nem lehet hozzáadni a videoklipet a projekthez."</string>
+    <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Nem lehet hozzáadni a videót a projekthez."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Nem lehet hozzáadni a képet a projekthez."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Az elem nem helyezhető át."</string>
     <string name="editor_remove_media_item_error" msgid="2913555471288806841">"Nem lehet eltávolítani az elemet."</string>
     <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"Nem lehet beállítani a megjelenítési módot."</string>
     <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"Nem lehet beállítani a kép időtartamát."</string>
-    <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"Nem lehet beállítani a videoklip határait."</string>
+    <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"Nem lehet beállítani a videó határait."</string>
     <string name="editor_add_transition_error" msgid="6471979516727265318">"Nem lehet hozzáadni az átmenetet."</string>
     <string name="editor_remove_transition_error" msgid="7995113177965011103">"Nem lehet eltávolítani az átmenetet."</string>
     <string name="editor_set_transition_duration_error" msgid="3773102565195022670">"Nem lehet beállítani az átmenet időtartamát."</string>

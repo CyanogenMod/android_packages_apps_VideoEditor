@@ -62,7 +62,7 @@
     <string name="editor_load_error" msgid="8168726329719423779">"Error al cargar el proyecto. ¿Quieres eliminar este proyecto?"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"No se puede cambiar la relación de aspecto."</string>
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"No se puede aplicar el tema."</string>
-    <string name="editor_export_error" msgid="382400675648706944">"Error al exportar la película"</string>
+    <string name="editor_export_error" msgid="382400675648706944">"Error al exportar el vídeo"</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"No se puede guardar el proyecto."</string>
     <string name="editor_release_error" msgid="8784979625100950327">"Se ha producido un error al publicar el proyecto."</string>
     <string name="editor_delete_error" msgid="3558147455809883972">"Se ha producido un error al eliminar el proyecto."</string>

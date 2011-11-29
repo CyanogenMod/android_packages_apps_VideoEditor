@@ -58,7 +58,7 @@
     <string name="aspect_ratio_3_2" msgid="507963433914879558">"3 x 2"</string>
     <string name="aspect_ratio_4_3" msgid="3697255322178944937">"4 x 3"</string>
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"5 x 3"</string>
-    <string name="editor_storage_not_available" msgid="5030416644629630761">"Das Projekt kann nicht erstellt werden, da nicht auf den Speicher zugegriffen werden kann."</string>
+    <string name="editor_storage_not_available" msgid="5030416644629630761">"Das Projekt kann nicht erstellt werden, weil nicht auf den Speicher zugegriffen werden kann."</string>
     <string name="editor_create_error" msgid="6104899467848074373">"Das Projekt kann aufgrund eines Fehlers nicht erstellt werden."</string>
     <string name="editor_load_error" msgid="8168726329719423779">"Das Projekt kann aufgrund eines Fehlers nicht geladen werden. Möchten Sie dieses Projekt löschen?"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"Das Seitenverhältnis kann nicht geändert werden."</string>
@@ -87,7 +87,7 @@
     <string name="editor_add_audio_track_error" msgid="595137916691596584">"Der Audiotrack kann nicht hinzugefügt werden."</string>
     <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"Der Audiotrack kann nicht entfernt werden."</string>
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Der Audiotrack kann nicht geschnitten werden."</string>
-    <string name="editor_transition_too_short" msgid="6861692504557642278">"Der Übergang kann nicht hinzugefügt werden, da er zu kurz wäre."</string>
+    <string name="editor_transition_too_short" msgid="6861692504557642278">"Der Übergang kann nicht hinzugefügt werden, weil er zu kurz wäre."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Die Datei kann nicht heruntergeladen werden."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportieren"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Filmlänge"</string>
@@ -98,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Schwenk- &amp; Zoomeffekt"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Einrichten"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Beenden"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Der Schwenk- &amp; Zoomeffekt kann für dieses Bild nicht übernommen werden. Das Bild ist zu klein."</string>
+    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Der Schwenk- und Zoomeffekt kann für dieses Bild nicht übernommen werden. Das Bild ist zu klein."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Reisen"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Meine Reise nach Kalifornien"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

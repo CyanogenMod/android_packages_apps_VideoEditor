@@ -50,7 +50,7 @@
     <string name="editor_mute" msgid="4901844675777155179">"Kutt lyd"</string>
     <string name="editor_unmute" msgid="905024676961016538">"Slå på lyd"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"Demping"</string>
-    <string name="projects_new_project" msgid="835981505260510697">"Opprett prosjekt"</string>
+    <string name="projects_new_project" msgid="835981505260510697">"Nytt prosjekt"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Prosjektnavn"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
@@ -70,7 +70,7 @@
     <string name="editor_add_image_error" msgid="537642460372324704">"Kan ikke legge til bildet i prosjektet."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Kan ikke flytte elementet."</string>
     <string name="editor_remove_media_item_error" msgid="2913555471288806841">"Kan ikke fjerne elementet."</string>
-    <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"Kan ikke angi gjengivelsesmodusen."</string>
+    <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"Kan ikke angi gjengivelsesmodus."</string>
     <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"Kan ikke angi bildevarighet."</string>
     <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"Kan ikke angi grenser for videoklippet."</string>
     <string name="editor_add_transition_error" msgid="6471979516727265318">"Kan ikke legge til overgangen."</string>
@@ -115,7 +115,7 @@
     <string name="overlay_title" msgid="4956934604656932207">"Tittel"</string>
     <string name="overlay_title_sample" msgid="8273092953382736653">"Min tur"</string>
     <string name="overlay_subtitle_sample" msgid="3780261169507563826">"San Francisco"</string>
-    <string name="overlays_select_type" msgid="2636156650882536003">"Velg tittelmal"</string>
+    <string name="overlays_select_type" msgid="2636156650882536003">"Valg av tittelmal"</string>
     <string name="overlay_title_label" msgid="4354132919363220241">"Tittel"</string>
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Filmtekst"</string>
     <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Bytt mal"</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
-    <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
+    <string name="short_app_name" msgid="5507177282765852169">"Trình biên tập video"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"Trình biên tập video của Android"</string>
     <string name="editor_loading_project" msgid="4425794204325511857">"Đang tải dự án…"</string>
     <string name="editor_no_project" msgid="7878678429340266635">"Không tìm thấy dự án nào."</string>
     <string name="editor_add" msgid="1728703558703319942">"Thêm"</string>
@@ -88,7 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Không thể cắt đoạn âm thanh."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Không thể thêm hiệu ứng chuyển đổi. Thời gian chuyển đổi quá ngắn."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Không thể tải tệp xuống."</string>
-    <string name="export_dialog_export" msgid="3425471919331193846">"Xuất"</string>
+    <string name="export_dialog_export" msgid="3425471919331193846">"Xuất"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Kích thước phim"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Chất lượng phim"</string>
     <string name="export_dialog_movie_quality_low" msgid="5453423100969821309">"Thấp"</string>

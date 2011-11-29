@@ -34,7 +34,7 @@
     <string name="editor_add_effect" msgid="7598526041207561912">"Pridať efekt"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"Zmeniť efekt"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Odstrániť efekt"</string>
-    <string name="editor_pan_zoom_effect" msgid="4430230779587987690">"Panoráma a lupa"</string>
+    <string name="editor_pan_zoom_effect" msgid="4430230779587987690">"Posunutie a lupa"</string>
     <string name="editor_gradient_effect" msgid="7850306294518429709">"Gradient"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Sépiové farby"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Negatív"</string>
@@ -42,8 +42,8 @@
     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Prechod do klipu"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"Prechod na konci klipu"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Zmeniť prechod"</string>
-    <string name="editor_video_load" msgid="195098585816541585">"Preberanie videoklipu sa začalo. Po jeho dokončení budete upozornení."</string>
-    <string name="editor_image_load" msgid="5271735501748316661">"Preberanie obrázka začalo. Po jeho dokončení budete upozornení."</string>
+    <string name="editor_video_load" msgid="195098585816541585">"Preberanie videoklipu sa začalo. Po jeho dokončení dostanete upozornenie."</string>
+    <string name="editor_image_load" msgid="5271735501748316661">"Preberanie obrázka začalo. Po jeho dokončení dostanete upozornenie."</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"Prechod"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Opakovať"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Neopakovať"</string>
@@ -97,7 +97,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Efekt posunutia a priblíženia"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Spustiť"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Koniec"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Efekt panoráma a lupa nie je možné použiť na tento obrázok. Obrázok je príliš malý."</string>
+    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Efekt posunutia a lupy na tento obrázok nie je možné použiť. Je príliš malý."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Cestovanie"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Môj výlet do Kalifornie"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>
