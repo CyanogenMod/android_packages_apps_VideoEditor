@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
+    <string name="short_app_name" msgid="5507177282765852169">"电影工作室"</string>
     <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"正在载入项目..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"未找到项目"</string>
@@ -126,8 +126,8 @@
     <string name="effect_negative" msgid="4266435358235859136">"负片效果"</string>
     <string name="effect_fifties" msgid="8481127912713456758">"五十年代效果"</string>
     <string name="transitions_select_transition" msgid="4967975803733317444">"选择切换"</string>
-    <string name="transitions_alpha_countour" msgid="8172271436629067722">"轮廓 alpha"</string>
-    <string name="transitions_alpha_diagonal" msgid="41249798064809453">"对角线 alpha"</string>
+    <string name="transitions_alpha_countour" msgid="8172271436629067722">"轮廓 Alpha 通道遮罩"</string>
+    <string name="transitions_alpha_diagonal" msgid="41249798064809453">"对角线 Alpha 通道遮罩"</string>
     <string name="transitions_crossfade" msgid="8675768530446018936">"淡入淡出"</string>
     <string name="transitions_fade_black" msgid="4660683008630768277">"黑色背景淡入与淡出"</string>
     <string name="transitions_sliding_right_out_left_in" msgid="1389887781046015922">"从左滑入，从右滑出"</string>
