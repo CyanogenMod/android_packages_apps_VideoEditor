@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
-    <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
+    <string name="short_app_name" msgid="5507177282765852169">"Trình biên tập video"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"Trình biên tập video của Android"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"Đang tải dự án..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Không tìm thấy dự án nào"</string>
     <string name="editor_add" msgid="1728703558703319942">"Thêm"</string>

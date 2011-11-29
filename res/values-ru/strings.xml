@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="short_app_name" msgid="5507177282765852169">"Movie Studio"</string>
-    <string name="full_app_name" msgid="5729546228978363869">"Android Movie Studio"</string>
+    <string name="short_app_name" msgid="5507177282765852169">"Киностудия"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"Киностудия Android"</string>
     <string name="editor_loading_project" msgid="3510642162166476100">"Загрузка проекта..."</string>
     <string name="editor_no_project" msgid="3873338552933049950">"Проекты не найдены"</string>
     <string name="editor_add" msgid="1728703558703319942">"Добавить"</string>
@@ -94,7 +94,7 @@
     <string name="export_dialog_movie_quality_low" msgid="5453423100969821309">"Низкое"</string>
     <string name="export_dialog_movie_quality_medium" msgid="4907951890148318364">"Среднее"</string>
     <string name="export_dialog_movie_quality_high" msgid="4622241978022000159">"Высокое"</string>
-    <string name="pan_zoom_title" msgid="5962535722026848255">"Эффект Кена Бернса"</string>
+    <string name="pan_zoom_title" msgid="5962535722026848255">"Эффект \"Панорама+масштаб\""</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Начало"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Конец"</string>
     <string name="pan_zoom_small_image_error" msgid="4250616742809088660">"К этому изображению невозможно применить эффект Кена Бернса. Размер изображения слишком мал."</string>
@@ -120,7 +120,7 @@
     <string name="overlay_subtitle_label" msgid="7551473702348702251">"Субтитры"</string>
     <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"Изменить шаблон"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"Эффекты"</string>
-    <string name="effect_pan_zoom" msgid="569977803331838206">"Эффект Кена Бернса"</string>
+    <string name="effect_pan_zoom" msgid="569977803331838206">"Эффект \"Панорама+масштаб\""</string>
     <string name="effect_gradient" msgid="3375636253347853008">"Эффект градиента"</string>
     <string name="effect_sepia" msgid="674793199333159952">"Сепия"</string>
     <string name="effect_negative" msgid="4266435358235859136">"Эффект негатива"</string>
