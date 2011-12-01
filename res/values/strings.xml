@@ -178,6 +178,8 @@
     <string name="editor_transition_too_short">Cannot add a transition. The transition would be too short.</string>
     <!-- Error message displayed in a toast when a video clip or an image cannot be downloaded. -->
     <string name="editor_media_load_error">Cannot download file.</string>
+    <!-- Error message displayed in a toast if a project cannot be previewed. -->
+    <string name="editor_preview_error">An error occurred. The project cannot be previewed.</string>
 
      <!-- Export options dialog-->
     <!-- The title of the export dialog. -->
