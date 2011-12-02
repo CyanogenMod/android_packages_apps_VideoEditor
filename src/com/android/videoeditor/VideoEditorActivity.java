@@ -1915,6 +1915,22 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                                     }
                                 });
                             }
+
+                            public void onError(VideoEditor videoEditor, int error) {
+                                Log.w(TAG, "PreviewProgressListener onError:" + error);
+
+                                // Notify the user that some error happened.
+                                mMainHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String msg = getString(R.string.editor_preview_error);
+                                        Toast.makeText(VideoEditorActivity.this, msg,
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                                onStop(videoEditor);
+                            }
                         });
 
                         mMainHandler.post(new Runnable() {
