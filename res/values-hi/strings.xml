@@ -88,6 +88,8 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"ऑडियो ट्रैक ट्रिम नहीं कर सकता."</string>
     <string name="editor_transition_too_short" msgid="3956089619553629988">"कोई संक्रमण जोड़ नहीं सकता. संक्रमण बहुत छोटा होगा."</string>
     <string name="editor_media_load_error" msgid="2421624042826573589">"फ़ाइल डाउनलोड नहीं कर सकता."</string>
+    <!-- no translation found for editor_preview_error (8160936065171079209) -->
+    <skip />
     <string name="export_dialog_export" msgid="3425471919331193846">"निर्यात करें"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"फ़िल्म आकार"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"फ़िल्म गुणवत्ता"</string>
