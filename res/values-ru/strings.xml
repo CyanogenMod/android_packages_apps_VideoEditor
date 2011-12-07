@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"Невозможно обрезать трек."</string>
     <string name="editor_transition_too_short" msgid="3956089619553629988">"Невозможно добавить переход. Переход слишком короткий."</string>
     <string name="editor_media_load_error" msgid="2421624042826573589">"Невозможно загрузить файл."</string>
+    <string name="editor_preview_error" msgid="8160936065171079209">"Ошибка. Невозможно просмотреть проект."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Экспорт"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Размер фильма"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Качество фильма"</string>

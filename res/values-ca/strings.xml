@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"No es pot retallar la pista d\'àudio."</string>
     <string name="editor_transition_too_short" msgid="3956089619553629988">"No es pot afegir una transició. La transició seria massa curta."</string>
     <string name="editor_media_load_error" msgid="2421624042826573589">"No es pot baixar el fitxer."</string>
+    <string name="editor_preview_error" msgid="8160936065171079209">"S\'ha produït un error i no s\'ha pogut previsualitzar el projecte."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exporta"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Mida de la pel·lícula"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Qualitat de la pel·lícula"</string>

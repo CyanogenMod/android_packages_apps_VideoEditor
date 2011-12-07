@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"音声トラックを短くできません。"</string>
     <string name="editor_transition_too_short" msgid="3956089619553629988">"トランジションを追加できません。トランジションが短すぎます。"</string>
     <string name="editor_media_load_error" msgid="2421624042826573589">"ファイルをダウンロードできません。"</string>
+    <string name="editor_preview_error" msgid="8160936065171079209">"エラーが発生しました。プロジェクトをプレビューできません。"</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"エクスポート"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"映画サイズ"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"映画の画質"</string>
