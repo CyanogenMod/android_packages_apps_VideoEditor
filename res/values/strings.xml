@@ -131,9 +131,9 @@
     <!-- Error message displayed in a toast if a project cannot be saved. -->
     <string name="editor_saved_error">Can\'t save the project.</string>
     <!-- Error message displayed in a toast if an error had occurred while releasing the project. -->
-    <string name="editor_release_error">There was an error while releasing the project.</string>
+    <string name="editor_release_error">Couldn\'t release the project because of an error.</string>
     <!-- Error message displayed in a toast if an error had occurred while releasing the project. -->
-    <string name="editor_delete_error">There was an error while deleting the project.</string>
+    <string name="editor_delete_error">Couldn\'t delete the project because of an error.</string>
     <!-- Error message displayed in a toast if an error occurs if a video clip cannot be added to the project. -->
     <string name="editor_add_video_clip_error">Can\'t add the video clip to your project.</string>
     <!-- Error message displayed in a toast if an error occurs if an image cannot be added to the project. -->
@@ -179,7 +179,7 @@
     <!-- Error message displayed in a toast when a video clip or an image cannot be downloaded. -->
     <string name="editor_media_load_error">Can\'t download the file.</string>
     <!-- Error message displayed in a toast if a project cannot be previewed. -->
-    <string name="editor_preview_error">An error occurred. The project cannot be previewed.</string>
+    <string name="editor_preview_error">Can\'t show the project preview because of an error.</string>
 
      <!-- Export options dialog-->
     <!-- The title of the export dialog. -->
@@ -202,7 +202,7 @@
     <string name="pan_zoom_start">Start</string>
     <!-- The label for the end rectangle checkbox. -->
     <string name="pan_zoom_end">End</string>
-    <string name="pan_zoom_small_image_error">Can\'t apply the pan &amp; zoom effect to this image. The image is too small.</string>
+    <string name="pan_zoom_small_image_error">The image is too small to apply the pan &amp; zoom effect.</string>
 
     <!-- Themes names and titles-->
     <!-- The label/name for Theme 1. -->
