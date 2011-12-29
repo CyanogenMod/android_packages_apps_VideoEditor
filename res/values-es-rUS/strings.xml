@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"No se puede aplicar el tema."</string>
     <string name="editor_export_error" msgid="382400675648706944">"No se puede exportar la película debido a un error."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"No se puede guardar el proyecto."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Se produjo un error al publicar el proyecto."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Se produjo un error al eliminar el proyecto."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"No se pudo iniciar el proyecto debido a un error."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"No se pudo eliminar el proyecto debido a un error."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"No se puede agregar el videoclip a tu proyecto."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"No se puede agregar la imagen a tu proyecto."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"No se puede mover el elemento."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"No es posible recortar la pista de audio."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"No se puede agregar una transición. La transición sería demasiado corta."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"No se puede descargar el archivo."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"No se puede mostrar la vista previa del proyecto debido a un error."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportar"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Tamaño de la película"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Calidad de la película"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Efecto &amp; zoom y panorámico"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Inicio"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Finalizar"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"No se puede aplicar el efecto de panorámica y zoom a esta imagen. La imagen es demasiado pequeña."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"La imagen es demasiado pequeña para el efecto zoom y panorámico."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Viajes"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Mi viaje a California"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

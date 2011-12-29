@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Δεν είναι δυνατή η εφαρμογή του θέματος."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Δεν είναι δυνατή η εξαγωγή της ταινίας επειδή προέκυψε σφάλμα."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Δεν είναι δυνατή η αποθήκευση του έργου."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Προέκυψε σφάλμα κατά την έκδοση του έργου."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Προέκυψε σφάλμα κατά τη διαγραφή του έργου."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Δεν ήταν δυνατή η δημοσίευση του έργου λόγω κάποιου σφάλματος."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Δεν ήταν δυνατή η διαγραφή του έργου λόγω κάποιου σφάλματος."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Δεν είναι δυνατή η προσθήκη βιντεοκλίπ στο έργο σας."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Δεν είναι δυνατή η προσθήκη της εικόνας στο έργο σας."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Δεν είναι δυνατή η μετακίνηση του στοιχείου."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Δεν είναι δυνατή η αποκοπή του κομματιού ήχου."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Δεν είναι δυνατή η προσθήκη μετάβασης. Η μετάβαση θα ήταν πολύ σύντομη."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Δεν είναι δυνατή η λήψη του αρχείου."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Δεν είναι δυνατή η εμφάνιση της προεπισκόπησης του έργου λόγω κάποιου σφάλματος."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Εξαγωγή"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Μέγεθος ταινίας"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Ποιότητα ταινίας"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Εφέ μετακίνησης και μεγέθυνσης"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Εκκίνηση"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Τερματισμός"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Δεν είναι δυνατή η εφαρμογή του εφέ \"Μετατόπιση και ζουμ\" σε αυτήν την εικόνα. Η εικόνα είναι πολύ μικρή."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Η εικόνα είναι πολύ μικρή για να εφαρμοστεί το εφέ μετατόπισης και ζουμ."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Ταξίδια"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Το ταξίδι μου στην Καλιφόρνια"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"Σαν Φρανσίσκο"</string>

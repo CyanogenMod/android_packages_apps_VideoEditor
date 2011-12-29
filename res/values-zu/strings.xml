@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Iyehluleka ukufaka ingqikithi."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Ayikwazi ukuthumela imuvi ngena yephutha."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Ayikwazi ukulondoloza umsebenzi."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Kube nephutha kusadedelwa umsebenzi."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Kube khona iphutha ngesikhathi kususwa umsebenzi."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Ayikwazanga ukukhipha Couldn\'t release the project because of an error."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Ayikwazanga ukusula iprojekthi ngenxa yephutha."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Iyehluleka ukwengez isiqeshana sevidiyo emsebenzini wakho."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Iyehluleka ukwengez isiqeshana sevidiyo emsebenzini wakho."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Iyehluleka ukususa into."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Ayikwazi ukunciphisa ingoma elalelwayo."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Ayikwazi ukwengeza inguquko. Inguquko ayikwazanga ukuba mfishane."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Ayikwazi ukulayisha ifayela"</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Ayikwazi ukubonisa ukubuka kuqala kwephrojekthi ngenxa yephutha."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Thumela kwenye indawo"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Usayizi we-Movie"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Ubu ngqo be-movie"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"i-Pan &amp; umphumela wokusondeza"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Qala"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Qeda"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Ayikwazi ukufaka isinandisi sokuqalaz &amp; nokusondeza lomfanekiso. Umfanekiso muncane kakhulu."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Isithombe sincane kakhulu ukusebenzisa umphumela wokunyakazisa nokukhulisa."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Ukuvakasha"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Uhambo lwami lokuya-California"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

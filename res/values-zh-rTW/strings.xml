@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"無法套用主題。"</string>
     <string name="editor_export_error" msgid="382400675648706944">"發生錯誤，無法匯出電影。"</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"無法儲存專案。"</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"發佈專案時發生錯誤。"</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"刪除專案時發生錯誤。"</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"發生錯誤，無法發佈專案。"</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"發生錯誤，無法刪除專案。"</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"無法將影片剪輯新增至您的專案。"</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"無法將圖片新增至您的專案。"</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"無法移動項目。"</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"無法修剪音軌。"</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"轉場時間過短，因此無法新增轉場效果。"</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"無法下載檔案。"</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"發生錯誤，無法預覽專案。"</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"匯出"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"電影大小"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"電影畫質"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"平移和縮放效果"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"開始"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"結束"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"這個圖片過小，因此無法套用平移和縮放效果。"</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"圖片過小，無法套用平移和縮放效果。"</string>
     <string name="theme_name_travel" msgid="667328014375405107">"旅遊"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"我的加州遊"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"舊金山"</string>

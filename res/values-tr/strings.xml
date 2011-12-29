@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Tema uygulanamıyor."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Bir hata nedeniyle film dışa aktarılamıyor."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Proje kaydedilemiyor."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Proje kullanıma sunulurken bir hata oluştu."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Projeyi silerken bir hata oluştu."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Bir hata nedeniyle proje bırakılamadı."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Bir hata nedeniyle proje silinemedi."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Video klip projenize eklenemiyor."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Resim, projenize eklenemiyor."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Öğe taşınamıyor."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Ses parçası kısaltılamaz."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Geçiş eklenemiyor. Geçiş çok kısa olacaktı."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Dosya indirilemiyor."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Bir hata nedeniyle proje gösterilemiyor."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Dışa aktar"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Film boyutu"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Film kalitesi"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Kaydırma ve zum yapma efekti"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Başlangıç"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Son"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Pan ve zum efekti bu resme uygulanamıyor. Resim çok küçük."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Resim, kaydırma ve zum efektini uygulamak için çok küçük."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Seyahat"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"California yolculuğum"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

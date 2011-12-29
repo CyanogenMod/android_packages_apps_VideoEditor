@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Nepavyksta taikyti temos."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Dėl klaidos nepavyksta eksportuoti filmo."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Nepavyksta išsaugoti projekto."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Išleidžiant projektą įvyko klaida."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Ištrinant projektą įvyko klaida."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Dėl klaidos nepavyko išleisti projekto."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Dėl klaidos nepavyko ištrinti projekto."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Nepavyksta prie projekto pridėti vaizdo klipo."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Nepavyksta prie projekto pridėti vaizdo."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Nepavyksta perkelti elemento."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Nepavyksta sutrumpinti garso takelio."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Nepavyksta pridėti perėjimo. Perėjimas būtų per trumpas."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Nepavyksta atsisiųsti failo."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Dėl klaidos nepavyksta rodyti projekto peržiūros."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Eksportuoti"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Filmo dydis"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Filmo kokybė"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Stumdymo ir mastelio keitimo efektas"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Pradėti"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Pabaiga"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Šiam vaizdui negalima taikyti apžvalgos ir mastelio keitimo efekto. Vaizdas per mažas."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Vaizdas per mažas, kad būtų galima taikyti panoraminio vaizdo ir mastelio keitimo efektą."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Kelionės"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Mano kelionė į Kaliforniją"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Fransiskas"</string>

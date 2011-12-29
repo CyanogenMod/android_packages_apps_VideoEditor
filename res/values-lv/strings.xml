@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Nevar lietot motīvu."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Nevar eksportēt filmu kļūdas dēļ."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Nevar saglabāt projektu."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Radās kļūda, izlaižot projektu."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Radās kļūda, dzēšot projektu."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Projektu nevarēja izlaist kļūdas dēļ."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Projektu nevarēja dzēst kļūdas dēļ."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Jūsu projektam nevar pievienot videoklipu."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Jūsu projektam nevar pievienot attēlu."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Nevar pārvietot vienumu."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Nevar apgriezt audio ierakstu."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Nevar pievienot pāreju. Pāreja būtu pārāk īsa."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Nevar lejupielādēt failu."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Nevar parādīt projekta priekšskatījumu kļūdas dēļ."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Eksportēšana"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Filmas lielums"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Filmas kvalitāte"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Panoramēšanas un tālummaiņas efekts"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Sākt"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Beigt"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Šim attēlam nevar pievienot panoramēšanas un tālummaiņas efektu. Attēls ir pārāk mazs."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Attēls ir pārāk mazs, lai lietotu panorāmas un tālummaiņas efektu."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Ceļojums"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Mans brauciens uz Kaliforniju"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"Sanfrancisko"</string>

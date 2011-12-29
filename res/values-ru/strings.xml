@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Не удалось сохранить изменения."</string>
     <string name="editor_export_error" msgid="382400675648706944">"При экспорте фильма произошла ошибка."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Не удалось сохранить проект."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"При публикации проекта произошла ошибка."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"При удалении проекта произошла ошибка."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Не удалось опубликовать проект."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Не удалось удалить проект."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Не удалось добавить видеоклип в проект."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Не удалось добавить изображение в проект."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Не удалось переместить элемент."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Не удалось сохранить изменения."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Не удалось добавить переход, так как он слишком короткий."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Не удалось загрузить файл."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Не удалось открыть окно предпросмотра."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Экспорт"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Размер фильма"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Качество фильма"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Эффект \"Панорама+масштаб\""</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Начало"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Конец"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Не удалось применить эффект панорамирования и масштабирования, так как изображение слишком маленькое."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Изображение слишком маленькое для панорамирования и масштабирования."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Путешествия"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Моя поездка к Балтийскому морю"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"Санкт-Петербург"</string>

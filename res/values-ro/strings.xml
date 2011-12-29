@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Nu se poate aplica tema."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Nu poate exporta filmul din cauza unei erori."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Nu se poate salva proiectul."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"A apărut o eroare la lansarea proiectului."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"A apărut o eroare la ştergerea proiectului."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Proiectul nu a putut fi lansat din cauza unei erori."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Proiectul nu a putut fi şters din cauza unei erori."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Nu se poate adăuga videoclipul la proiect."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Nu se poate adăuga imaginea la proiect."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Nu se poate muta elementul."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Componenta audio nu se poate ajusta."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Nu se poate adăuga o tranziţie, deoarece aceasta ar fi prea scurtă."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Nu se poate descărca fişierul."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Proiectul nu poate fi previzualizat din cauza unei erori."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportaţi"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Dimensiunea filmului"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Calitatea filmului"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Efect de deplasare şi panoramare"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Porniţi"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Opriţi"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Nu se poate aplica efectul de deplasare şi panoramare la această imagine, deoarece imaginea este prea mică."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Imaginea este prea mică pentru a putea utiliza efectul de deplasare şi zoom."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Călătorii"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Excursia mea în California"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

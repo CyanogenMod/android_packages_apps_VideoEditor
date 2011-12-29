@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Det går inte att använda temat."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Ett fel inträffade. Det går inte att exportera filmen."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Det går inte att spara projektet."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Ett fel inträffade när projektet skulle släppas."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Ett fel inträffade när projektet skulle tas bort."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Det gick inte att släppa projektet på grund av ett fel."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Det gick inte att ta bort projektet på grund av ett fel."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Det går inte att lägga till videoklippet i ditt projekt."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Det går inte att lägga till bilden i ditt projekt."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Det går inte att flytta objektet."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Det går inte att beskära ljudspåret."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Det går inte att lägga till en övergång eftersom övergången skulle bli för kort."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Det går inte att hämta filen."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Det går inte att förhandsgranska projektet på grund av ett fel."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportera"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Filmstorlek"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Filmkvalitet"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Panorerings- och zoomeffekt"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Start"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Avsluta"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Det går inte att panorera eller zooma på den här bilden. Bilden är för liten."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Bilden är för liten för att panorera och zooma."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Resor"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Min resa till Kalifornien"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

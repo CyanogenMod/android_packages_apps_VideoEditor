@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"थीम लागू नहीं की जा सकती."</string>
     <string name="editor_export_error" msgid="382400675648706944">"किसी त्रुटि के कारण फिल्म निर्यात नहीं की जा सकती."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"प्रोजेक्‍ट सहेजा नहीं जा सकता."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"प्रोजेक्‍ट रिलीज़ करते समय कोई त्रुटि हुई थी."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"प्रोजेक्‍ट हटाते समय कोई त्रुटि हुई थी."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"किसी त्रुटि के कारण प्रोजेक्‍ट को रिलीज़ नहीं किया जा सका."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"किसी त्रुटि के कारण प्रोजेक्‍ट को हटाया नहीं जा सका."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"आपके प्रोजेक्‍ट में वीडियो क्‍लिप जोड़ी नहीं जा सकती."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"आपके प्रोजेक्‍ट में छवि जोड़ी नहीं जा सकती."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"आइटम स्‍थानांतरित नहीं किया जा सकता."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"ऑडियो ट्रैक ट्रिम नहीं किया जा सकता."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"कोई संक्रमण जोड़ा नहीं जा सकता. संक्रमण बहुत छोटा होगा."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"फ़ाइल डाउनलोड नहीं की जा सकती."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"किसी त्रुटि के कारण प्रोजेक्‍ट का पूर्वावलोकन नहीं दिखाया जा सकता."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"निर्यात करें"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"फ़िल्म आकार"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"फ़िल्म गुणवत्ता"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"पैन और ज़ूम प्रभाव"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"प्रारंभ"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"समाप्त"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"इस छवि पर पैन और ज़ूम प्रभाव लागू नहीं किया जा सकता. छवि बहुत छोटी है."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"पैन और ज़ूम प्रभाव लागू करने के लिए छवि बहुत छोटी है."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"यात्रा"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"मेरा कैलिफ़ोर्निया भ्रमण"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"सैन फ़्रांसिस्को"</string>

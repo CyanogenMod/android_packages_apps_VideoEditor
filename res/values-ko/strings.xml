@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"테마를 적용할 수 없습니다."</string>
     <string name="editor_export_error" msgid="382400675648706944">"오류가 발생하여 영화를 내보낼 수 없습니다."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"프로젝트를 저장할 수 없습니다."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"프로젝트를 실행하는 중에 오류가 발생했습니다."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"프로젝트를 삭제하는 동안 오류가 발생했습니다."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"오류가 발생하여 프로젝트를 릴리스할 수 없습니다."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"오류가 발생하여 프로젝트를 삭제할 수 없습니다."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"프로젝트에 동영상 클립을 추가할 수 없습니다."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"프로젝트에 이미지를 추가할 수 없습니다."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"항목을 이동할 수 없습니다."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"오디오 트랙을 잘라낼 수 없습니다."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"전환을 추가할 수 없습니다. 전환이 너무 짧습니다."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"파일을 다운로드할 수 없습니다."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"오류가 발생하여 프로젝트 미리보기를 표시할 수 없습니다."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"내보내기"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"동영상 크기"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"동영상 품질"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"이동 및 확대/축소 효과"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"시작"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"종료"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"이미지에 이동 및 확대/축소 효과를 적용할 수 없습니다. 이미지가 너무 작습니다."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"이미지가 너무 작아 이동 및 확대/축소 효과를 적용할 수 없습니다."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"여행"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"캘리포니아 여행"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"샌프란시스코"</string>

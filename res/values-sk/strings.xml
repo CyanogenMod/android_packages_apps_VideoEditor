@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Motív nie je možné použiť."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Film nie je možné kvôli chybe exportovať."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Projekt nie je možné uložiť."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Pri spúšťaní projektu sa vyskytla chyba."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Pri odstraňovaní projektu sa vyskytla chyba."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Kvôli chybe sa projekt nepodarilo vydať."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Kvôli chybe sa projekt nepodarilo odstrániť."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Videoklip nie je možné pridať do projektu."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Obrázok nie je možné pridať do projektu."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Položku nie je možné presunúť."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Zvukovú stopu nie je možné orezať."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Prechod nie je možné pridať. Prechod by bol príliš krátky."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Súbor nie je možné prevziať."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Kvôli chybe nie je možné zobraziť ukážku projektu."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportovať"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Veľkosť filmu"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Kvalita filmu"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Efekt posunutia a priblíženia"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Spustiť"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Koniec"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Efekt posunutia a lupy na tento obrázok nie je možné použiť. Je príliš malý."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Obrázok je príliš malý na použitie efektu posunutia a lupy."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Cestovanie"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Môj výlet do Kalifornie"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

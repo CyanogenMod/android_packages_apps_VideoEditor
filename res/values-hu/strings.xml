@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"A téma nem alkalmazható."</string>
     <string name="editor_export_error" msgid="382400675648706944">"A film egy hiba miatt nem exportálható."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"A projekt nem menthető."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Hiba történt a projekt kiadása közben."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Hiba történt a projekt törlése közben."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Egy hiba miatt nem sikerült engedélyezni a projektet."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Egy hiba miatt nem sikerült törölni a projektet."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Nem lehet hozzáadni a videót a projekthez."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Nem lehet hozzáadni a képet a projekthez."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Az elem nem helyezhető át."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"A hangsáv nem vágható meg."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Nem lehet hozzáadni átmenetet, mert az túl rövid lenne."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Nem lehet letölteni a fájlt."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Egy hiba miatt nem lehet megnézni a projekt előnézetét."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportálás"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Film mérete"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Filmminőség"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Pásztázás és közelítés effekt"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Indítás"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Befejezés"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Ezen a képen nem alkalmazható a mozgatás és nagyítás effekt. A kép túl kicsi."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"A kép túl kicsi a pásztázáshoz és a kicsinyítéshez/nagyításhoz."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Utazás"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Utazásom Kaliforniába"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>

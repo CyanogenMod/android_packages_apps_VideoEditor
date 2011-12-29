@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"نمی‌توان طرح زمینه را اعمال نمود."</string>
     <string name="editor_export_error" msgid="382400675648706944">"به دلیل خطا نمی‌توان فیلم را استخراج نمود."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"نمی‌توان پروژه را ذخیره نمود."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"در حین انتشار پروژه، خطایی وجود داشت."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"در حین حذف این پروژه خطایی وجود داشت."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"پروژه به دلیل خطا منتشر نشد."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"پروژه به دلیل خطا حذف نشد."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"کلیپ ویدیویی را نمی‌توان به پروژه خود اضافه نمود."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"نمی‌توان تصویری را به پروژه خود اضافه کرد."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"مورد منتقل نمی‌شود."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"تراک صوتی را نمی‌توان برش داد."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"افزودن انتقال ممکن نیست. انتقال بیش از حد کوتاه می‌شود."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"فایل را نمی‌توان دانلود نمود."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"پیش‌نمایش پروژه به دلیل خطا نشان داده نمی‌شود."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"صادر کردن"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"اندازه فیلم"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"کیفیت فیلم"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"جلوه چرخش و بزرگنمایی"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"شروع"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"پایان"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"جلوه حرکت روی صفحه و بزرگنمایی به این صفحه اعمال نمی‌شوند. تصویر بسیار کوچک است."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"تصویر برای اعمال جلوه حرکت و بزرگنمایی بیش از حد کوچک است."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"سفر"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"سفر من به کالیفرنیا"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"سانفرانسیسکو"</string>

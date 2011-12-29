@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"ไม่สามารถใช้ธีม"</string>
     <string name="editor_export_error" msgid="382400675648706944">"ไม่สามารถส่งออกภาพยนตร์เนื่องจากเกิดข้อผิดพลาด"</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"ไม่สามารถบันทึกโครงการ"</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"เกิดข้อผิดพลาดขณะเปิดตัวโครงการ"</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"เกิดข้อผิดพลาดขณะลบโครงการ"</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"ไม่สามารถเปิดตัวโครงการได้เนื่องจากข้อผิดพลาด"</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"ไม่สามารถลบโครงการได้เนื่องจากข้อผิดพลาด"</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"ไม่สามารถเพิ่มวิดีโอคลิปลงในโครงการของคุณ"</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"ไม่สามารถเพิ่มภาพลงในโครงการของคุณ"</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"ไม่สามารถย้ายรายการ"</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"ไม่สามารถตัดแทร็กเสียง"</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"ไม่สามารถเพิ่มการเปลี่ยนหน้า การเปลี่ยนหน้าสั้นเกินไป"</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"ไม่สามารถดาวน์โหลดไฟล์"</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"ไม่สามารถแสดงหน้าตัวอย่างโครงการได้เนื่องจากข้อผิดพลาด"</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"ส่งออก"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"ขนาดภาพยนตร์"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"คุณภาพของภาพยนตร์"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"เอฟเฟกต์การแพนและย่อ/ขยาย"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"เริ่มต้น"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"สิ้นสุด"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"ไม่สามารถใช้เอฟเฟ็กต์เลื่อนและย่อ/ขยายกับภาพนี้ได้เพราะมีขนาดเล็กเกินไป"</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"ภาพเล็กเกินกว่าจะใช้เอฟเฟ็กต์แพนและย่อ/ขยาย"</string>
     <string name="theme_name_travel" msgid="667328014375405107">"การเดินทาง"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"การเดินทางสู่แคลิฟอร์เนียของฉัน"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"ซานฟรานซิสโก"</string>

@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Није могуће применити тему."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Није могуће извести филм због грешке."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Није могуће сачувати пројекат."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Дошло је до грешке при објављивању пројекта."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Дошло је до грешке при брисању пројекта."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Није могуће издати пројекат због грешке."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Није могуће избрисати пројекат због грешке."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Није могуће додати видео клип у пројекат."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Није могуће додати слику у пројекат."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Није могуће преместити ставку."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Није могуће скратити аудио снимак."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Није могуће додати прелаз. Прелаз би био прекратак."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Није могуће преузети датотеку."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Није могуће приказати преглед пројекта због грешке."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Извоз"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Величина филма"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Квалитет филма"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Ефекат померања и зумирања"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Покрени"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Заврши"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Није могуће применити ефекат померања и зумирања на ову слику. Слика је премала."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Слика је сувише мала да би се применио ефекат померања и зумирања."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Путовање"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Моје путовање у Калифорнију"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"Сан Франциско"</string>

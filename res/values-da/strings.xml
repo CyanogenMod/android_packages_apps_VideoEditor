@@ -35,7 +35,7 @@
     <string name="editor_change_effect" msgid="2867521171671527910">"Skift effekt"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Fjern effekt"</string>
     <string name="editor_pan_zoom_effect" msgid="4430230779587987690">"Panorer/zoom"</string>
-    <string name="editor_gradient_effect" msgid="7850306294518429709">"Hældning"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Glidende overgang"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Sepia"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Negativ"</string>
     <string name="editor_no_effect" msgid="382362560484492238">"Ingen effekt"</string>
@@ -64,8 +64,8 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Temaet kan ikke anvendes."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Filmen kan ikke eksporteres på grund af en fejl."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Projektet kan ikke gemmes."</string>
-    <string name="editor_release_error" msgid="8784979625100950327">"Der opstod en fejl ved udgivelsen af projektet."</string>
-    <string name="editor_delete_error" msgid="3558147455809883972">"Der opstod en fejl ved sletningen af projektet."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Projektet kunne ikke udgives på grund af en fejl."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Projektet kunne ikke slettes på grund af en fejl."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Videoklippet kan ikke føjes til dit projekt."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Billedet kan ikke føjes til dit projekt."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Elementet kan ikke flyttes."</string>
@@ -88,6 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Lydsporet kan ikke beskæres."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Der kan ikke tilføjes en overgang. Overgangen ville være for kort."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Filen kan ikke downloades."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Der kan ikke vises et eksempel på projektet på grund af en fejl."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Eksporter"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Filmstørrelse"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Filmkvalitet"</string>
@@ -97,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"Panorerings- og zoomeffekt"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"Start"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"Slutning"</string>
-    <string name="pan_zoom_small_image_error" msgid="3368347791668826341">"Panorerings- og zoomeffekten kan ikke anvendes på dette billede. Billedet er for lille."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"Billedet er for lille til, at panorerings- og zoom-effekten kan anvendes."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"Rejser"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"Min tur til Californien"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"San Francisco"</string>
