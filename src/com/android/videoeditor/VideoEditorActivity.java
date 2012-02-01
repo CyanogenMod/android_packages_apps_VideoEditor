@@ -556,7 +556,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
                 final Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mCaptureMediaUri);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 startActivityForResult(intent, REQUEST_CODE_CAPTURE_VIDEO);
                 return true;
             }
@@ -570,7 +569,6 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                 final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mCaptureMediaUri);
-                intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 startActivityForResult(intent, REQUEST_CODE_CAPTURE_IMAGE);
                 return true;
             }
