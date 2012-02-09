@@ -64,7 +64,7 @@
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Iyehluleka ukufaka ingqikithi."</string>
     <string name="editor_export_error" msgid="382400675648706944">"Ayikwazi ukuthumela imuvi ngena yephutha."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Ayikwazi ukulondoloza umsebenzi."</string>
-    <string name="editor_release_error" msgid="5789983632914351735">"Ayikwazanga ukukhipha Couldn\'t release the project because of an error."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Ayikwazanga ukukhipha iphrojekthi ngenxa yephutha."</string>
     <string name="editor_delete_error" msgid="242821026624698563">"Ayikwazanga ukusula iprojekthi ngenxa yephutha."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Iyehluleka ukwengez isiqeshana sevidiyo emsebenzini wakho."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Iyehluleka ukwengez isiqeshana sevidiyo emsebenzini wakho."</string>
