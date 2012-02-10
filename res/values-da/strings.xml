@@ -35,7 +35,7 @@
     <string name="editor_change_effect" msgid="2867521171671527910">"Skift effekt"</string>
     <string name="editor_remove_effect" msgid="7802250142621203881">"Fjern effekt"</string>
     <string name="editor_pan_zoom_effect" msgid="7040551005893392872">"Pan Zoom"</string>
-    <string name="editor_gradient_effect" msgid="7850306294518429709">"Hældning"</string>
+    <string name="editor_gradient_effect" msgid="7850306294518429709">"Glidende overgang"</string>
     <string name="editor_sepia_effect" msgid="2862418961255160687">"Sepia"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"Negativ"</string>
     <string name="editor_no_effect" msgid="960037351930077107">"ingen effekt"</string>
