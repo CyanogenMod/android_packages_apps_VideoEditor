@@ -10,7 +10,7 @@
     <string name="editor_import_image" msgid="4711897454453141861">"Импортировать изображение"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"Импортировать музыку"</string>
     <string name="editor_share_movie" msgid="7902085631426113162">"Отправить фильм"</string>
-    <string name="editor_export_movie" msgid="6179595763732596532">"Экспортировать фильм"</string>
+    <string name="editor_export_movie" msgid="6179595763732596532">"Экспортировать файл"</string>
     <string name="editor_play_exported_movie" msgid="4312100359380734615">"Воспроизвести экспортированный фильм"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Изменить соотношение сторон"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"Изменить название"</string>
@@ -88,10 +88,10 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="5850938851754227439">"Невозможно обрезать трек."</string>
     <string name="editor_transition_too_short" msgid="3956089619553629988">"Невозможно добавить переход. Переход слишком короткий."</string>
     <string name="editor_media_load_error" msgid="2421624042826573589">"Невозможно загрузить файл."</string>
-    <string name="editor_preview_error" msgid="8160936065171079209">"Ошибка. Невозможно просмотреть проект."</string>
+    <string name="editor_preview_error" msgid="8160936065171079209">"Ошибка. Предварительный просмотр недоступен."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Экспорт"</string>
-    <string name="export_dialog_movie_size" msgid="7285302703460176418">"Размер фильма"</string>
-    <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Качество фильма"</string>
+    <string name="export_dialog_movie_size" msgid="7285302703460176418">"Размер"</string>
+    <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Качество"</string>
     <string name="export_dialog_movie_quality_low" msgid="5453423100969821309">"Низкое"</string>
     <string name="export_dialog_movie_quality_medium" msgid="4907951890148318364">"Среднее"</string>
     <string name="export_dialog_movie_quality_high" msgid="4622241978022000159">"Высокое"</string>
