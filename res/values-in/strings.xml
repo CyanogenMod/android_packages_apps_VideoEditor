@@ -87,7 +87,7 @@
     <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"Tidak dapat menghapus trek audio."</string>
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Tidak dapat memangkas trek audio."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Tidak dapat menambahkan transisi. Transisi akan menjadi terlalu singkat."</string>
-    <string name="editor_media_load_error" msgid="458634098279249971">"Tidak dapat mengunduh berkas."</string>
+    <string name="editor_media_load_error" msgid="458634098279249971">"Tidak dapat mengunduh file."</string>
     <string name="editor_preview_error" msgid="6896625021643290945">"Tidak dapat menampilkan pratinjau proyek karena galat."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Ekspor"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Ukuran film"</string>

@@ -145,9 +145,9 @@
     <string name="edit" msgid="8659197150838109875">"Modifier"</string>
     <string name="remove" msgid="7886072447916861923">"Supprimer"</string>
     <string name="untitled" msgid="579236531346245199">"Sans nom"</string>
-    <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> h <xliff:g id="MINUTES">%d</xliff:g> mn"</string>
-    <string name="hour_and_minutes" msgid="1067026366169392034">"1 h <xliff:g id="MINUTES">%d</xliff:g> mn"</string>
-    <string name="minutes" msgid="6924555888655437479">"<xliff:g id="MINUTES">%d</xliff:g> mn"</string>
-    <string name="minute_and_seconds" msgid="421389061027404642">"1 mn <xliff:g id="SECONDS">%d</xliff:g> s"</string>
+    <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> h <xliff:g id="MINUTES">%d</xliff:g> min"</string>
+    <string name="hour_and_minutes" msgid="1067026366169392034">"1 h <xliff:g id="MINUTES">%d</xliff:g> min"</string>
+    <string name="minutes" msgid="6924555888655437479">"<xliff:g id="MINUTES">%d</xliff:g> min"</string>
+    <string name="minute_and_seconds" msgid="421389061027404642">"1 min <xliff:g id="SECONDS">%d</xliff:g> s"</string>
     <string name="seconds" msgid="6169618193647386033">"<xliff:g id="SECONDS">%d</xliff:g> s"</string>
 </resources>
