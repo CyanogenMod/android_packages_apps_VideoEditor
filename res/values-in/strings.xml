@@ -58,14 +58,14 @@
     <string name="aspect_ratio_4_3" msgid="3697255322178944937">" 4 x 3"</string>
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">" 5 x 3"</string>
     <string name="editor_storage_not_available" msgid="5030416644629630761">"Tidak dapat membuat proyek karena penyimpanan tidak dapat diakses."</string>
-    <string name="editor_create_error" msgid="6104899467848074373">"Tidak dapat membuat proyek karena galat."</string>
-    <string name="editor_load_error" msgid="8168726329719423779">"Tidak dapat memuat proyek karena galat. Apakah Anda ingin menghapus proyek ini?"</string>
+    <string name="editor_create_error" msgid="6104899467848074373">"Tidak dapat membuat proyek karena kesalahan."</string>
+    <string name="editor_load_error" msgid="8168726329719423779">"Tidak dapat memuat proyek karena kesalahan. Apakah Anda ingin menghapus proyek ini?"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"Tidak dapat mengubah rasio aspek."</string>
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"Tidak dapat menerapkan tema."</string>
-    <string name="editor_export_error" msgid="382400675648706944">"Tidak dapat mengekspor film karena galat."</string>
+    <string name="editor_export_error" msgid="382400675648706944">"Tidak dapat mengekspor film karena kesalahan."</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"Tidak dapat menyimpan proyek."</string>
-    <string name="editor_release_error" msgid="5789983632914351735">"Tidak dapat merilis proyek karena galat."</string>
-    <string name="editor_delete_error" msgid="242821026624698563">"Tidak dapat menghapus proyek karena galat."</string>
+    <string name="editor_release_error" msgid="5789983632914351735">"Tidak dapat merilis proyek karena kesalahan."</string>
+    <string name="editor_delete_error" msgid="242821026624698563">"Tidak dapat menghapus proyek karena kesalahan."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"Tidak dapat menambahkan klip video ke proyek Anda."</string>
     <string name="editor_add_image_error" msgid="537642460372324704">"Tidak dapat menambahkan gambar ke proyek Anda."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"Tidak dapat memindahkan item."</string>
@@ -88,7 +88,7 @@
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Tidak dapat memangkas trek audio."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Tidak dapat menambahkan transisi. Transisi akan menjadi terlalu singkat."</string>
     <string name="editor_media_load_error" msgid="458634098279249971">"Tidak dapat mengunduh file."</string>
-    <string name="editor_preview_error" msgid="6896625021643290945">"Tidak dapat menampilkan pratinjau proyek karena galat."</string>
+    <string name="editor_preview_error" msgid="6896625021643290945">"Tidak dapat menampilkan pratinjau proyek karena kesalahan."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Ekspor"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Ukuran film"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Kualitas film"</string>
