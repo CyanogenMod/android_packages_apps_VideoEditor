@@ -83,6 +83,7 @@ public class AudioTrackLinearLayout extends LinearLayout {
             SeekBar.OnSeekBarChangeListener {
         // Instance variables
         private final MovieAudioTrack mAudioTrack;
+        private int mProgress;
 
         /**
          * Constructor
@@ -109,7 +110,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
             final SeekBar seekBar =
                 ((SeekBar)titleBarView.findViewById(R.id.action_volume));
             seekBar.setOnSeekBarChangeListener(this);
-            seekBar.setProgress(mAudioTrack.getAppVolume());
+            mProgress = mAudioTrack.getAppVolume();
+            seekBar.setProgress(mProgress);
 
             return true;
         }
@@ -147,9 +149,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-                mAudioTrack.setAppVolume(progress);
-                ApiService.setAudioTrackVolume(getContext(), mProject.getPath(),
-                        mAudioTrack.getId(), progress);
+                mProgress = progress;
+                mAudioTrack.setAppVolume(mProgress);
             }
         }
 
@@ -159,6 +160,8 @@ public class AudioTrackLinearLayout extends LinearLayout {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            ApiService.setAudioTrackVolume(getContext(), mProject.getPath(),
+                    mAudioTrack.getId(), mProgress);
         }
 
         @Override
