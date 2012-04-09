@@ -137,7 +137,7 @@
     <string name="transitions_sliding_bottom_out_top_in" msgid="2053651773008656618">"Aşağıdan dışarı, yukarıdan içeri kaydırma"</string>
     <string name="transitions_duration" msgid="8920913306085446845">"<xliff:g id="SECONDS">%(,.1f</xliff:g> sn"</string>
     <string name="rendering_mode_black_borders" msgid="3328779663112893086">"Siyah kenarlar"</string>
-    <string name="rendering_mode_stretch" msgid="6386449069902135234">"Sığdırmak üzere genişlet"</string>
+    <string name="rendering_mode_stretch" msgid="6386449069902135234">"Kaplayacak şekilde genişlet"</string>
     <string name="rendering_mode_crop" msgid="1892533060338728880">"Kırp"</string>
     <string name="yes" msgid="5627909733720577098">"Evet"</string>
     <string name="no" msgid="4303537392215476576">"Hayır"</string>
