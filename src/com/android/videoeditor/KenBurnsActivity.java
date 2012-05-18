@@ -197,8 +197,6 @@ public class KenBurnsActivity extends Activity {
                 }
 
                 showBitmapRectangle();
-            } else {
-                bitmap.recycle();
             }
         }
     }
