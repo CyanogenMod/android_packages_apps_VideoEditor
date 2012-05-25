@@ -7,7 +7,7 @@
     <string name="editor_no_project" msgid="7878678429340266635">"Kein Projekt gefunden"</string>
     <string name="editor_add" msgid="1728703558703319942">"Hinzufügen"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"Videoclip importieren"</string>
-    <string name="editor_import_image" msgid="4711897454453141861">"Bild importieren"</string>
+    <string name="editor_import_image" msgid="4711897454453141861">"Foto importieren"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"Musik importieren"</string>
     <string name="editor_share_movie" msgid="7902085631426113162">"Film weiterleiten"</string>
     <string name="editor_export_movie" msgid="6179595763732596532">"Film exportieren"</string>
