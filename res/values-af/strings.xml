@@ -130,7 +130,7 @@
     <string name="transitions_alpha_countour" msgid="8172271436629067722">"Kontoer alfa"</string>
     <string name="transitions_alpha_diagonal" msgid="41249798064809453">"Diagonale alfa"</string>
     <string name="transitions_crossfade" msgid="8675768530446018936">"Kruisdoof"</string>
-    <string name="transitions_fade_black" msgid="4660683008630768277">"Doof uit na en van swart"</string>
+    <string name="transitions_fade_black" msgid="4660683008630768277">"Vervaag na en van swart af"</string>
     <string name="transitions_sliding_right_out_left_in" msgid="1389887781046015922">"Gly regs uit en links in"</string>
     <string name="transitions_sliding_left_out_right_in" msgid="3356163485812291888">"Gly links uit en regs in"</string>
     <string name="transitions_sliding_top_out_bottom_in" msgid="5442312445544903771">"Gly bo uit en onder in"</string>
