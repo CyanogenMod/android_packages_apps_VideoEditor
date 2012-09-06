@@ -326,13 +326,7 @@ public class KenBurnsActivity extends Activity {
         mImageView.setEventListener(new ImageViewTouchBase.ImageTouchEventListener() {
             @Override
             public boolean onImageTouchEvent(MotionEvent ev) {
-                if (null != mScaleGestureDetector) {
-                    mScaleGestureDetector.onTouchEvent(ev);
-                    if (mScaleGestureDetector.isInProgress()) {
-                        return true;
-                    }
-                }
-
+                mScaleGestureDetector.onTouchEvent(ev);
                 mGestureDetector.onTouchEvent(ev);
                 return true;
             }
