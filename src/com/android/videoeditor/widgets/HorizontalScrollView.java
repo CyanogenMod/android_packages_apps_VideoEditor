@@ -74,9 +74,14 @@ public class HorizontalScrollView extends FrameLayout {
     private EdgeEffect mEdgeGlowRight;
 
     /**
-     * Position of the last motion event.
+     * X position of the last focal point.
      */
-    private int mLastMotionX;
+    private int mLastFocusX;
+
+    /**
+     * True if the value of mLastFocusX is still valid.
+     */
+    private boolean mHasLastFocusX;
 
     /**
      * True when the layout has changed but the traversal has not come through yet.
@@ -121,18 +126,6 @@ public class HorizontalScrollView extends FrameLayout {
 
     private int mOverscrollDistance;
     private int mOverflingDistance;
-
-    /**
-     * ID of the active pointer. This is used to retain consistency during
-     * drags/flings if multiple pointers are used.
-     */
-    private int mActivePointerId = INVALID_POINTER;
-
-    /**
-     * Sentinel value for no current active pointer.
-     * Used by {@link #mActivePointerId}.
-     */
-    private static final int INVALID_POINTER = -1;
 
     public HorizontalScrollView(Context context) {
         this(context, null);
@@ -415,6 +408,24 @@ public class HorizontalScrollView extends FrameLayout {
         }
     }
 
+    private static int getFocusX(MotionEvent ev) {
+        final int action = ev.getAction();
+        final boolean pointerUp =
+                (action & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP;
+        final int skipIndex = pointerUp ? ev.getActionIndex() : -1;
+
+        // Determine focal point
+        float sumX = 0;
+        final int count = ev.getPointerCount();
+        for (int i = 0; i < count; i++) {
+            if (skipIndex == i) continue;
+            sumX += ev.getX(i);
+        }
+        final int div = pointerUp ? count - 1 : count;
+        final float focusX = sumX / div;
+        return (int) focusX;
+    }
+
     @Override
     public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
         if (disallowIntercept) {
@@ -448,22 +459,17 @@ public class HorizontalScrollView extends FrameLayout {
                  * whether the user has moved far enough from his original down touch.
                  */
 
-                /*
-                * Locally do absolute value. mLastMotionX is set to the x value
-                * of the down event.
-                */
-                final int activePointerId = mActivePointerId;
-                if (activePointerId == INVALID_POINTER) {
-                    // If we don't have a valid id, the touch down wasn't on content.
+                if (!mHasLastFocusX) {
+                    // If we don't have a valid mLastFocusX, the touch down wasn't
+                    // on content.
                     break;
                 }
 
-                final int pointerIndex = ev.findPointerIndex(activePointerId);
-                final int x = (int) ev.getX(pointerIndex);
-                final int xDiff = (int) Math.abs(x - mLastMotionX);
+                final int x = getFocusX(ev);
+                final int xDiff = (int) Math.abs(x - mLastFocusX);
                 if (xDiff > mTouchSlop) {
                     mIsBeingDragged = true;
-                    mLastMotionX = x;
+                    mLastFocusX = x;
                     initVelocityTrackerIfNotExists();
                     mVelocityTracker.addMovement(ev);
                     if (mParent != null) mParent.requestDisallowInterceptTouchEvent(true);
@@ -481,10 +487,9 @@ public class HorizontalScrollView extends FrameLayout {
 
                 /*
                  * Remember location of down touch.
-                 * ACTION_DOWN always refers to pointer index 0.
                  */
-                mLastMotionX = x;
-                mActivePointerId = ev.getPointerId(0);
+                mLastFocusX = getFocusX(ev);
+                mHasLastFocusX = true;
 
                 initOrResetVelocityTracker();
                 mVelocityTracker.addMovement(ev);
@@ -502,20 +507,19 @@ public class HorizontalScrollView extends FrameLayout {
             case MotionEvent.ACTION_UP:
                 /* Release the drag */
                 mIsBeingDragged = false;
-                mActivePointerId = INVALID_POINTER;
+                mHasLastFocusX = false;
                 if (mScroller.springBack(mScrollX, mScrollY, 0, getScrollRange(), 0, 0)) {
                     postInvalidateOnAnimation();
                 }
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: {
-                final int index = ev.getActionIndex();
-                mLastMotionX = (int) ev.getX(index);
-                mActivePointerId = ev.getPointerId(index);
+                mLastFocusX = getFocusX(ev);
+                mHasLastFocusX = true;
                 break;
             }
             case MotionEvent.ACTION_POINTER_UP:
                 onSecondaryPointerUp(ev);
-                mLastMotionX = (int) ev.getX(ev.findPointerIndex(mActivePointerId));
+                mLastFocusX = getFocusX(ev);
                 break;
         }
 
@@ -554,14 +558,13 @@ public class HorizontalScrollView extends FrameLayout {
                 }
 
                 // Remember where the motion event started
-                mLastMotionX = (int) ev.getX();
-                mActivePointerId = ev.getPointerId(0);
+                mLastFocusX = getFocusX(ev);
+                mHasLastFocusX = true;
                 break;
             }
             case MotionEvent.ACTION_MOVE:
-                final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
-                final int x = (int) ev.getX(activePointerIndex);
-                int deltaX = mLastMotionX - x;
+                final int x = getFocusX(ev);
+                int deltaX = mLastFocusX - x;
                 if (!mIsBeingDragged && Math.abs(deltaX) > mTouchSlop) {
                     final ViewParent parent = getParent();
                     if (parent != null) {
@@ -576,7 +579,7 @@ public class HorizontalScrollView extends FrameLayout {
                 }
                 if (mIsBeingDragged) {
                     // Scroll to follow the motion event
-                    mLastMotionX = x;
+                    mLastFocusX = x;
 
                     final int oldX = mScrollX;
                     final int oldY = mScrollY;
@@ -615,8 +618,9 @@ public class HorizontalScrollView extends FrameLayout {
             case MotionEvent.ACTION_UP:
                 if (mIsBeingDragged) {
                     final VelocityTracker velocityTracker = mVelocityTracker;
+                    final int pointerId = ev.getPointerId(0);
                     velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                    int initialVelocity = (int) velocityTracker.getXVelocity(mActivePointerId);
+                    int initialVelocity = (int) velocityTracker.getXVelocity(pointerId);
 
                     if (getChildCount() > 0) {
                         if ((Math.abs(initialVelocity) > mMinimumVelocity)) {
@@ -629,7 +633,7 @@ public class HorizontalScrollView extends FrameLayout {
                         }
                     }
 
-                    mActivePointerId = INVALID_POINTER;
+                    mHasLastFocusX = false;
                     mIsBeingDragged = false;
                     recycleVelocityTracker();
 
@@ -644,7 +648,7 @@ public class HorizontalScrollView extends FrameLayout {
                     if (mScroller.springBack(mScrollX, mScrollY, 0, getScrollRange(), 0, 0)) {
                         postInvalidateOnAnimation();
                     }
-                    mActivePointerId = INVALID_POINTER;
+                    mHasLastFocusX = false;
                     mIsBeingDragged = false;
                     recycleVelocityTracker();
 
@@ -662,19 +666,10 @@ public class HorizontalScrollView extends FrameLayout {
     }
 
     private void onSecondaryPointerUp(MotionEvent ev) {
-        final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >>
-                MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final int pointerId = ev.getPointerId(pointerIndex);
-        if (pointerId == mActivePointerId) {
-            // This was our active pointer going up. Choose a new
-            // active pointer and adjust accordingly.
-            // TODO: Make this decision more intelligent.
-            final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mLastMotionX = (int) ev.getX(newPointerIndex);
-            mActivePointerId = ev.getPointerId(newPointerIndex);
-            if (mVelocityTracker != null) {
-                mVelocityTracker.clear();
-            }
+        mLastFocusX = getFocusX(ev);
+        mHasLastFocusX = true;
+        if (mVelocityTracker != null) {
+            mVelocityTracker.clear();
         }
     }
 
