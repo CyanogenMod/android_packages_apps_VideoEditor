@@ -32,7 +32,6 @@ import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.HorizontalScrollView;
 
 /**
  * The timeline scroll view
