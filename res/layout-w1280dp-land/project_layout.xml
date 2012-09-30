@@ -24,7 +24,7 @@
         android:layout_width="300dip"
         android:layout_height="300dip"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="50dip"
+        android:layout_marginTop="30dip"
         android:layout_marginLeft="-60dip"
         android:background="@drawable/buttons_background_zoom">
         <com.android.videoeditor.widgets.ZoomControl android:id="@+id/editor_zoom"
@@ -36,7 +36,7 @@
         android:layout_width="300dip"
         android:layout_height="300dip"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="50dip"
+        android:layout_marginTop="30dip"
         android:layout_marginRight="-60dip"
         android:background="@drawable/buttons_background">
          <ImageButton android:id="@+id/editor_prev"
@@ -45,14 +45,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="18dip"
-            android:layout_marginLeft="115dip"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/btn_playback_ic_prev"
             android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_rewind"
             android:onClick="onClickHandler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120dip"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="20dip"
             android:src="@drawable/btn_playback_ic_rev"
             android:background="@drawable/background_selector"/>
@@ -61,8 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="17dip"
-            android:layout_below="@id/editor_prev"
+            android:layout_centerVertical="true"
             android:src="@drawable/btn_playback_ic_play"
             android:background="@drawable/background_selector"/>
         <ImageButton android:id="@+id/editor_next"
@@ -70,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="115dip"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="18dip"
             android:src="@drawable/btn_playback_ic_next"
             android:background="@drawable/background_selector"/>
@@ -101,9 +100,9 @@
         android:background="@drawable/surface_background">
         <com.android.videoeditor.widgets.PreviewSurfaceView android:id="@+id/video_view"
             android:layout_width="0dip"
-            android:layout_height="370dip"/>
+            android:layout_height="340dip"/>
         <ImageView android:id="@+id/overlay_layer"
             android:layout_width="0dip"
-            android:layout_height="370dip"/>
+            android:layout_height="340dip"/>
     </FrameLayout>
 </com.android.videoeditor.widgets.EditorRelativeLayout>
