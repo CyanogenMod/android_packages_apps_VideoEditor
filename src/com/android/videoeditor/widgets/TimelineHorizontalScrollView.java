@@ -32,7 +32,6 @@ import android.util.AttributeSet;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.HorizontalScrollView;
 
 /**
  * The timeline scroll view
@@ -124,19 +123,14 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         mScaleDetector.onTouchEvent(ev);
-        return mScaleDetector.isInProgress() || super.onInterceptTouchEvent(ev);
+        return super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (mEnableUserScrolling) {
             mScaleDetector.onTouchEvent(ev);
-
-            if (!mScaleDetector.isInProgress()) {
-                return super.onTouchEvent(ev);
-            } else {
-                return true;
-            }
+            return super.onTouchEvent(ev);
         } else {
             if (mScaleDetector.isInProgress()) {
                 final MotionEvent cancelEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
