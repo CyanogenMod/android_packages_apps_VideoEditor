@@ -9,7 +9,7 @@
     <string name="editor_import_video" msgid="6939466871773802646">"वीडियो क्‍लिप आयात करें"</string>
     <string name="editor_import_image" msgid="4711897454453141861">"चित्र आयात करें"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"संगीत आयात करें"</string>
-    <string name="editor_share_movie" msgid="7902085631426113162">"फ़िल्म शेयर करें"</string>
+    <string name="editor_share_movie" msgid="7902085631426113162">"फ़िल्म साझा करें"</string>
     <string name="editor_export_movie" msgid="6179595763732596532">"फ़िल्म निर्यात करें"</string>
     <string name="editor_play_exported_movie" msgid="4312100359380734615">"निर्यात की गई फ़िल्म चलाएं"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"पक्षानुपात बदलें"</string>
