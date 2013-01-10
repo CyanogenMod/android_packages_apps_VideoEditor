@@ -47,7 +47,7 @@
     <string name="editor_transition_title" msgid="4340622816798792302">"جلوه انتقال"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"تکرار نوار"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"تکرار نوار انجام نشود"</string>
-    <string name="editor_mute" msgid="4901844675777155179">"بیصدا"</string>
+    <string name="editor_mute" msgid="4901844675777155179">"بی‌صدا"</string>
     <string name="editor_unmute" msgid="905024676961016538">"صدادار"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"شکار مرغابی"</string>
     <string name="projects_new_project" msgid="835981505260510697">"ایجاد پروژهٔ جدید"</string>

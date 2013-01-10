@@ -7,9 +7,9 @@
     <string name="editor_no_project" msgid="7878678429340266635">"कोई प्रोजेक्ट नहीं मिला."</string>
     <string name="editor_add" msgid="1728703558703319942">"जोड़ें"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"वीडियो क्‍लिप आयात करें"</string>
-    <string name="editor_import_image" msgid="4711897454453141861">"छवि आयात करें"</string>
+    <string name="editor_import_image" msgid="4711897454453141861">"चित्र आयात करें"</string>
     <string name="editor_import_audio" msgid="1382830016716612319">"संगीत आयात करें"</string>
-    <string name="editor_share_movie" msgid="7902085631426113162">"फ़िल्म शेयर करें"</string>
+    <string name="editor_share_movie" msgid="7902085631426113162">"फ़िल्म साझा करें"</string>
     <string name="editor_export_movie" msgid="6179595763732596532">"फ़िल्म निर्यात करें"</string>
     <string name="editor_play_exported_movie" msgid="4312100359380734615">"निर्यात की गई फ़िल्म चलाएं"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"पक्षानुपात बदलें"</string>
@@ -29,7 +29,7 @@
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"क्या आप यह संक्रमण निकालना चाहते हैं?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"क्‍या आप इस प्रभाव को निकालना चाहते हैं?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"क्‍या आप इस वीडियो क्‍लिप को निकालना चाहते हैं?"</string>
-    <string name="editor_remove_image_question" msgid="1785701428761756119">"क्या आप यह छवि निकालना चाहते हैं?"</string>
+    <string name="editor_remove_image_question" msgid="1785701428761756119">"क्या आप यह चित्र निकालना चाहते हैं?"</string>
     <string name="editor_effect_menu_header" msgid="7596259319584812532">"प्रभाव"</string>
     <string name="editor_add_effect" msgid="7598526041207561912">"प्रभाव जोड़ें"</string>
     <string name="editor_change_effect" msgid="2867521171671527910">"प्रभाव बदलें"</string>
@@ -43,7 +43,7 @@
     <string name="editor_add_end_transition" msgid="578791466048263129">"क्‍लि‍प के बाहर संक्रमण"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"संक्रमण बदलें"</string>
     <string name="editor_video_load" msgid="195098585816541585">"वीडियो क्‍लिप डाउनलोड प्रारंभ हो गया है. इसके पूर्ण होने पर आपको सूचित किया जाएगा."</string>
-    <string name="editor_image_load" msgid="5271735501748316661">"छवि डाउनलोड प्रारंभ हो गया है. इसके पूर्ण होने पर आपको सूचित किया जाएगा."</string>
+    <string name="editor_image_load" msgid="5271735501748316661">"चित्र डाउनलोड प्रारंभ हो गया है. इसके पूर्ण होने पर आपको सूचित किया जाएगा."</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"संक्रमण"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"लूप करें"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"लूप न करें"</string>
@@ -67,11 +67,11 @@
     <string name="editor_release_error" msgid="5789983632914351735">"किसी त्रुटि के कारण प्रोजेक्‍ट को रिलीज़ नहीं किया जा सका."</string>
     <string name="editor_delete_error" msgid="242821026624698563">"किसी त्रुटि के कारण प्रोजेक्‍ट को हटाया नहीं जा सका."</string>
     <string name="editor_add_video_clip_error" msgid="3361429454748783356">"आपके प्रोजेक्‍ट में वीडियो क्‍लिप जोड़ी नहीं जा सकती."</string>
-    <string name="editor_add_image_error" msgid="537642460372324704">"आपके प्रोजेक्‍ट में छवि जोड़ी नहीं जा सकती."</string>
+    <string name="editor_add_image_error" msgid="537642460372324704">"आपके प्रोजेक्‍ट में चित्र जोड़ी नहीं जा सकती."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"आइटम स्‍थानांतरित नहीं किया जा सकता."</string>
     <string name="editor_remove_media_item_error" msgid="2913555471288806841">"आइटम निकाला नहीं जा सकता."</string>
     <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"रेंडरिंग मोड सेट नहीं किया जा सकता."</string>
-    <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"छवि अवधि सेट नहीं की जा सकती."</string>
+    <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"चित्र अवधि सेट नहीं की जा सकती."</string>
     <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"वीडियो क्लिप सीमाएं सेट नहीं की जा सकतीं."</string>
     <string name="editor_add_transition_error" msgid="6471979516727265318">"संक्रमण जोड़ा नहीं जा सकता."</string>
     <string name="editor_remove_transition_error" msgid="7995113177965011103">"संक्रमण निकाला नहीं जा सकता."</string>
@@ -98,7 +98,7 @@
     <string name="pan_zoom_title" msgid="5962535722026848255">"पैन और ज़ूम प्रभाव"</string>
     <string name="pan_zoom_start" msgid="3201190627057376354">"प्रारंभ"</string>
     <string name="pan_zoom_end" msgid="8577364516174049589">"समाप्त"</string>
-    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"पैन और ज़ूम प्रभाव लागू करने के लिए छवि बहुत छोटी है."</string>
+    <string name="pan_zoom_small_image_error" msgid="8691715704603049043">"पैन और ज़ूम प्रभाव लागू करने के लिए चित्र बहुत छोटी है."</string>
     <string name="theme_name_travel" msgid="667328014375405107">"यात्रा"</string>
     <string name="theme_travel_title" msgid="6001352420200418178">"मेरा कैलिफ़ोर्निया भ्रमण"</string>
     <string name="theme_travel_subtitle" msgid="5861186449934194608">"सैन फ़्रांसिस्को"</string>

@@ -25,7 +25,7 @@
     <string name="editor_edit_overlay" msgid="6425579635817051901">"Edit judul"</string>
     <string name="editor_remove_overlay" msgid="5027979271603770938">"Hapus judul"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"Apakah Anda ingin menghapus hamparan ini?"</string>
-    <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Ganti modus perenderan"</string>
+    <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Ganti mode perenderan"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"Apakah Anda ingin menghapus transisi ini?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"Apakah Anda ingin menghapus efek ini?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"Apakah Anda ingin menghapus klip video ini?"</string>
