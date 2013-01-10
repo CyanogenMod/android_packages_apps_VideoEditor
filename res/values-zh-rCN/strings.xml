@@ -61,7 +61,7 @@
     <string name="editor_create_error" msgid="6104899467848074373">"由于出错而无法创建项目。"</string>
     <string name="editor_load_error" msgid="8168726329719423779">"由于出错而无法加载项目。要删除此项目吗？"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"无法更改宽高比。"</string>
-    <string name="editor_apply_theme_error" msgid="3079581810200707936">"无法应用该主题背景。"</string>
+    <string name="editor_apply_theme_error" msgid="3079581810200707936">"无法应用该主题。"</string>
     <string name="editor_export_error" msgid="382400675648706944">"由于出错而无法导出电影。"</string>
     <string name="editor_saved_error" msgid="5347778960945973388">"无法保存该项目。"</string>
     <string name="editor_release_error" msgid="5789983632914351735">"出现错误，无法发布该项目。"</string>

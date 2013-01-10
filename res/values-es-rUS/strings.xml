@@ -48,7 +48,7 @@
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Repeticiones"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"No repetir"</string>
     <string name="editor_mute" msgid="4901844675777155179">"Silenciar"</string>
-    <string name="editor_unmute" msgid="905024676961016538">"Silencio"</string>
+    <string name="editor_unmute" msgid="905024676961016538">"Activar sonido"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"Atenuación"</string>
     <string name="projects_new_project" msgid="835981505260510697">"Crear proyecto"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"Nombre del proyecto"</string>
