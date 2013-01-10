@@ -59,7 +59,7 @@
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"‎5 x 3"</string>
     <string name="editor_storage_not_available" msgid="5030416644629630761">"לא ניתן ליצור את הפרויקט משום שלא ניתן לגשת לאמצעי האחסון."</string>
     <string name="editor_create_error" msgid="6104899467848074373">"לא ניתן ליצור את הפרויקט בשל שגיאה."</string>
-    <string name="editor_load_error" msgid="8168726329719423779">"לא ניתן לטעון את הפרויקט בשל שגיאה. האם ברצונך למחוק פרויקט זה?"</string>
+    <string name="editor_load_error" msgid="8168726329719423779">"לא ניתן להעלות את הפרויקט בשל שגיאה. האם ברצונך למחוק פרויקט זה?"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"לא ניתן לשנות את יחס הגובה-רוחב."</string>
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"לא ניתן להחיל את העיצוב."</string>
     <string name="editor_export_error" msgid="382400675648706944">"לא ניתן לייצא את הסרט בשל שגיאה."</string>
