@@ -90,7 +90,7 @@
     <string name="editor_media_load_error" msgid="458634098279249971">"Não é possível baixar o arquivo."</string>
     <string name="editor_preview_error" msgid="6896625021643290945">"Não é possível visualizar o projeto devido a um erro."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportar"</string>
-    <string name="export_dialog_movie_size" msgid="7285302703460176418">"Duração do filme"</string>
+    <string name="export_dialog_movie_size" msgid="7285302703460176418">"Tamanho do filme"</string>
     <string name="export_dialog_movie_quality" msgid="5455709803799359041">"Qualidade do filme"</string>
     <string name="export_dialog_movie_quality_low" msgid="5453423100969821309">"Baixa"</string>
     <string name="export_dialog_movie_quality_medium" msgid="4907951890148318364">"Médio"</string>
