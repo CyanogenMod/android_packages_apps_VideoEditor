@@ -3,7 +3,7 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"電影工作室"</string>
     <string name="full_app_name" msgid="5729546228978363869">"Android 電影工作室"</string>
-    <string name="editor_loading_project" msgid="4425794204325511857">"正在載入專案..."</string>
+    <string name="editor_loading_project" msgid="4425794204325511857">"正在載入專案…"</string>
     <string name="editor_no_project" msgid="7878678429340266635">"找不到專案。"</string>
     <string name="editor_add" msgid="1728703558703319942">"新增"</string>
     <string name="editor_import_video" msgid="6939466871773802646">"匯入影片剪輯"</string>
