@@ -14,10 +14,10 @@
     <string name="editor_play_exported_movie" msgid="4312100359380734615">"Redaţi filmul exportat"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"Modificaţi raportul dimensiunilor"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"Modificaţi numele proiectului"</string>
-    <string name="editor_delete_project" msgid="2521676016183608234">"Ştergeţi proiectul"</string>
+    <string name="editor_delete_project" msgid="2521676016183608234">"Ștergeţi proiectul"</string>
     <string name="editor_capture_video" msgid="7441727320975225967">"Înregistraţi un videoclip"</string>
     <string name="editor_capture_image" msgid="7243706032936431456">"Fotografiaţi"</string>
-    <string name="editor_delete_project_question" msgid="1453862802788814277">"Ştergeţi acest proiect?"</string>
+    <string name="editor_delete_project_question" msgid="1453862802788814277">"Ștergeţi acest proiect?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"Eliminaţi această melodie?"</string>
     <string name="editor_title_menu_header" msgid="8042548112022118522">"Titlu"</string>
