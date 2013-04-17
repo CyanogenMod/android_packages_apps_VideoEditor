@@ -25,7 +25,7 @@
     <string name="editor_edit_overlay" msgid="6425579635817051901">"Editar título"</string>
     <string name="editor_remove_overlay" msgid="5027979271603770938">"Eliminar título"</string>
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"¿Quieres eliminar esta superposición?"</string>
-    <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Cambiar modo de representación"</string>
+    <string name="editor_change_rendering_mode" msgid="1703741281523626932">"Cambiar modo de renderización"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"¿Quieres eliminar esta transición?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"¿Quieres eliminar este efecto?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"¿Quieres eliminar este vídeo?"</string>
@@ -70,7 +70,7 @@
     <string name="editor_add_image_error" msgid="537642460372324704">"No se puede añadir la imagen al proyecto."</string>
     <string name="editor_move_media_item_error" msgid="3370835930609505642">"No se puede mover el elemento."</string>
     <string name="editor_remove_media_item_error" msgid="2913555471288806841">"No se puede eliminar el elemento."</string>
-    <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"No se puede establecer el modo de representación."</string>
+    <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"No se puede establecer el modo de renderización."</string>
     <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"No se puede establecer la duración de la imagen."</string>
     <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"No se puede establecer los límites del vídeo."</string>
     <string name="editor_add_transition_error" msgid="6471979516727265318">"No se puede añadir la transición."</string>
