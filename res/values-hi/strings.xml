@@ -50,7 +50,7 @@
     <string name="editor_mute" msgid="4901844675777155179">"म्यूट करें"</string>
     <string name="editor_unmute" msgid="905024676961016538">"अनम्यूट करें"</string>
     <string name="audio_track_menu_duck" msgid="3521940598902152451">"डकिंग"</string>
-    <string name="projects_new_project" msgid="835981505260510697">"नया प्रोजे. बनाएं"</string>
+    <string name="projects_new_project" msgid="835981505260510697">"नई प्रोजेक्ट बनाएं"</string>
     <string name="projects_project_name" msgid="9077511317849923976">"प्रोजेक्ट नाम"</string>
     <string name="aspect_ratio_11_9" msgid="3529342152764150538">"11 x 9"</string>
     <string name="aspect_ratio_16_9" msgid="1423027126389220080">"16 x 9"</string>
