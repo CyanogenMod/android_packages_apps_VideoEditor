@@ -3,6 +3,7 @@
       package="com.android.videoeditor"
       android:versionCode="11"
       android:versionName="1.1">
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -66,6 +67,5 @@
         </activity>
 
     </application>
-    <uses-sdk android:minSdkVersion="11" />
 
 </manifest>
