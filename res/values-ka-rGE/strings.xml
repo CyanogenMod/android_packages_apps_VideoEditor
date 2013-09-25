@@ -11,22 +11,22 @@
     <string name="editor_import_audio" msgid="1382830016716612319">"მუსიკის იმპორტი"</string>
     <string name="editor_share_movie" msgid="7902085631426113162">"ფილმის გაზიარება"</string>
     <string name="editor_export_movie" msgid="6179595763732596532">"ფილმის ექსპორტი"</string>
-    <string name="editor_play_exported_movie" msgid="4312100359380734615">"დაექსპორტებული ფილმის დაკვრა"</string>
+    <string name="editor_play_exported_movie" msgid="4312100359380734615">"ექსპორტებული ფილმის დაკვრა"</string>
     <string name="editor_change_aspect_ratio" msgid="4979215677592420989">"გვერდების შეფარდების შეცვლა"</string>
     <string name="editor_edit_project_name" msgid="1910357904276802782">"პროექტის სახელის შეცვლა"</string>
     <string name="editor_delete_project" msgid="2521676016183608234">"პროექტის წაშლა"</string>
     <string name="editor_capture_video" msgid="7441727320975225967">"ვიდეოს ჩაწერა"</string>
     <string name="editor_capture_image" msgid="7243706032936431456">"ფოტოს გადაღება"</string>
-    <string name="editor_delete_project_question" msgid="1453862802788814277">"გსურთ ამ პროექტის წაშლა?"</string>
+    <string name="editor_delete_project_question" msgid="1453862802788814277">"გსურთ, ამ პროექტის წაშლა?"</string>
     <string name="editor_zero_time_stamp" msgid="3534077185153971762">"00:00:00.0"</string>
     <string name="editor_remove_audio_track_question" msgid="6857027674045947187">"გსურთ, ამ აუდიო ბილიკის წაშლა?"</string>
     <string name="editor_title_menu_header" msgid="8042548112022118522">"წარწერა"</string>
     <string name="editor_add_overlay" msgid="1515525110646122291">"წარწერის დამატება"</string>
     <string name="editor_edit_overlay" msgid="6425579635817051901">"წარწერის რედაქტირება"</string>
     <string name="editor_remove_overlay" msgid="5027979271603770938">"წარწერის წაშლა"</string>
-    <string name="editor_remove_overlay_question" msgid="1113396043958946144">"გსურთ, ამ ფადაფარვის წაშლა?"</string>
+    <string name="editor_remove_overlay_question" msgid="1113396043958946144">"გსურთ, ამ გადაფარვის წაშლა?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"რენდერის რეჟიმის შეცვლა"</string>
-    <string name="editor_remove_transition_question" msgid="2679033947203081687">"გსურთ, ამ ფადასვლის წაშლა?"</string>
+    <string name="editor_remove_transition_question" msgid="2679033947203081687">"გსურთ, ამ გადასვლის წაშლა?"</string>
     <string name="editor_remove_effect_question" msgid="8346475525473044890">"გსურთ, ამ ეფექტის წაშლა?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"გსურთ, ამ ვიდეო კლიპის წაშლა?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"გსურთ, ამ სურათის წაშლა?"</string>
@@ -39,7 +39,7 @@
     <string name="editor_sepia_effect" msgid="2862418961255160687">"სეპია"</string>
     <string name="editor_negative_effect" msgid="2768007868568598873">"ნეგატივი"</string>
     <string name="editor_no_effect" msgid="382362560484492238">"ეფექტის გარეშე"</string>
-    <string name="editor_add_begin_transition" msgid="1797563833232547946">"ცლიპზე გადასვლა"</string>
+    <string name="editor_add_begin_transition" msgid="1797563833232547946">"კლიპზე გადასვლა"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"კლიპიდან გადასვლა"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"გადასვლის შეცვლა"</string>
     <string name="editor_video_load" msgid="195098585816541585">"დაიწყო ვიდეო კლიპის ჩამოტვირთვა. დასრულებისას შეტყობინებას მიიღებთ."</string>
@@ -72,7 +72,7 @@
     <string name="editor_remove_media_item_error" msgid="2913555471288806841">"ერთეულის წაშლა ვერ ხერხდება."</string>
     <string name="editor_set_rendering_mode_error" msgid="3313879604799128904">"რენდერის რეჟიმის დაყენება ვერ ხერხდება."</string>
     <string name="editor_set_media_item_duration_error" msgid="8911729088020650120">"სურათის ხანგრძლივობის დაყენება ვერ ხერხდება."</string>
-    <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"ვიდეო ლიპის საზღვრების დაყენება ხერხდება."</string>
+    <string name="editor_set_media_item_boundaries_error" msgid="2124784838073604515">"ვიდეო კლიპის საზღვრების დაყენება ვერ ხერხდება."</string>
     <string name="editor_add_transition_error" msgid="6471979516727265318">"გადასვლა ვერ დაემატება."</string>
     <string name="editor_remove_transition_error" msgid="7995113177965011103">"გადასვლის წაშლა ვერ ხერხდება."</string>
     <string name="editor_set_transition_duration_error" msgid="3773102565195022670">"გადასვლის ხანგრძლივობის დაყენება ვერ ხერხდება."</string>
