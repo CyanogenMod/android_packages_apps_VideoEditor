@@ -27,7 +27,7 @@
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"ይህን ተደራቢ ለማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"የአቀራረብ ሁኔታ ለውጥ"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"ይህን ሽግግር ማስወገድ ይፈልጋሉ?"</string>
-    <string name="editor_remove_effect_question" msgid="8346475525473044890">"ይህን ተፅዕኖ ለማስወገድ ትፈልጋለህ?"</string>
+    <string name="editor_remove_effect_question" msgid="8346475525473044890">"ይህን ተፅዕኖ ለማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"ይህን የሙዚቃ ቪዲዮ ለማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"ይህን ምስል ማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_effect_menu_header" msgid="7596259319584812532">"ተፅዕኖ"</string>
