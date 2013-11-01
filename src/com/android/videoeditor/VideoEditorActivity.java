@@ -257,10 +257,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
             @Override
             public void onAddMediaItem(String afterMediaItemId) {
                 mInsertMediaItemAfterMediaItemId = afterMediaItemId;
-
-                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                intent.setType("video/*");
+                final Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setData(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
             }
 
@@ -298,8 +296,8 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
         mAudioTrackLayout.setListener(new AudioTrackLinearLayout.AudioTracksLayoutListener() {
             @Override
             public void onAddAudioTrack() {
-                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("audio/*");
+                final Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setData(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_MUSIC);
             }
         });
@@ -576,27 +574,23 @@ public class VideoEditorActivity extends VideoEditorBaseActivity
 
             case R.id.menu_item_import_video: {
                 mInsertMediaItemAfterMediaItemId = mProject.getLastMediaItemId();
-
-                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("video/*");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                final Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setData(MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_VIDEO);
                 return true;
             }
 
             case R.id.menu_item_import_image: {
                 mInsertMediaItemAfterMediaItemId = mProject.getLastMediaItemId();
-
-                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                final Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_IMAGE);
                 return true;
             }
 
             case R.id.menu_item_import_audio: {
-                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("audio/*");
+                final Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setData(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE_IMPORT_MUSIC);
                 return true;
             }

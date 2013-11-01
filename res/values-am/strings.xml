@@ -27,7 +27,7 @@
     <string name="editor_remove_overlay_question" msgid="1113396043958946144">"ይህን ተደራቢ ለማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_change_rendering_mode" msgid="1703741281523626932">"የአቀራረብ ሁኔታ ለውጥ"</string>
     <string name="editor_remove_transition_question" msgid="2679033947203081687">"ይህን ሽግግር ማስወገድ ይፈልጋሉ?"</string>
-    <string name="editor_remove_effect_question" msgid="8346475525473044890">"ይህን ተፅዕኖ ለማስወገድ ትፈልጋለህ?"</string>
+    <string name="editor_remove_effect_question" msgid="8346475525473044890">"ይህን ተፅዕኖ ለማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_remove_video_question" msgid="2503609249297907900">"ይህን የሙዚቃ ቪዲዮ ለማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_remove_image_question" msgid="1785701428761756119">"ይህን ምስል ማስወገድ ይፈልጋሉ?"</string>
     <string name="editor_effect_menu_header" msgid="7596259319584812532">"ተፅዕኖ"</string>
@@ -59,7 +59,7 @@
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"5 x 3"</string>
     <string name="editor_storage_not_available" msgid="5030416644629630761">"ፕሮጀክቱን መፍጠር አልተቻለም፡፡ ማከማቻው የማይደረስ ነው፡፡"</string>
     <string name="editor_create_error" msgid="6104899467848074373">"በስህተት ምክንያት ፕሮጀክቱን መፍጠር አልተቻለም፡፡"</string>
-    <string name="editor_load_error" msgid="8168726329719423779">"በስህተት ምክንያት ፕሮጀክቱን መጫን አልተቻለም፡፡ ይሄን ፕሮጀክት መሰረዝ ትፈልጋለህ ?"</string>
+    <string name="editor_load_error" msgid="8168726329719423779">"በስህተት ምክንያት ፕሮጀክቱን መጫን አልተቻለም። ይሄን ፕሮጀክት መሰረዝ ይፈልጋሉ?"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"ምጥነ ገጽታ መለወጥ አልተቻለም፡፡"</string>
     <string name="editor_apply_theme_error" msgid="3079581810200707936">"ገፅታውን ማድረግ አልተቻለም፡፡"</string>
     <string name="editor_export_error" msgid="382400675648706944">"በስህተት ምክንያት ፊልሙን ወደ ውጭ መላክ አልተቻለም፡፡"</string>
@@ -135,7 +135,7 @@
     <string name="transitions_sliding_left_out_right_in" msgid="3356163485812291888">"በማንሻራተት የግራው ሲወጣ የቀኙ ይገባል"</string>
     <string name="transitions_sliding_top_out_bottom_in" msgid="5442312445544903771">"በማንሻራተት የላይኛው ሲወጣ የታችኛው ይገባል"</string>
     <string name="transitions_sliding_bottom_out_top_in" msgid="2053651773008656618">"በማንሻራተት የታችኛው ሲወጣ የላይኛው ይገባል"</string>
-    <string name="transitions_duration" msgid="8920913306085446845">"<xliff:g id="SECONDS">%(,.1f</xliff:g> ሰከንድ"</string>
+    <string name="transitions_duration" msgid="8920913306085446845">"<xliff:g id="SECONDS">%(,.1f</xliff:g> ሴኮንድ"</string>
     <string name="rendering_mode_black_borders" msgid="3328779663112893086">"ጥቁር ክፈፎች"</string>
     <string name="rendering_mode_stretch" msgid="6386449069902135234">"ለማስማማት ዘርጋ"</string>
     <string name="rendering_mode_crop" msgid="1892533060338728880">"ክፈፍ"</string>

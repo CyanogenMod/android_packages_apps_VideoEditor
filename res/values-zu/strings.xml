@@ -87,7 +87,7 @@
     <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"Iyehluleka ukususa ingoma elalelekayo."</string>
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Ayikwazi ukunciphisa ingoma elalelwayo."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Ayikwazi ukwengeza inguquko. Inguquko ayikwazanga ukuba mfishane."</string>
-    <string name="editor_media_load_error" msgid="458634098279249971">"Ayikwazi ukulayisha ifayela"</string>
+    <string name="editor_media_load_error" msgid="458634098279249971">"Ayikwazi ukulanda ifayela"</string>
     <string name="editor_preview_error" msgid="6896625021643290945">"Ayikwazi ukubonisa ukubuka kuqala kwephrojekthi ngenxa yephutha."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Thumela kwenye indawo"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Usayizi we-Movie"</string>
@@ -146,7 +146,7 @@
     <string name="remove" msgid="7886072447916861923">"Susa"</string>
     <string name="untitled" msgid="579236531346245199">"Akunasihloko"</string>
     <string name="hours_and_minutes" msgid="3321381734132704902">"<xliff:g id="HOURS">%d</xliff:g> amahora <xliff:g id="MINUTES">%d</xliff:g> amaminithi"</string>
-    <string name="hour_and_minutes" msgid="1067026366169392034">"ihora elingu-1 <xliff:g id="MINUTES">%d</xliff:g> amaminithi"</string>
+    <string name="hour_and_minutes" msgid="1067026366169392034">"1 ihora <xliff:g id="MINUTES">%d</xliff:g> amaminithi"</string>
     <string name="minutes" msgid="6924555888655437479">"<xliff:g id="MINUTES">%d</xliff:g> amaminithi"</string>
     <string name="minute_and_seconds" msgid="421389061027404642">"1 iminithi <xliff:g id="SECONDS">%d</xliff:g> amasekhondi"</string>
     <string name="seconds" msgid="6169618193647386033">"<xliff:g id="SECONDS">%d</xliff:g> amasekhondi"</string>

@@ -138,7 +138,7 @@
     <string name="transitions_duration" msgid="8920913306085446845">"<xliff:g id="SECONDS">%(,.1f</xliff:g> 秒"</string>
     <string name="rendering_mode_black_borders" msgid="3328779663112893086">"黑色边框"</string>
     <string name="rendering_mode_stretch" msgid="6386449069902135234">"拉伸以适合屏幕尺寸"</string>
-    <string name="rendering_mode_crop" msgid="1892533060338728880">"修剪"</string>
+    <string name="rendering_mode_crop" msgid="1892533060338728880">"剪裁"</string>
     <string name="yes" msgid="5627909733720577098">"是"</string>
     <string name="no" msgid="4303537392215476576">"否"</string>
     <string name="done" msgid="5693464841369633740">"完成"</string>
