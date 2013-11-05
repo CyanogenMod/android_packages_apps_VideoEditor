@@ -2,7 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"אולפן הסרטים"</string>
-    <string name="full_app_name" msgid="5729546228978363869">"אולפן הסרטים של Android"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"‏אולפן הסרטים של Android"</string>
     <string name="editor_loading_project" msgid="4425794204325511857">"טוען את הפרויקט..."</string>
     <string name="editor_no_project" msgid="7878678429340266635">"לא נמצאו פרויקטים."</string>
     <string name="editor_add" msgid="1728703558703319942">"הוסף"</string>
@@ -122,14 +122,14 @@
     <string name="overlay_change_title_template_button_text" msgid="5764969336814781829">"שנה תבנית"</string>
     <string name="effects_select_effect" msgid="236707968441680914">"אפקטים"</string>
     <string name="effect_pan_zoom" msgid="569977803331838206">"אפקט של הזזה ושינוי גודל תצוגה"</string>
-    <string name="effect_gradient" msgid="3375636253347853008">"אפקט שינוי גוון הדרגתי (Gradient)"</string>
+    <string name="effect_gradient" msgid="3375636253347853008">"‏אפקט שינוי גוון הדרגתי (Gradient)"</string>
     <string name="effect_sepia" msgid="674793199333159952">"אפקט חום (ספיה)"</string>
     <string name="effect_negative" msgid="4266435358235859136">"אפקט שלילי"</string>
     <string name="effect_fifties" msgid="8481127912713456758">"אפקט שנות החמישים"</string>
     <string name="transitions_select_transition" msgid="2078853282860045900">"בחר מעבר"</string>
     <string name="transitions_alpha_countour" msgid="8172271436629067722">"קונטור אלפא"</string>
     <string name="transitions_alpha_diagonal" msgid="41249798064809453">"אלפא אלכסוני"</string>
-    <string name="transitions_crossfade" msgid="8675768530446018936">"מעבר חופף בעמעום (Crossfade)"</string>
+    <string name="transitions_crossfade" msgid="8675768530446018936">"‏מעבר חופף בעמעום (Crossfade)"</string>
     <string name="transitions_fade_black" msgid="4660683008630768277">"הופעה הדרגתית ועמעום"</string>
     <string name="transitions_sliding_right_out_left_in" msgid="1389887781046015922">"הסט משמאל לימין"</string>
     <string name="transitions_sliding_left_out_right_in" msgid="3356163485812291888">"הסט מימין לשמאל"</string>
