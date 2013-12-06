@@ -2,7 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"استودیوی فیلم"</string>
-    <string name="full_app_name" msgid="5729546228978363869">"استودیوی فیلم Android"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"‏استودیوی فیلم Android"</string>
     <string name="editor_loading_project" msgid="4425794204325511857">"در حال بارگیری پروژه..."</string>
     <string name="editor_no_project" msgid="7878678429340266635">"پروژه‌ای یافت نشد."</string>
     <string name="editor_add" msgid="1728703558703319942">"افزودن"</string>

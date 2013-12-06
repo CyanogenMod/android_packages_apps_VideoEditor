@@ -2,7 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="short_app_name" msgid="5507177282765852169">"أستديو الأفلام"</string>
-    <string name="full_app_name" msgid="5729546228978363869">"أستديو الأفلام من Android"</string>
+    <string name="full_app_name" msgid="5729546228978363869">"‏أستديو الأفلام من Android"</string>
     <string name="editor_loading_project" msgid="4425794204325511857">"جارٍ تحميل المشروع..."</string>
     <string name="editor_no_project" msgid="7878678429340266635">"لم يتم العثور على أي مشروع."</string>
     <string name="editor_add" msgid="1728703558703319942">"إضافة"</string>
