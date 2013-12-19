@@ -57,7 +57,7 @@
     <string name="aspect_ratio_3_2" msgid="507963433914879558">"3x2"</string>
     <string name="aspect_ratio_4_3" msgid="3697255322178944937">"4x3"</string>
     <string name="aspect_ratio_5_3" msgid="8540286002309128174">"5x3"</string>
-    <string name="editor_storage_not_available" msgid="5030416644629630761">"无法访问存储设备，因此无法创建项目。"</string>
+    <string name="editor_storage_not_available" msgid="5030416644629630761">"无法使用存储设备，因此无法创建项目。"</string>
     <string name="editor_create_error" msgid="6104899467848074373">"由于出错而无法创建项目。"</string>
     <string name="editor_load_error" msgid="8168726329719423779">"由于出错而无法加载项目。要删除此项目吗？"</string>
     <string name="editor_aspect_ratio_error" msgid="887361517540628159">"无法更改宽高比。"</string>
