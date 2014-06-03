@@ -42,8 +42,8 @@
     <string name="editor_add_begin_transition" msgid="1797563833232547946">"Prechod do klipu"</string>
     <string name="editor_add_end_transition" msgid="578791466048263129">"Prechod na konci klipu"</string>
     <string name="editor_change_transition" msgid="1729795192684212426">"Zmeniť prechod"</string>
-    <string name="editor_video_load" msgid="195098585816541585">"Preberanie videoklipu sa začalo. Po jeho dokončení dostanete upozornenie."</string>
-    <string name="editor_image_load" msgid="5271735501748316661">"Preberanie obrázka začalo. Po jeho dokončení dostanete upozornenie."</string>
+    <string name="editor_video_load" msgid="195098585816541585">"Sťahovanie videoklipu sa začalo. Po jeho dokončení dostanete upozornenie."</string>
+    <string name="editor_image_load" msgid="5271735501748316661">"Sťahovanie obrázka začalo. Po jeho dokončení dostanete upozornenie."</string>
     <string name="editor_transition_title" msgid="4340622816798792302">"Prechod"</string>
     <string name="editor_enable_loop_audio_track" msgid="3621067524622203394">"Opakovať"</string>
     <string name="editor_disable_loop_audio_track" msgid="7726861077018487853">"Neopakovať"</string>
@@ -87,7 +87,7 @@
     <string name="editor_remove_audio_track_error" msgid="3964817135562383898">"Zvukovú stopu nie je možné odstrániť."</string>
     <string name="editor_set_audio_track_boundaries_error" msgid="1679475535915673070">"Zvukovú stopu nie je možné orezať."</string>
     <string name="editor_transition_too_short" msgid="6861692504557642278">"Prechod nie je možné pridať. Prechod by bol príliš krátky."</string>
-    <string name="editor_media_load_error" msgid="458634098279249971">"Súbor nie je možné prevziať."</string>
+    <string name="editor_media_load_error" msgid="458634098279249971">"Súbor nie je možné stiahnuť."</string>
     <string name="editor_preview_error" msgid="6896625021643290945">"Kvôli chybe nie je možné zobraziť ukážku projektu."</string>
     <string name="export_dialog_export" msgid="3425471919331193846">"Exportovať"</string>
     <string name="export_dialog_movie_size" msgid="7285302703460176418">"Veľkosť filmu"</string>
