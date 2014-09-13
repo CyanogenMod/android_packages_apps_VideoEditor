@@ -18,6 +18,7 @@
   <string name="editor_effect_menu_header">Effekt</string>
   <string name="editor_enable_loop_audio_track">Widderhuelen</string>
   <string name="editor_disable_loop_audio_track">Net widderhuelen</string>
+  <string name="editor_mute">Stomm</string>
   <string name="audio_track_menu_duck">Dämpfung</string>
   <string name="aspect_ratio_11_9">11:9</string>
   <string name="aspect_ratio_16_9">16:9</string>
