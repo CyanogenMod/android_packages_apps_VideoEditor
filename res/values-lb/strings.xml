@@ -47,7 +47,7 @@
   <string name="editor_transition_title">Transitioun</string>
   <string name="editor_enable_loop_audio_track">Widderhuelen</string>
   <string name="editor_disable_loop_audio_track">Net widderhuelen</string>
-  <string name="editor_mute">Stomm</string>
+  <string name="editor_mute">Roueg</string>
   <string name="editor_unmute">Toun un</string>
   <string name="audio_track_menu_duck">Dämpfung</string>
   <string name="projects_new_project">Neie Projet erstellen</string>
