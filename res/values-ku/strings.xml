@@ -5,6 +5,7 @@
   <string name="full_app_name">ستۆدیۆی فیلمی ئه‌ندرۆید</string>
   <string name="editor_loading_project">کردنه‌وه‌ی پرۆژه‌\u2026</string>
   <string name="editor_no_project">هیچ پرۆژه‌یه‌ک نه‌دۆزرایه‌وه‌.</string>
+  <string name="editor_add">زیاکردن</string>
   <string name="editor_import_video">هاورده‌کردنی ڤیدیۆ</string>
   <string name="editor_import_image">هاورده‌کردنی وێنه‌</string>
   <string name="editor_import_audio">هاورده‌کردنی گۆرانی</string>
@@ -19,6 +20,7 @@
   <string name="editor_delete_project_question">ئه‌ته‌وێ پرۆژه‌که‌ بسڕیته‌وه‌؟</string>
   <string name="editor_zero_time_stamp">00:00:00.0</string>
   <string name="editor_remove_audio_track_question">ئه‌ته‌وێ ته‌نیا سایدی ده‌نگه‌که‌ بسڕیته‌وه‌؟</string>
+  <string name="editor_title_menu_header">سەردێڕ</string>
   <string name="editor_add_overlay">زیادکردنی ناونیشان</string>
   <string name="editor_edit_overlay">ده‌ستکاریکردنی ناونیشان</string>
   <string name="editor_remove_overlay">سڕینه‌وه‌ی ناونیشان</string>
@@ -45,6 +47,7 @@
   <string name="editor_transition_title">گواستنەوە</string>
   <string name="editor_enable_loop_audio_track">كلو</string>
   <string name="editor_disable_loop_audio_track">كلو مه‌که‌</string>
+  <string name="editor_mute">کپکردن</string>
   <string name="editor_unmute">نه‌کپاندن</string>
   <string name="audio_track_menu_duck">په‌یوه‌ندکردن</string>
   <string name="projects_new_project">درووست کردنی پرۆژەیەکی نوێ</string>
@@ -89,8 +92,12 @@
   <string name="export_dialog_export">ناردن</string>
   <string name="export_dialog_movie_size">قەبارەی فلیم</string>
   <string name="export_dialog_movie_quality">جۆری فیلم</string>
+  <string name="export_dialog_movie_quality_low">نزم</string>
+  <string name="export_dialog_movie_quality_medium">ناوەند</string>
+  <string name="export_dialog_movie_quality_high">بەرز</string>
   <string name="pan_zoom_title">پان کردن وamp; کاریگەری گەورە کردنەوە</string>
   <string name="pan_zoom_start">دەسپێک</string>
+  <string name="pan_zoom_end">کۆتایی</string>
   <string name="pan_zoom_small_image_error">وێنەکە زۆر بچووکە بۆ کارتێکردنی پانکردن و وamp; گەورەکردنەوە.</string>
   <string name="theme_name_travel">گه‌شت</string>
   <string name="theme_travel_title">گەشتەکەم بۆ کالیفۆرنیا</string>
@@ -106,10 +113,15 @@
   <string name="theme_rock_and_roll_subtitle">Two and a half barrels</string>
   <string name="overlay_preview_center">ناونیشانی چەق</string>
   <string name="overlay_preview_bottom">ناونیشانی ژێرەوە</string>
+  <string name="overlay_title">سەردێڕ</string>
   <string name="overlay_title_sample">سەفەری من</string>
+  <string name="overlay_subtitle_sample">سان فراسیسکۆ</string>
   <string name="overlays_select_type">داڕێژه‌ی ناونیشان هەڵبژێرە</string>
+  <string name="overlay_title_label">سەردێڕ</string>
   <string name="overlay_subtitle_label">ژێرنووس</string>
   <string name="overlay_change_title_template_button_text">گۆڕینی داڕێژە</string>
+  <string name="effects_select_effect">کاریگه‌رییه‌کان</string>
+  <string name="effect_pan_zoom">پانکردن &amp; کاریگەریی زووم</string>
   <string name="effect_gradient">کاریگەری لار کردنەوە</string>
   <string name="effect_sepia">کاریگەری قاوەیی تێر</string>
   <string name="effect_negative">کاریگەری نێگاتیڤ</string>
@@ -127,6 +139,13 @@
   <string name="transitions_duration"><xliff:g id="seconds">%(,.1f</xliff:g> چرکە</string>
   <string name="rendering_mode_black_borders">چوارچێوەی ڕەش</string>
   <string name="rendering_mode_stretch">کێشهێنان بۆ رێکخستنی قەبارە</string>
+  <string name="rendering_mode_crop">قرتاندن</string>
+  <string name="yes">بەڵێ</string>
+  <string name="no">نا</string>
+  <string name="done">کرا</string>
+  <string name="edit">ده‌ستکاریکردن</string>
+  <string name="remove">لابردن</string>
+  <string name="untitled">بێ سەردێڕ</string>
   <string name="hours_and_minutes"><xliff:g id="hours">%d</xliff:g> کاتکۆ <xliff:g id="minutes">%d</xliff:g> خۆلەک</string>
   <string name="hour_and_minutes">1 کاتکۆ <xliff:g id="minutes">%d</xliff:g> خولەک</string>
   <string name="minutes"><xliff:g id="minutes">%d</xliff:g> خولەک</string>
